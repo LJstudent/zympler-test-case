@@ -1,0 +1,964 @@
+[
+  {
+    "organisation_id": "0194d654-ae32-7000-8404-6a79c9a8904e",
+    "location_id": "0194d655-171f-7000-8667-52c4d38b1214",
+    "interval": {
+      "start": "2026-03-22T23:00:00Z",
+      "end": "2026-03-22T23:15:00Z"
+    },
+    "measured_solar": {
+      "energy": 0,
+      "power": 0,
+      "power_max": 0
+    },
+    "forecasted_solar": {
+      "energy": 0,
+      "power": 0,
+      "power_max": 0
+    },
+    "curtailed_solar": null
+  },
+  {
+    "organisation_id": "0194d654-ae32-7000-8404-6a79c9a8904e",
+    "location_id": "0194d655-171f-7000-8667-52c4d38b1214",
+    "interval": {
+      "start": "2026-03-22T23:15:00Z",
+      "end": "2026-03-22T23:30:00Z"
+    },
+    "measured_solar": {
+      "energy": 0,
+      "power": 0,
+      "power_max": 0
+    },
+    "forecasted_solar": {
+      "energy": 0,
+      "power": 0,
+      "power_max": 0
+    },
+    "curtailed_solar": null
+  },
+  {
+    "organisation_id": "0194d654-ae32-7000-8404-6a79c9a8904e",
+    "location_id": "0194d655-171f-7000-8667-52c4d38b1214",
+    "interval": {
+      "start": "2026-03-22T23:30:00Z",
+      "end": "2026-03-22T23:45:00Z"
+    },
+    "measured_solar": {
+      "energy": 0,
+      "power": 0,
+      "power_max": 0
+    },
+    "forecasted_solar": {
+      "energy": 0,
+      "power": 0,
+      "power_max": 0
+    },
+    "curtailed_solar": null
+  },
+  {
+    "organisation_id": "0194d654-ae32-7000-8404-6a79c9a8904e",
+    "location_id": "0194d655-171f-7000-8667-52c4d38b1214",
+    "interval": {
+      "start": "2026-03-22T23:45:00Z",
+      "end": "2026-03-23T00:00:00Z"
+    },
+    "measured_solar": {
+      "energy": 0,
+      "power": 0,
+      "power_max": 0
+    },
+    "forecasted_solar": {
+      "energy": 0,
+      "power": 0,
+      "power_max": 0
+    },
+    "curtailed_solar": null
+  },
+  {
+    "organisation_id": "0194d654-ae32-7000-8404-6a79c9a8904e",
+    "location_id": "0194d655-171f-7000-8667-52c4d38b1214",
+    "interval": {
+      "start": "2026-03-23T00:00:00Z",
+      "end": "2026-03-23T00:15:00Z"
+    },
+    "measured_solar": {
+      "energy": 0,
+      "power": 0,
+      "power_max": 0
+    },
+    "forecasted_solar": {
+      "energy": 0,
+      "power": 0,
+      "power_max": 0
+    },
+    "curtailed_solar": null
+  },
+  {
+    "organisation_id": "0194d654-ae32-7000-8404-6a79c9a8904e",
+    "location_id": "0194d655-171f-7000-8667-52c4d38b1214",
+    "interval": {
+      "start": "2026-03-23T00:15:00Z",
+      "end": "2026-03-23T00:30:00Z"
+    },
+    "measured_solar": {
+      "energy": 0,
+      "power": 0,
+      "power_max": 0
+    },
+    "forecasted_solar": {
+      "energy": 0,
+      "power": 0,
+      "power_max": 0
+    },
+    "curtailed_solar": null
+  },
+  {
+    "organisation_id": "0194d654-ae32-7000-8404-6a79c9a8904e",
+    "location_id": "0194d655-171f-7000-8667-52c4d38b1214",
+    "interval": {
+      "start": "2026-03-23T00:30:00Z",
+      "end": "2026-03-23T00:45:00Z"
+    },
+    "measured_solar": {
+      "energy": 0,
+      "power": 0,
+      "power_max": 0
+    },
+    "forecasted_solar": {
+      "energy": 0,
+      "power": 0,
+      "power_max": 0
+    },
+    "curtailed_solar": null
+  },
+  {
+    "organisation_id": "0194d654-ae32-7000-8404-6a79c9a8904e",
+    "location_id": "0194d655-171f-7000-8667-52c4d38b1214",
+    "interval": {
+      "start": "2026-03-23T00:45:00Z",
+      "end": "2026-03-23T01:00:00Z"
+    },
+    "measured_solar": {
+      "energy": 0,
+      "power": 0,
+      "power_max": 0
+    },
+    "forecasted_solar": {
+      "energy": 0,
+      "power": 0,
+      "power_max": 0
+    },
+    "curtailed_solar": null
+  },
+  {
+    "organisation_id": "0194d654-ae32-7000-8404-6a79c9a8904e",
+    "location_id": "0194d655-171f-7000-8667-52c4d38b1214",
+    "interval": {
+      "start": "2026-03-23T01:00:00Z",
+      "end": "2026-03-23T01:15:00Z"
+    },
+    "measured_solar": {
+      "energy": 0,
+      "power": 0,
+      "power_max": 0
+    },
+    "forecasted_solar": {
+      "energy": 0,
+      "power": 0,
+      "power_max": 0
+    },
+    "curtailed_solar": null
+  },
+  {
+    "organisation_id": "0194d654-ae32-7000-8404-6a79c9a8904e",
+    "location_id": "0194d655-171f-7000-8667-52c4d38b1214",
+    "interval": {
+      "start": "2026-03-23T01:15:00Z",
+      "end": "2026-03-23T01:30:00Z"
+    },
+    "measured_solar": {
+      "energy": 0,
+      "power": 0,
+      "power_max": 0
+    },
+    "forecasted_solar": {
+      "energy": 0,
+      "power": 0,
+      "power_max": 0
+    },
+    "curtailed_solar": null
+  },
+  {
+    "organisation_id": "0194d654-ae32-7000-8404-6a79c9a8904e",
+    "location_id": "0194d655-171f-7000-8667-52c4d38b1214",
+    "interval": {
+      "start": "2026-03-23T01:30:00Z",
+      "end": "2026-03-23T01:45:00Z"
+    },
+    "measured_solar": {
+      "energy": 0,
+      "power": 0,
+      "power_max": 0
+    },
+    "forecasted_solar": {
+      "energy": 0,
+      "power": 0,
+      "power_max": 0
+    },
+    "curtailed_solar": null
+  },
+  {
+    "organisation_id": "0194d654-ae32-7000-8404-6a79c9a8904e",
+    "location_id": "0194d655-171f-7000-8667-52c4d38b1214",
+    "interval": {
+      "start": "2026-03-23T01:45:00Z",
+      "end": "2026-03-23T02:00:00Z"
+    },
+    "measured_solar": {
+      "energy": 0,
+      "power": 0,
+      "power_max": 0
+    },
+    "forecasted_solar": {
+      "energy": 0,
+      "power": 0,
+      "power_max": 0
+    },
+    "curtailed_solar": null
+  },
+  {
+    "organisation_id": "0194d654-ae32-7000-8404-6a79c9a8904e",
+    "location_id": "0194d655-171f-7000-8667-52c4d38b1214",
+    "interval": {
+      "start": "2026-03-23T02:00:00Z",
+      "end": "2026-03-23T02:15:00Z"
+    },
+    "measured_solar": {
+      "energy": 0,
+      "power": 0,
+      "power_max": 0
+    },
+    "forecasted_solar": {
+      "energy": 0,
+      "power": 0,
+      "power_max": 0
+    },
+    "curtailed_solar": null
+  },
+  {
+    "organisation_id": "0194d654-ae32-7000-8404-6a79c9a8904e",
+    "location_id": "0194d655-171f-7000-8667-52c4d38b1214",
+    "interval": {
+      "start": "2026-03-23T02:15:00Z",
+      "end": "2026-03-23T02:30:00Z"
+    },
+    "measured_solar": {
+      "energy": 0,
+      "power": 0,
+      "power_max": 0
+    },
+    "forecasted_solar": {
+      "energy": 0,
+      "power": 0,
+      "power_max": 0
+    },
+    "curtailed_solar": null
+  },
+  {
+    "organisation_id": "0194d654-ae32-7000-8404-6a79c9a8904e",
+    "location_id": "0194d655-171f-7000-8667-52c4d38b1214",
+    "interval": {
+      "start": "2026-03-23T02:30:00Z",
+      "end": "2026-03-23T02:45:00Z"
+    },
+    "measured_solar": {
+      "energy": 0,
+      "power": 0,
+      "power_max": 0
+    },
+    "forecasted_solar": {
+      "energy": 0,
+      "power": 0,
+      "power_max": 0
+    },
+    "curtailed_solar": null
+  },
+  {
+    "organisation_id": "0194d654-ae32-7000-8404-6a79c9a8904e",
+    "location_id": "0194d655-171f-7000-8667-52c4d38b1214",
+    "interval": {
+      "start": "2026-03-23T02:45:00Z",
+      "end": "2026-03-23T03:00:00Z"
+    },
+    "measured_solar": {
+      "energy": 0,
+      "power": 0,
+      "power_max": 0
+    },
+    "forecasted_solar": {
+      "energy": 0,
+      "power": 0,
+      "power_max": 0
+    },
+    "curtailed_solar": null
+  },
+  {
+    "organisation_id": "0194d654-ae32-7000-8404-6a79c9a8904e",
+    "location_id": "0194d655-171f-7000-8667-52c4d38b1214",
+    "interval": {
+      "start": "2026-03-23T03:00:00Z",
+      "end": "2026-03-23T03:15:00Z"
+    },
+    "measured_solar": {
+      "energy": 0,
+      "power": 0,
+      "power_max": 0
+    },
+    "forecasted_solar": {
+      "energy": 0,
+      "power": 0,
+      "power_max": 0
+    },
+    "curtailed_solar": null
+  },
+  {
+    "organisation_id": "0194d654-ae32-7000-8404-6a79c9a8904e",
+    "location_id": "0194d655-171f-7000-8667-52c4d38b1214",
+    "interval": {
+      "start": "2026-03-23T03:15:00Z",
+      "end": "2026-03-23T03:30:00Z"
+    },
+    "measured_solar": {
+      "energy": 0,
+      "power": 0,
+      "power_max": 0
+    },
+    "forecasted_solar": {
+      "energy": 0,
+      "power": 0,
+      "power_max": 0
+    },
+    "curtailed_solar": null
+  },
+  {
+    "organisation_id": "0194d654-ae32-7000-8404-6a79c9a8904e",
+    "location_id": "0194d655-171f-7000-8667-52c4d38b1214",
+    "interval": {
+      "start": "2026-03-23T03:30:00Z",
+      "end": "2026-03-23T03:45:00Z"
+    },
+    "measured_solar": {
+      "energy": 0,
+      "power": 0,
+      "power_max": 0
+    },
+    "forecasted_solar": {
+      "energy": 0,
+      "power": 0,
+      "power_max": 0
+    },
+    "curtailed_solar": null
+  },
+  {
+    "organisation_id": "0194d654-ae32-7000-8404-6a79c9a8904e",
+    "location_id": "0194d655-171f-7000-8667-52c4d38b1214",
+    "interval": {
+      "start": "2026-03-23T03:45:00Z",
+      "end": "2026-03-23T04:00:00Z"
+    },
+    "measured_solar": {
+      "energy": 0,
+      "power": 0,
+      "power_max": 0
+    },
+    "forecasted_solar": {
+      "energy": 0,
+      "power": 0,
+      "power_max": 0
+    },
+    "curtailed_solar": null
+  },
+  {
+    "organisation_id": "0194d654-ae32-7000-8404-6a79c9a8904e",
+    "location_id": "0194d655-171f-7000-8667-52c4d38b1214",
+    "interval": {
+      "start": "2026-03-23T04:00:00Z",
+      "end": "2026-03-23T04:15:00Z"
+    },
+    "measured_solar": {
+      "energy": 0,
+      "power": 0,
+      "power_max": 0
+    },
+    "forecasted_solar": {
+      "energy": 0,
+      "power": 0,
+      "power_max": 0
+    },
+    "curtailed_solar": null
+  },
+  {
+    "organisation_id": "0194d654-ae32-7000-8404-6a79c9a8904e",
+    "location_id": "0194d655-171f-7000-8667-52c4d38b1214",
+    "interval": {
+      "start": "2026-03-23T04:15:00Z",
+      "end": "2026-03-23T04:30:00Z"
+    },
+    "measured_solar": {
+      "energy": 0,
+      "power": 0,
+      "power_max": 0
+    },
+    "forecasted_solar": {
+      "energy": 0,
+      "power": 0,
+      "power_max": 0
+    },
+    "curtailed_solar": null
+  },
+  {
+    "organisation_id": "0194d654-ae32-7000-8404-6a79c9a8904e",
+    "location_id": "0194d655-171f-7000-8667-52c4d38b1214",
+    "interval": {
+      "start": "2026-03-23T04:30:00Z",
+      "end": "2026-03-23T04:45:00Z"
+    },
+    "measured_solar": {
+      "energy": 0,
+      "power": 0,
+      "power_max": 0
+    },
+    "forecasted_solar": {
+      "energy": 0,
+      "power": 0,
+      "power_max": 0
+    },
+    "curtailed_solar": null
+  },
+  {
+    "organisation_id": "0194d654-ae32-7000-8404-6a79c9a8904e",
+    "location_id": "0194d655-171f-7000-8667-52c4d38b1214",
+    "interval": {
+      "start": "2026-03-23T04:45:00Z",
+      "end": "2026-03-23T05:00:00Z"
+    },
+    "measured_solar": {
+      "energy": 0,
+      "power": 0,
+      "power_max": 0
+    },
+    "forecasted_solar": {
+      "energy": 0,
+      "power": 0,
+      "power_max": 0
+    },
+    "curtailed_solar": null
+  },
+  {
+    "organisation_id": "0194d654-ae32-7000-8404-6a79c9a8904e",
+    "location_id": "0194d655-171f-7000-8667-52c4d38b1214",
+    "interval": {
+      "start": "2026-03-23T05:00:00Z",
+      "end": "2026-03-23T05:15:00Z"
+    },
+    "measured_solar": {
+      "energy": 0,
+      "power": 0,
+      "power_max": 0
+    },
+    "forecasted_solar": {
+      "energy": 0,
+      "power": 0,
+      "power_max": 0
+    },
+    "curtailed_solar": null
+  },
+  {
+    "organisation_id": "0194d654-ae32-7000-8404-6a79c9a8904e",
+    "location_id": "0194d655-171f-7000-8667-52c4d38b1214",
+    "interval": {
+      "start": "2026-03-23T05:15:00Z",
+      "end": "2026-03-23T05:30:00Z"
+    },
+    "measured_solar": {
+      "energy": 0.30624999999999997,
+      "power": 1.2249999999999999,
+      "power_max": 1.2249999999999999
+    },
+    "forecasted_solar": {
+      "energy": 0,
+      "power": 0,
+      "power_max": 0
+    },
+    "curtailed_solar": null
+  },
+  {
+    "organisation_id": "0194d654-ae32-7000-8404-6a79c9a8904e",
+    "location_id": "0194d655-171f-7000-8667-52c4d38b1214",
+    "interval": {
+      "start": "2026-03-23T05:30:00Z",
+      "end": "2026-03-23T05:45:00Z"
+    },
+    "measured_solar": {
+      "energy": 141.72833333333332,
+      "power": 566.9133333333333,
+      "power_max": 566.9133333333333
+    },
+    "forecasted_solar": {
+      "energy": 0,
+      "power": 0,
+      "power_max": 0
+    },
+    "curtailed_solar": null
+  },
+  {
+    "organisation_id": "0194d654-ae32-7000-8404-6a79c9a8904e",
+    "location_id": "0194d655-171f-7000-8667-52c4d38b1214",
+    "interval": {
+      "start": "2026-03-23T05:45:00Z",
+      "end": "2026-03-23T06:00:00Z"
+    },
+    "measured_solar": {
+      "energy": 614.1166666666667,
+      "power": 2456.4666666666667,
+      "power_max": 2456.4666666666667
+    },
+    "forecasted_solar": {
+      "energy": 31.91618772431453,
+      "power": 127.66475089725812,
+      "power_max": 127.66475089725812
+    },
+    "curtailed_solar": null
+  },
+  {
+    "organisation_id": "0194d654-ae32-7000-8404-6a79c9a8904e",
+    "location_id": "0194d655-171f-7000-8667-52c4d38b1214",
+    "interval": {
+      "start": "2026-03-23T06:00:00Z",
+      "end": "2026-03-23T06:15:00Z"
+    },
+    "measured_solar": {
+      "energy": 1504.22,
+      "power": 6016.88,
+      "power_max": 6016.88
+    },
+    "forecasted_solar": {
+      "energy": 1694.4660887858142,
+      "power": 6777.864355143257,
+      "power_max": 6777.864355143257
+    },
+    "curtailed_solar": null
+  },
+  {
+    "organisation_id": "0194d654-ae32-7000-8404-6a79c9a8904e",
+    "location_id": "0194d655-171f-7000-8667-52c4d38b1214",
+    "interval": {
+      "start": "2026-03-23T06:15:00Z",
+      "end": "2026-03-23T06:30:00Z"
+    },
+    "measured_solar": {
+      "energy": 3119.538333333333,
+      "power": 12478.153333333332,
+      "power_max": 12478.153333333332
+    },
+    "forecasted_solar": {
+      "energy": 4165.387778270087,
+      "power": 16661.55111308035,
+      "power_max": 16661.55111308035
+    },
+    "curtailed_solar": null
+  },
+  {
+    "organisation_id": "0194d654-ae32-7000-8404-6a79c9a8904e",
+    "location_id": "0194d655-171f-7000-8667-52c4d38b1214",
+    "interval": {
+      "start": "2026-03-23T06:30:00Z",
+      "end": "2026-03-23T06:45:00Z"
+    },
+    "measured_solar": {
+      "energy": 5566.981250000001,
+      "power": 22267.925000000003,
+      "power_max": 22267.925000000003
+    },
+    "forecasted_solar": {
+      "energy": 6271.695574784434,
+      "power": 25086.782299137736,
+      "power_max": 25086.782299137736
+    },
+    "curtailed_solar": null
+  },
+  {
+    "organisation_id": "0194d654-ae32-7000-8404-6a79c9a8904e",
+    "location_id": "0194d655-171f-7000-8667-52c4d38b1214",
+    "interval": {
+      "start": "2026-03-23T06:45:00Z",
+      "end": "2026-03-23T07:00:00Z"
+    },
+    "measured_solar": {
+      "energy": 8385.334027777779,
+      "power": 33541.336111111115,
+      "power_max": 33541.336111111115
+    },
+    "forecasted_solar": {
+      "energy": 8260.272160450284,
+      "power": 33041.088641801136,
+      "power_max": 33041.088641801136
+    },
+    "curtailed_solar": null
+  },
+  {
+    "organisation_id": "0194d654-ae32-7000-8404-6a79c9a8904e",
+    "location_id": "0194d655-171f-7000-8667-52c4d38b1214",
+    "interval": {
+      "start": "2026-03-23T07:00:00Z",
+      "end": "2026-03-23T07:15:00Z"
+    },
+    "measured_solar": {
+      "energy": 11004.597420634922,
+      "power": 44018.38968253969,
+      "power_max": 44018.38968253969
+    },
+    "forecasted_solar": {
+      "energy": 3938.341301229903,
+      "power": 15753.365204919612,
+      "power_max": 15753.365204919612
+    },
+    "curtailed_solar": null
+  },
+  {
+    "organisation_id": "0194d654-ae32-7000-8404-6a79c9a8904e",
+    "location_id": "0194d655-171f-7000-8667-52c4d38b1214",
+    "interval": {
+      "start": "2026-03-23T07:15:00Z",
+      "end": "2026-03-23T07:30:00Z"
+    },
+    "measured_solar": {
+      "energy": 10095.531666666666,
+      "power": 40382.12666666666,
+      "power_max": 40382.12666666666
+    },
+    "forecasted_solar": {
+      "energy": 4525.641504972017,
+      "power": 18102.56601988807,
+      "power_max": 18102.56601988807
+    },
+    "curtailed_solar": null
+  },
+  {
+    "organisation_id": "0194d654-ae32-7000-8404-6a79c9a8904e",
+    "location_id": "0194d655-171f-7000-8667-52c4d38b1214",
+    "interval": {
+      "start": "2026-03-23T07:30:00Z",
+      "end": "2026-03-23T07:45:00Z"
+    },
+    "measured_solar": {
+      "energy": 17030.93375,
+      "power": 68123.735,
+      "power_max": 68123.735
+    },
+    "forecasted_solar": {
+      "energy": 5253.8917883129625,
+      "power": 21015.56715325185,
+      "power_max": 21015.56715325185
+    },
+    "curtailed_solar": null
+  },
+  {
+    "organisation_id": "0194d654-ae32-7000-8404-6a79c9a8904e",
+    "location_id": "0194d655-171f-7000-8667-52c4d38b1214",
+    "interval": {
+      "start": "2026-03-23T07:45:00Z",
+      "end": "2026-03-23T08:00:00Z"
+    },
+    "measured_solar": {
+      "energy": 25850.335833333334,
+      "power": 103401.34333333334,
+      "power_max": 103401.34333333334
+    },
+    "forecasted_solar": {
+      "energy": 6166.315718646105,
+      "power": 24665.26287458442,
+      "power_max": 24665.26287458442
+    },
+    "curtailed_solar": null
+  },
+  {
+    "organisation_id": "0194d654-ae32-7000-8404-6a79c9a8904e",
+    "location_id": "0194d655-171f-7000-8667-52c4d38b1214",
+    "interval": {
+      "start": "2026-03-23T08:00:00Z",
+      "end": "2026-03-23T08:15:00Z"
+    },
+    "measured_solar": {
+      "energy": 8756.144999999999,
+      "power": 35024.579999999994,
+      "power_max": 35024.579999999994
+    },
+    "forecasted_solar": {
+      "energy": 18268.52300672998,
+      "power": 73074.09202691993,
+      "power_max": 73074.09202691993
+    },
+    "curtailed_solar": {
+      "energy": 13073.781038268658,
+      "power": 52295.124153074634,
+      "power_max": 52295.124153074634
+    }
+  },
+  {
+    "organisation_id": "0194d654-ae32-7000-8404-6a79c9a8904e",
+    "location_id": "0194d655-171f-7000-8667-52c4d38b1214",
+    "interval": {
+      "start": "2026-03-23T08:15:00Z",
+      "end": "2026-03-23T08:30:00Z"
+    },
+    "measured_solar": {
+      "energy": 14586.044166666668,
+      "power": 58344.17666666667,
+      "power_max": 58344.17666666667
+    },
+    "forecasted_solar": {
+      "energy": 19852.388615224012,
+      "power": 79409.55446089605,
+      "power_max": 79409.55446089605
+    },
+    "curtailed_solar": {
+      "energy": 5836.890103771206,
+      "power": 23347.560415084823,
+      "power_max": 23347.560415084823
+    }
+  },
+  {
+    "organisation_id": "0194d654-ae32-7000-8404-6a79c9a8904e",
+    "location_id": "0194d655-171f-7000-8667-52c4d38b1214",
+    "interval": {
+      "start": "2026-03-23T08:30:00Z",
+      "end": "2026-03-23T08:45:00Z"
+    },
+    "measured_solar": {
+      "energy": 5271.369583333336,
+      "power": 21085.478333333343,
+      "power_max": 21085.478333333343
+    },
+    "forecasted_solar": {
+      "energy": 21200.39094987826,
+      "power": 84801.56379951304,
+      "power_max": 84801.56379951304
+    },
+    "curtailed_solar": {
+      "energy": 15311.942529910724,
+      "power": 61247.7701196429,
+      "power_max": 61247.7701196429
+    }
+  },
+  {
+    "organisation_id": "0194d654-ae32-7000-8404-6a79c9a8904e",
+    "location_id": "0194d655-171f-7000-8667-52c4d38b1214",
+    "interval": {
+      "start": "2026-03-23T08:45:00Z",
+      "end": "2026-03-23T09:00:00Z"
+    },
+    "measured_solar": {
+      "energy": 19980.128666666667,
+      "power": 79920.51466666667,
+      "power_max": 79920.51466666667
+    },
+    "forecasted_solar": {
+      "energy": 22409.093410692036,
+      "power": 89636.37364276814,
+      "power_max": 89636.37364276814
+    },
+    "curtailed_solar": null
+  },
+  {
+    "organisation_id": "0194d654-ae32-7000-8404-6a79c9a8904e",
+    "location_id": "0194d655-171f-7000-8667-52c4d38b1214",
+    "interval": {
+      "start": "2026-03-23T09:00:00Z",
+      "end": "2026-03-23T09:15:00Z"
+    },
+    "measured_solar": {
+      "energy": 24539.93077380952,
+      "power": 98159.72309523808,
+      "power_max": 98159.72309523808
+    },
+    "forecasted_solar": {
+      "energy": 20219.515626941436,
+      "power": 80878.06250776575,
+      "power_max": 80878.06250776575
+    },
+    "curtailed_solar": null
+  },
+  {
+    "organisation_id": "0194d654-ae32-7000-8404-6a79c9a8904e",
+    "location_id": "0194d655-171f-7000-8667-52c4d38b1214",
+    "interval": {
+      "start": "2026-03-23T09:15:00Z",
+      "end": "2026-03-23T09:30:00Z"
+    },
+    "measured_solar": {
+      "energy": 27177.49591666667,
+      "power": 108709.98366666668,
+      "power_max": 108709.98366666668
+    },
+    "forecasted_solar": {
+      "energy": 19906.73898395389,
+      "power": 79626.95593581555,
+      "power_max": 79626.95593581555
+    },
+    "curtailed_solar": null
+  },
+  {
+    "organisation_id": "0194d654-ae32-7000-8404-6a79c9a8904e",
+    "location_id": "0194d655-171f-7000-8667-52c4d38b1214",
+    "interval": {
+      "start": "2026-03-23T09:30:00Z",
+      "end": "2026-03-23T09:45:00Z"
+    },
+    "measured_solar": {
+      "energy": 27931.25041666667,
+      "power": 111725.00166666668,
+      "power_max": 111725.00166666668
+    },
+    "forecasted_solar": {
+      "energy": 19720.470522175376,
+      "power": 78881.8820887015,
+      "power_max": 78881.8820887015
+    },
+    "curtailed_solar": null
+  },
+  {
+    "organisation_id": "0194d654-ae32-7000-8404-6a79c9a8904e",
+    "location_id": "0194d655-171f-7000-8667-52c4d38b1214",
+    "interval": {
+      "start": "2026-03-23T09:45:00Z",
+      "end": "2026-03-23T10:00:00Z"
+    },
+    "measured_solar": {
+      "energy": 27802.90958333333,
+      "power": 111211.63833333332,
+      "power_max": 111211.63833333332
+    },
+    "forecasted_solar": {
+      "energy": 19915.739229267525,
+      "power": 79662.9569170701,
+      "power_max": 79662.9569170701
+    },
+    "curtailed_solar": null
+  },
+  {
+    "organisation_id": "0194d654-ae32-7000-8404-6a79c9a8904e",
+    "location_id": "0194d655-171f-7000-8667-52c4d38b1214",
+    "interval": {
+      "start": "2026-03-23T10:00:00Z",
+      "end": "2026-03-23T10:15:00Z"
+    },
+    "measured_solar": {
+      "energy": 30420.37875,
+      "power": 121681.515,
+      "power_max": 121681.515
+    },
+    "forecasted_solar": {
+      "energy": 21133.092977630982,
+      "power": 84532.37191052393,
+      "power_max": 84532.37191052393
+    },
+    "curtailed_solar": null
+  },
+  {
+    "organisation_id": "0194d654-ae32-7000-8404-6a79c9a8904e",
+    "location_id": "0194d655-171f-7000-8667-52c4d38b1214",
+    "interval": {
+      "start": "2026-03-23T10:15:00Z",
+      "end": "2026-03-23T10:30:00Z"
+    },
+    "measured_solar": {
+      "energy": 29668.893333333337,
+      "power": 118675.57333333335,
+      "power_max": 118675.57333333335
+    },
+    "forecasted_solar": {
+      "energy": 21013.246978034545,
+      "power": 84052.98791213818,
+      "power_max": 84052.98791213818
+    },
+    "curtailed_solar": null
+  },
+  {
+    "organisation_id": "0194d654-ae32-7000-8404-6a79c9a8904e",
+    "location_id": "0194d655-171f-7000-8667-52c4d38b1214",
+    "interval": {
+      "start": "2026-03-23T10:30:00Z",
+      "end": "2026-03-23T10:45:00Z"
+    },
+    "measured_solar": {
+      "energy": 28521.32916666667,
+      "power": 114085.31666666668,
+      "power_max": 114085.31666666668
+    },
+    "forecasted_solar": {
+      "energy": 21003.773629949123,
+      "power": 84015.09451979649,
+      "power_max": 84015.09451979649
+    },
+    "curtailed_solar": null
+  },
+  {
+    "organisation_id": "0194d654-ae32-7000-8404-6a79c9a8904e",
+    "location_id": "0194d655-171f-7000-8667-52c4d38b1214",
+    "interval": {
+      "start": "2026-03-23T10:45:00Z",
+      "end": "2026-03-23T11:00:00Z"
+    },
+    "measured_solar": {
+      "energy": 28387.718749999996,
+      "power": 113550.87499999999,
+      "power_max": 113550.87499999999
+    },
+    "forecasted_solar": {
+      "energy": 21337.419372828932,
+      "power": 85349.67749131573,
+      "power_max": 85349.67749131573
+    },
+    "curtailed_solar": null
+  },
+  {
+    "organisation_id": "0194d654-ae32-7000-8404-6a79c9a8904e",
+    "location_id": "0194d655-171f-7000-8667-52c4d38b1214",
+    "interval": {
+      "start": "2026-03-23T11:00:00Z",
+      "end": "2026-03-23T11:15:00Z"
+    },
+    "measured_solar": {
+      "energy": 28808.521666666667,
+      "power": 115234.08666666667,
+      "power_max": 115234.08666666667
+    },
+    "forecasted_solar": {
+      "energy": 22281.07051204329,
+      "power": 89124.28204817316,
+      "power_max": 89124.28204817316
+    },
+    "curtailed_solar": null
+  },
+  {
+    "organisation_id": "0194d654-ae32-7000-8404-6a79c9a8904e",
+    "location_id": "0194d655-171f-7000-8667-52c4d38b1214",
+    "interval": {
+      "start": "2026-03-23T11:15:00Z",
+      "end": "2026-03-23T11:26:24Z"
+    },
+    "measured_solar": {
+      "energy": 18636.356527777774,
+      "power": 98086.08698830407,
+      "power_max": 98086.08698830407
+    },
+    "forecasted_solar": {
+      "energy": 17325.5309251728,
+      "power": 91187.00486933053,
+      "power_max": 91187.00486933053
+    },
+    "curtailed_solar": null
+  }
+]
