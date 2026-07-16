@@ -1,24 +1,25 @@
-@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap");
 @import "tailwindcss";
 
 @theme {
-  --font-sans: "Poppins", ui-sans-serif, system-ui, sans-serif,
-    "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+  --font-sans:
+    "Poppins", ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji",
+    "Segoe UI Symbol", "Noto Color Emoji";
 
   /* extra steps for slate */
   --color-slate-50: oklch(0.984 0.003 247.858);
   --color-slate-100: oklch(0.968 0.007 247.896);
-  --color-slate-150: oklch(0.9485 0.0100 251.702);
+  --color-slate-150: oklch(0.9485 0.01 251.702);
   --color-slate-200: oklch(0.929 0.013 255.508);
   --color-slate-250: oklch(0.899 0.0175 254.201);
   --color-slate-300: oklch(0.869 0.022 252.894);
-  --color-slate-350: oklch(0.7865 0.0310 254.841);
-  --color-slate-400: oklch(0.704 0.040 256.788);
-  --color-slate-450: oklch(0.629 0.0430 257.1025);
+  --color-slate-350: oklch(0.7865 0.031 254.841);
+  --color-slate-400: oklch(0.704 0.04 256.788);
+  --color-slate-450: oklch(0.629 0.043 257.1025);
   --color-slate-500: oklch(0.554 0.046 257.417);
-  --color-slate-550: oklch(0.500 0.0445 257.349);
+  --color-slate-550: oklch(0.5 0.0445 257.349);
   --color-slate-600: oklch(0.446 0.043 257.281);
-  --color-slate-650: oklch(0.4090 0.0435 257.284);
+  --color-slate-650: oklch(0.409 0.0435 257.284);
   --color-slate-700: oklch(0.372 0.044 257.287);
   --color-slate-750: oklch(0.3255 0.0425 258.659);
   --color-slate-800: oklch(0.279 0.041 260.031);
@@ -30,9 +31,9 @@
   --color-azure: oklch(0.448 0.229 263.14);
   --color-azure-50: oklch(0.95 0.024 280.91);
   --color-azure-100: oklch(0.906 0.046 281.46);
-  --color-azure-150: oklch(0.860 0.071 280.46);
+  --color-azure-150: oklch(0.86 0.071 280.46);
   --color-azure-200: oklch(0.814 0.095 279.46);
-  --color-azure-250: oklch(0.768 0.120 278.20);
+  --color-azure-250: oklch(0.768 0.12 278.2);
   --color-azure-300: oklch(0.722 0.145 276.94);
   --color-azure-350: oklch(0.677 0.171 274.69);
   --color-azure-400: oklch(0.632 0.197 272.43);
@@ -42,9 +43,9 @@
   --color-azure-600: oklch(0.448 0.229 263.14);
   --color-azure-650: oklch(0.407 0.209 263.15);
   --color-azure-700: oklch(0.366 0.188 263.16);
-  --color-azure-750: oklch(0.331 0.170 263.16);
+  --color-azure-750: oklch(0.331 0.17 263.16);
   --color-azure-800: oklch(0.295 0.151 263.16);
-  --color-azure-850: oklch(0.255 0.131 263.20);
+  --color-azure-850: oklch(0.255 0.131 263.2);
   --color-azure-900: oklch(0.215 0.111 263.23);
   --color-azure-950: oklch(0.17 0.086 263.03);
 

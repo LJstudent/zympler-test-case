@@ -15,58 +15,57 @@ const PICO_THRESHOLD: number = 0.000000000001;
 
 export function get_compact_prefix_and_value(value: number): [string, number] {
   if (value >= TERA_THRESHOLD || value <= -1 * TERA_THRESHOLD) {
-    return ['T', value / TERA_THRESHOLD];
+    return ["T", value / TERA_THRESHOLD];
   } else if (value >= GIGA_THRESHOLD || value <= -1 * GIGA_THRESHOLD) {
-    return ['G', value / GIGA_THRESHOLD];
+    return ["G", value / GIGA_THRESHOLD];
   } else if (value >= MEGA_THRESHOLD || value <= -1 * MEGA_THRESHOLD) {
-    return ['M', value / MEGA_THRESHOLD];
+    return ["M", value / MEGA_THRESHOLD];
   } else if (value >= KILO_THRESHOLD || value <= -1 * KILO_THRESHOLD) {
-    return ['k', value / KILO_THRESHOLD];
-
+    return ["k", value / KILO_THRESHOLD];
   } else if (value === 0) {
-    return ['', value];
-
+    return ["", value];
   } else if (value < 100 * PICO_THRESHOLD && value > -1 * 100 * PICO_THRESHOLD) {
-    return ['p', value / PICO_THRESHOLD];
+    return ["p", value / PICO_THRESHOLD];
   } else if (value < 100 * NANO_THRESHOLD && value > -1 * 100 * NANO_THRESHOLD) {
-    return ['n', value / NANO_THRESHOLD];
+    return ["n", value / NANO_THRESHOLD];
   } else if (value < 100 * MICRO_THRESHOLD && value > -1 * 100 * MICRO_THRESHOLD) {
-    return ['µ', value / MICRO_THRESHOLD];
+    return ["µ", value / MICRO_THRESHOLD];
   } else if (value < 100 * MILLI_THRESHOLD && value > -1 * 100 * MILLI_THRESHOLD) {
-    return ['m', value / MILLI_THRESHOLD];
-
+    return ["m", value / MILLI_THRESHOLD];
   } else {
-    return ['', value];
+    return ["", value];
   }
 }
 
 export function format_intl_number(value: number, format?: NumberFormat): string {
   if (typeof value !== "number") {
-    return `- ${format?.suffix ?? ''}`;
+    return `- ${format?.suffix ?? ""}`;
   }
 
-  let prefix = '';
+  let prefix = "";
   if (typeof format?.fixedScaleFactor === "number") {
     value = value / format.fixedScaleFactor;
-  } else if (BESPOKE_NUMBER_FORMAT_SUFFIXES.includes(format?.suffix ?? '')) {
+  } else if (BESPOKE_NUMBER_FORMAT_SUFFIXES.includes(format?.suffix ?? "")) {
     const [p, v] = get_compact_prefix_and_value(value);
     prefix = p;
     value = v;
   }
 
-  const formattedValue = new Intl.NumberFormat(Settings.defaultLocale ?? 'en-US', format?.format).format(value);
+  const formattedValue = new Intl.NumberFormat(
+    Settings.defaultLocale ?? "en-US",
+    format?.format,
+  ).format(value);
 
-  return `${formattedValue} ${prefix}${format?.suffix ?? ''}`;
+  return `${formattedValue} ${prefix}${format?.suffix ?? ""}`;
 }
 
 export function getStartOfDate(resolution: TimeResolution, date: DateTime): DateTime {
   return date.startOf(getRoundTo(resolution));
 }
 
-
 export function measureTextSize(
   text: string,
-  fontSize: number = 18
+  fontSize: number = 18,
 ): { width: number; height: number } {
   if (typeof document === "undefined") {
     return { width: text.length * 0.5 * fontSize, height: fontSize };
@@ -89,10 +88,9 @@ export function measureTextSize(
   return { width, height };
 }
 
-
 export function getRoundTo(resolution: TimeResolution): DateTimeUnit {
   switch (resolution) {
-    case 'day':
+    case "day":
       return "day";
   }
 }

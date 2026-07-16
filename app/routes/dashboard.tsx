@@ -1,27 +1,44 @@
 import ContentBlock from "~/components/content-block";
 import type { Route } from "./+types/dashboard";
-import { Await, type UIMatch } from "react-router";
+import { Await } from "react-router";
 import telemetry from "~/content/telemetry.json";
 import plan from "~/content/plan.json";
 import curtailed_solar from "~/content/curtailed_solar.json";
 import TimeseriesGraph from "~/components/timeseries-graph";
-import { ENERGY_FORMAT, MergedBatteryMeasurementGraph, MergedBatteryStateOfChargeMeasurementGraph, MergedChargerMeasurementGraph, MergedGridMeterMeasurementGraph, MergedMeasurementSourceGraph, MergedMeasurementTargetGraph, MergedSolarWithCurtailmentMeasurementGraph, PERCENTAGE_FORMAT } from "~/utils/graphs";
+import {
+  ENERGY_FORMAT,
+  MergedBatteryMeasurementGraph,
+  MergedBatteryStateOfChargeMeasurementGraph,
+  MergedChargerMeasurementGraph,
+  MergedGridMeterMeasurementGraph,
+  MergedMeasurementSourceGraph,
+  MergedMeasurementTargetGraph,
+  MergedSolarWithCurtailmentMeasurementGraph,
+  PERCENTAGE_FORMAT,
+} from "~/utils/graphs";
 import { Suspense } from "react";
-import { FaArrowRightFromBracket, FaArrowRightToBracket, FaBatteryFull, FaBatteryThreeQuarters, FaBolt, FaChargingStation, FaChartColumn, FaNetworkWired, FaShieldHeart, FaSolarPanel } from "react-icons/fa6";
+import {
+  FaArrowRightFromBracket,
+  FaArrowRightToBracket,
+  FaBatteryFull,
+  FaBatteryThreeQuarters,
+  FaBolt,
+  FaChargingStation,
+  FaChartColumn,
+  FaNetworkWired,
+  FaShieldHeart,
+  FaSolarPanel,
+} from "react-icons/fa6";
 import { format_intl_number } from "~/utils/functions";
 
-export function meta({ }: Route.MetaArgs) {
-  return [
-    { title: "Zympler" },
-    { name: "description", content: "Welcome to the Zympler portal!" },
-  ];
+export function meta() {
+  return [{ title: "Zympler" }, { name: "description", content: "Welcome to the Zympler portal!" }];
 }
 
-const delay = (ms: number) => new Promise<void>(resolve => setTimeout(resolve, ms));
-const delayedResolve = <T extends unknown>(data: T, ms: number): Promise<T> =>
-  delay(ms).then(() => data);
+const delay = (ms: number) => new Promise<void>((resolve) => setTimeout(resolve, ms));
+const delayedResolve = <T,>(data: T, ms: number): Promise<T> => delay(ms).then(() => data);
 
-export const loader = async ({ context, request, params }: Route.LoaderArgs) => {
+export const loader = () => {
   return {
     telemetry: delayedResolve(telemetry, 1000),
     plan: delayedResolve(plan, 1500),
@@ -33,9 +50,9 @@ export const loader = async ({ context, request, params }: Route.LoaderArgs) => 
     from_grid_utilization: delayedResolve(0.355, 150),
     to_grid_utilization: delayedResolve(0.168, 75),
   };
-}
+};
 
-export default function Home({ loaderData, actionData, params, matches }: Route.ComponentProps & { matches: UIMatch[] }) {
+export default function Home({ loaderData }: Route.ComponentProps) {
   const {
     telemetry,
     plan,
@@ -51,7 +68,10 @@ export default function Home({ loaderData, actionData, params, matches }: Route.
   return (
     <>
       <ContentBlock>
-        <h2 className="flex gap-2.5 items-center text-xl font-medium"><FaShieldHeart className="h-5 w-5" />Status</h2>
+        <h2 className="flex gap-2.5 items-center text-xl font-medium">
+          <FaShieldHeart className="h-5 w-5" />
+          Status
+        </h2>
         <span className="font-medium flex flex-col gap-1">
           <span className="text-sm text-slate-400">Assets</span>
           <span>13 / 15 healthy</span>
@@ -59,7 +79,10 @@ export default function Home({ loaderData, actionData, params, matches }: Route.
       </ContentBlock>
 
       <ContentBlock>
-        <h2 className="flex gap-2.5 items-center text-xl font-medium"><FaChartColumn className="h-5 w-5" />Measurements</h2>
+        <h2 className="flex gap-2.5 items-center text-xl font-medium">
+          <FaChartColumn className="h-5 w-5" />
+          Measurements
+        </h2>
 
         <Suspense>
           <Await resolve={from_grid}>
@@ -85,7 +108,10 @@ export default function Home({ loaderData, actionData, params, matches }: Route.
       </ContentBlock>
 
       <ContentBlock>
-        <h2 className="flex gap-2.5 items-center text-xl font-medium"><FaNetworkWired className="h-5 w-5" />Grid connection</h2>
+        <h2 className="flex gap-2.5 items-center text-xl font-medium">
+          <FaNetworkWired className="h-5 w-5" />
+          Grid connection
+        </h2>
 
         <Suspense>
           <Await resolve={from_grid_utilization}>
@@ -111,7 +137,10 @@ export default function Home({ loaderData, actionData, params, matches }: Route.
       </ContentBlock>
 
       <ContentBlock>
-        <h2 className="flex gap-2.5 items-center text-xl font-medium"><FaArrowRightFromBracket className="h-5 w-5" />Source</h2>
+        <h2 className="flex gap-2.5 items-center text-xl font-medium">
+          <FaArrowRightFromBracket className="h-5 w-5" />
+          Source
+        </h2>
         <Suspense>
           <Await resolve={telemetry}>
             {(telemetry) => (
@@ -131,7 +160,10 @@ export default function Home({ loaderData, actionData, params, matches }: Route.
       </ContentBlock>
 
       <ContentBlock>
-        <h2 className="flex gap-2.5 items-center text-xl font-medium"><FaArrowRightToBracket className="h-5 w-5" />Target</h2>
+        <h2 className="flex gap-2.5 items-center text-xl font-medium">
+          <FaArrowRightToBracket className="h-5 w-5" />
+          Target
+        </h2>
         <Suspense>
           <Await resolve={telemetry}>
             {(telemetry) => (
@@ -151,7 +183,10 @@ export default function Home({ loaderData, actionData, params, matches }: Route.
       </ContentBlock>
 
       <ContentBlock>
-        <h2 className="flex gap-2.5 items-center text-xl font-medium"><FaBolt className="h-5 w-5" />Grid</h2>
+        <h2 className="flex gap-2.5 items-center text-xl font-medium">
+          <FaBolt className="h-5 w-5" />
+          Grid
+        </h2>
         <Suspense>
           <Await resolve={telemetry}>
             {(telemetry) => (
@@ -171,7 +206,10 @@ export default function Home({ loaderData, actionData, params, matches }: Route.
       </ContentBlock>
 
       <ContentBlock>
-        <h2 className="flex gap-2.5 items-center text-xl font-medium"><FaBatteryFull className="h-5 w-5" />Batteries</h2>
+        <h2 className="flex gap-2.5 items-center text-xl font-medium">
+          <FaBatteryFull className="h-5 w-5" />
+          Batteries
+        </h2>
         <Suspense>
           <Await resolve={telemetry}>
             {(telemetry) => (
@@ -191,7 +229,10 @@ export default function Home({ loaderData, actionData, params, matches }: Route.
       </ContentBlock>
 
       <ContentBlock>
-        <h2 className="flex gap-2.5 items-center text-xl font-medium"><FaBatteryThreeQuarters className="h-5 w-5" />Batteries State of Charge</h2>
+        <h2 className="flex gap-2.5 items-center text-xl font-medium">
+          <FaBatteryThreeQuarters className="h-5 w-5" />
+          Batteries State of Charge
+        </h2>
         <Suspense>
           <Await resolve={telemetry}>
             {(telemetry) => (
@@ -211,7 +252,10 @@ export default function Home({ loaderData, actionData, params, matches }: Route.
       </ContentBlock>
 
       <ContentBlock>
-        <h2 className="flex gap-2.5 items-center text-xl font-medium"><FaChargingStation className="h-5 w-5" />Chargers</h2>
+        <h2 className="flex gap-2.5 items-center text-xl font-medium">
+          <FaChargingStation className="h-5 w-5" />
+          Chargers
+        </h2>
         <Suspense>
           <Await resolve={telemetry}>
             {(telemetry) => (
@@ -230,9 +274,11 @@ export default function Home({ loaderData, actionData, params, matches }: Route.
         </Suspense>
       </ContentBlock>
 
-
       <ContentBlock>
-        <h2 className="flex gap-2.5 items-center text-xl font-medium"><FaSolarPanel className="h-5 w-5" />Solar</h2>
+        <h2 className="flex gap-2.5 items-center text-xl font-medium">
+          <FaSolarPanel className="h-5 w-5" />
+          Solar
+        </h2>
         <Suspense>
           <Await resolve={curtailed_solar}>
             {(curtailed_solar) => (
@@ -250,8 +296,6 @@ export default function Home({ loaderData, actionData, params, matches }: Route.
           </Await>
         </Suspense>
       </ContentBlock>
-
-
     </>
-  )
+  );
 }
