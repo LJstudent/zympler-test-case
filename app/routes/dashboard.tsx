@@ -3,7 +3,10 @@ import { useEffect, useState } from "react";
 import SectionHeading from "~/components/dashboard/section-heading";
 import SystemStatusCard from "~/components/dashboard/system-status-card";
 import SystemStatusCardSkeleton from "~/components/dashboard/system-status-card-skeleton";
+import ZymplerActionsSection from "~/components/dashboard/zympler-actions-section";
 import { TooltipProvider } from "~/components/ui/tooltip";
+import plan from "~/content/plan.json";
+import telemetry from "~/content/telemetry.json";
 import { SYSTEM_STATUSES } from "~/data/system-status";
 
 const STATUS_LOADING_DELAY_MS = 900;
@@ -53,6 +56,8 @@ export default function DashboardPage() {
                   ))}
             </div>
           </section>
+
+          <ZymplerActionsSection plan={plan} telemetry={telemetry} />
         </div>
       </main>
     </TooltipProvider>
