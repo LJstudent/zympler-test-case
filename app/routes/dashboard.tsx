@@ -1,301 +1,60 @@
-import ContentBlock from "~/components/content-block";
-import type { Route } from "./+types/dashboard";
-import { Await } from "react-router";
-import telemetry from "~/content/telemetry.json";
-import plan from "~/content/plan.json";
-import curtailed_solar from "~/content/curtailed_solar.json";
-import TimeseriesGraph from "~/components/timeseries-graph";
-import {
-  ENERGY_FORMAT,
-  MergedBatteryMeasurementGraph,
-  MergedBatteryStateOfChargeMeasurementGraph,
-  MergedChargerMeasurementGraph,
-  MergedGridMeterMeasurementGraph,
-  MergedMeasurementSourceGraph,
-  MergedMeasurementTargetGraph,
-  MergedSolarWithCurtailmentMeasurementGraph,
-  PERCENTAGE_FORMAT,
-} from "~/utils/graphs";
-import { Suspense } from "react";
-import {
-  FaArrowRightFromBracket,
-  FaArrowRightToBracket,
-  FaBatteryFull,
-  FaBatteryThreeQuarters,
-  FaBolt,
-  FaChargingStation,
-  FaChartColumn,
-  FaNetworkWired,
-  FaShieldHeart,
-  FaSolarPanel,
-} from "react-icons/fa6";
-import { format_intl_number } from "~/utils/functions";
+import { useEffect, useState } from "react";
+
+import SectionHeading from "~/components/dashboard/section-heading";
+import SystemStatusCard from "~/components/dashboard/system-status-card";
+import SystemStatusCardSkeleton from "~/components/dashboard/system-status-card-skeleton";
+import { TooltipProvider } from "~/components/ui/tooltip";
+import { SYSTEM_STATUSES } from "~/data/system-status";
+
+const STATUS_LOADING_DELAY_MS = 900;
 
 export function meta() {
-  return [{ title: "Zympler" }, { name: "description", content: "Welcome to the Zympler portal!" }];
+  return [
+    { title: "System Status | Zympler" },
+    { name: "description", content: "Live Zympler energy system status." },
+  ];
 }
 
-const delay = (ms: number) => new Promise<void>((resolve) => setTimeout(resolve, ms));
-const delayedResolve = <T,>(data: T, ms: number): Promise<T> => delay(ms).then(() => data);
+export default function DashboardPage() {
+  const [isLoading, setIsLoading] = useState(true);
 
-export const loader = () => {
-  return {
-    telemetry: delayedResolve(telemetry, 1000),
-    plan: delayedResolve(plan, 1500),
-    curtailed_solar: delayedResolve(curtailed_solar, 2500),
-
-    from_grid: delayedResolve(187_123, 200),
-    to_grid: delayedResolve(23_234, 250),
-
-    from_grid_utilization: delayedResolve(0.355, 150),
-    to_grid_utilization: delayedResolve(0.168, 75),
-  };
-};
-
-export default function Home({ loaderData }: Route.ComponentProps) {
-  const {
-    telemetry,
-    plan,
-    curtailed_solar,
-
-    from_grid,
-    to_grid,
-
-    from_grid_utilization,
-    to_grid_utilization,
-  } = loaderData;
+  useEffect(() => {
+    const loadingTimer = window.setTimeout(() => setIsLoading(false), STATUS_LOADING_DELAY_MS);
+    return () => window.clearTimeout(loadingTimer);
+  }, []);
 
   return (
-    <>
-      <ContentBlock>
-        <h2 className="flex gap-2.5 items-center text-xl font-medium">
-          <FaShieldHeart className="h-5 w-5" />
-          Status
-        </h2>
-        <span className="font-medium flex flex-col gap-1">
-          <span className="text-sm text-slate-400">Assets</span>
-          <span>13 / 15 healthy</span>
-        </span>
-      </ContentBlock>
+    <TooltipProvider>
+      <main className="relative min-h-dvh overflow-hidden bg-slate-950 px-4 py-12 text-white sm:px-8 sm:py-16 lg:px-12 lg:py-20">
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_15%_0%,rgba(0,62,208,0.24),transparent_34%),radial-gradient(circle_at_85%_18%,rgba(0,255,166,0.08),transparent_25%),linear-gradient(rgba(189,210,255,0.025)_1px,transparent_1px),linear-gradient(90deg,rgba(189,210,255,0.025)_1px,transparent_1px)] bg-[size:auto,auto,48px_48px,48px_48px]"
+        />
 
-      <ContentBlock>
-        <h2 className="flex gap-2.5 items-center text-xl font-medium">
-          <FaChartColumn className="h-5 w-5" />
-          Measurements
-        </h2>
+        <div className="relative mx-auto w-full max-w-6xl">
+          <header>
+            <h1 className="text-3xl font-semibold tracking-[-0.04em] text-mint drop-shadow-[0_0_20px_rgba(0,255,166,0.16)] sm:text-4xl">
+              Zympler
+            </h1>
+          </header>
 
-        <Suspense>
-          <Await resolve={from_grid}>
-            {(from_grid) => (
-              <span className="font-medium flex flex-col gap-1">
-                <span className="text-sm text-slate-400">Take</span>
-                <span>{format_intl_number(from_grid, ENERGY_FORMAT)}</span>
-              </span>
-            )}
-          </Await>
-        </Suspense>
+          <section aria-labelledby="system-status-heading" className="mt-14 sm:mt-18">
+            <SectionHeading id="system-status-heading">System Status</SectionHeading>
 
-        <Suspense>
-          <Await resolve={to_grid}>
-            {(to_grid) => (
-              <span className="font-medium flex flex-col gap-1">
-                <span className="text-sm text-slate-400">Feed-in</span>
-                <span>{format_intl_number(to_grid, ENERGY_FORMAT)}</span>
-              </span>
-            )}
-          </Await>
-        </Suspense>
-      </ContentBlock>
-
-      <ContentBlock>
-        <h2 className="flex gap-2.5 items-center text-xl font-medium">
-          <FaNetworkWired className="h-5 w-5" />
-          Grid connection
-        </h2>
-
-        <Suspense>
-          <Await resolve={from_grid_utilization}>
-            {(from_grid_utilization) => (
-              <span className="font-medium flex flex-col gap-1">
-                <span className="text-sm text-slate-400">Take utilization</span>
-                <span>{format_intl_number(from_grid_utilization, PERCENTAGE_FORMAT)}</span>
-              </span>
-            )}
-          </Await>
-        </Suspense>
-
-        <Suspense>
-          <Await resolve={to_grid_utilization}>
-            {(to_grid_utilization) => (
-              <span className="font-medium flex flex-col gap-1">
-                <span className="text-sm text-slate-400">Feed-in utilization</span>
-                <span>{format_intl_number(to_grid_utilization, PERCENTAGE_FORMAT)}</span>
-              </span>
-            )}
-          </Await>
-        </Suspense>
-      </ContentBlock>
-
-      <ContentBlock>
-        <h2 className="flex gap-2.5 items-center text-xl font-medium">
-          <FaArrowRightFromBracket className="h-5 w-5" />
-          Source
-        </h2>
-        <Suspense>
-          <Await resolve={telemetry}>
-            {(telemetry) => (
-              <Await resolve={plan}>
-                {(plan) => (
-                  <TimeseriesGraph
-                    graph={MergedMeasurementSourceGraph()}
-                    data={telemetry}
-                    forecast_data={plan}
-                    x_property_name="interval.start"
-                  />
-                )}
-              </Await>
-            )}
-          </Await>
-        </Suspense>
-      </ContentBlock>
-
-      <ContentBlock>
-        <h2 className="flex gap-2.5 items-center text-xl font-medium">
-          <FaArrowRightToBracket className="h-5 w-5" />
-          Target
-        </h2>
-        <Suspense>
-          <Await resolve={telemetry}>
-            {(telemetry) => (
-              <Await resolve={plan}>
-                {(plan) => (
-                  <TimeseriesGraph
-                    graph={MergedMeasurementTargetGraph()}
-                    data={telemetry}
-                    forecast_data={plan}
-                    x_property_name="interval.start"
-                  />
-                )}
-              </Await>
-            )}
-          </Await>
-        </Suspense>
-      </ContentBlock>
-
-      <ContentBlock>
-        <h2 className="flex gap-2.5 items-center text-xl font-medium">
-          <FaBolt className="h-5 w-5" />
-          Grid
-        </h2>
-        <Suspense>
-          <Await resolve={telemetry}>
-            {(telemetry) => (
-              <Await resolve={plan}>
-                {(plan) => (
-                  <TimeseriesGraph
-                    graph={MergedGridMeterMeasurementGraph()}
-                    data={telemetry}
-                    forecast_data={plan}
-                    x_property_name="interval.start"
-                  />
-                )}
-              </Await>
-            )}
-          </Await>
-        </Suspense>
-      </ContentBlock>
-
-      <ContentBlock>
-        <h2 className="flex gap-2.5 items-center text-xl font-medium">
-          <FaBatteryFull className="h-5 w-5" />
-          Batteries
-        </h2>
-        <Suspense>
-          <Await resolve={telemetry}>
-            {(telemetry) => (
-              <Await resolve={plan}>
-                {(plan) => (
-                  <TimeseriesGraph
-                    graph={MergedBatteryMeasurementGraph()}
-                    data={telemetry}
-                    forecast_data={plan}
-                    x_property_name="interval.start"
-                  />
-                )}
-              </Await>
-            )}
-          </Await>
-        </Suspense>
-      </ContentBlock>
-
-      <ContentBlock>
-        <h2 className="flex gap-2.5 items-center text-xl font-medium">
-          <FaBatteryThreeQuarters className="h-5 w-5" />
-          Batteries State of Charge
-        </h2>
-        <Suspense>
-          <Await resolve={telemetry}>
-            {(telemetry) => (
-              <Await resolve={plan}>
-                {(plan) => (
-                  <TimeseriesGraph
-                    graph={MergedBatteryStateOfChargeMeasurementGraph()}
-                    data={telemetry}
-                    forecast_data={plan}
-                    x_property_name="interval.start"
-                  />
-                )}
-              </Await>
-            )}
-          </Await>
-        </Suspense>
-      </ContentBlock>
-
-      <ContentBlock>
-        <h2 className="flex gap-2.5 items-center text-xl font-medium">
-          <FaChargingStation className="h-5 w-5" />
-          Chargers
-        </h2>
-        <Suspense>
-          <Await resolve={telemetry}>
-            {(telemetry) => (
-              <Await resolve={plan}>
-                {(plan) => (
-                  <TimeseriesGraph
-                    graph={MergedChargerMeasurementGraph()}
-                    data={telemetry}
-                    forecast_data={plan}
-                    x_property_name="interval.start"
-                  />
-                )}
-              </Await>
-            )}
-          </Await>
-        </Suspense>
-      </ContentBlock>
-
-      <ContentBlock>
-        <h2 className="flex gap-2.5 items-center text-xl font-medium">
-          <FaSolarPanel className="h-5 w-5" />
-          Solar
-        </h2>
-        <Suspense>
-          <Await resolve={curtailed_solar}>
-            {(curtailed_solar) => (
-              <Await resolve={plan}>
-                {(plan) => (
-                  <TimeseriesGraph
-                    graph={MergedSolarWithCurtailmentMeasurementGraph()}
-                    data={curtailed_solar}
-                    forecast_data={plan}
-                    x_property_name="interval.start"
-                  />
-                )}
-              </Await>
-            )}
-          </Await>
-        </Suspense>
-      </ContentBlock>
-    </>
+            <div
+              className="mt-8 grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3 lg:gap-6"
+              aria-live="polite"
+              aria-busy={isLoading}
+            >
+              {isLoading
+                ? SYSTEM_STATUSES.map((system) => <SystemStatusCardSkeleton key={system.id} />)
+                : SYSTEM_STATUSES.map((system, index) => (
+                    <SystemStatusCard key={system.id} system={system} index={index} />
+                  ))}
+            </div>
+          </section>
+        </div>
+      </main>
+    </TooltipProvider>
   );
 }

@@ -14,6 +14,7 @@
   },
   "dependencies": {
     "@number-flow/react": "^0.5.10",
+    "@radix-ui/react-tooltip": "^1.2.12",
     "@react-router/node": "7.13.1",
     "@react-router/serve": "7.13.1",
     "culori": "^4.0.2",

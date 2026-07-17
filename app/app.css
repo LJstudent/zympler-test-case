@@ -63,6 +63,9 @@
   --color-mint-900: oklch(0.317 0.073 158.9);
   --color-mint-950: oklch(0.226 0.052 159.38);
 
+  /* #bdd2ff */
+  --color-secondary-blue: #bdd2ff;
+
   /* 475569 */
   --color-grid: oklch(0.446 0.037 257.28);
   --color-grid-50: oklch(0.957 0.007 260.77);
@@ -187,5 +190,43 @@
     @apply fill-slate-400;
     @apply text-base;
     @apply font-sans;
+  }
+}
+
+@keyframes status-live-pulse {
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.18);
+    opacity: 0.78;
+  }
+}
+
+@keyframes status-card-in {
+  from {
+    transform: translateY(10px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.status-live-indicator {
+  animation: status-live-pulse 2.2s ease-in-out infinite;
+}
+
+.status-card {
+  animation: status-card-in 500ms ease-out both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .status-live-indicator,
+  .status-card {
+    animation: none;
   }
 }
