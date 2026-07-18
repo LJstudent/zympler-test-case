@@ -10,7 +10,9 @@ export type EnergyRecord = {
     end?: string | null;
   } | null;
   from_grid?: PowerReading | null;
+  to_grid?: PowerReading | null;
   from_grid_limit?: PowerReading | null;
+  to_grid_limit?: PowerReading | null;
   total_used?: PowerReading | null;
   breakdown?: {
     used_from_grid?: PowerReading | null;
@@ -20,21 +22,40 @@ export type EnergyRecord = {
   } | null;
 };
 
-export type GridCapacityMetrics = {
-  peakPlannedLoadWatts: number | null;
-  contractLimitWatts: number | null;
-  availableHeadroomWatts: number | null;
+export type CapacityDirection = "import" | "export";
+export type CapacityMode = "planned" | "actual";
+export type CapacityStatus = "within-limit" | "approaching-limit" | "exceeded" | "unavailable";
+
+export type GridCapacityPoint = {
+  timestamp: string | null;
+  powerWatts: number;
+  limitWatts: number;
+  utilisationPercentage: number;
+  headroomWatts: number;
   exceededByWatts: number;
-  utilisationPercentage: number | null;
-  progressPercentage: number;
-  status: "within-limit" | "exceeded" | "unavailable";
+  visualPercentage: number;
+};
+
+export type GridCapacityMetrics = {
+  maximumUtilisationPoint: GridCapacityPoint | null;
+  maximumPowerPoint: GridCapacityPoint | null;
+  status: CapacityStatus;
 };
 
 export type ZymplerAction = {
-  id: "grid-charging" | "battery-supply" | "solar-usage" | "grid-optimisation";
+  id:
+    | "grid-charging"
+    | "battery-supply"
+    | "solar-usage"
+    | "grid-import"
+    | "grid-export"
+    | "capacity-warning";
   title: string;
   supportingValue?: string;
+  tone?: "success" | "warning" | "danger";
 };
+
+export const NEAR_CAPACITY_THRESHOLD_PERCENTAGE = 90;
 
 const positiveFinite = (value: number | null | undefined): number | null =>
   typeof value === "number" && Number.isFinite(value) && value > 0 ? value : null;
@@ -42,48 +63,113 @@ const positiveFinite = (value: number | null | undefined): number | null =>
 const nonNegativeFinite = (value: number | null | undefined): number | null =>
   typeof value === "number" && Number.isFinite(value) && value >= 0 ? value : null;
 
+// Direction is encoded by separate import/export fields in these models, not by the value sign.
 const getPower = (reading: PowerReading | null | undefined): number | null =>
-  nonNegativeFinite(reading?.power_max) ?? nonNegativeFinite(reading?.power);
+  nonNegativeFinite(reading?.power) ?? nonNegativeFinite(reading?.power_max);
 
 export function wattsToKilowatts(watts: number): number {
   return watts / 1_000;
 }
 
-export function getGridCapacityMetrics(records: readonly EnergyRecord[]): GridCapacityMetrics {
-  const loads = records.map((record) => getPower(record.from_grid)).filter((v) => v !== null);
-  const limits = records
-    .map((record) => getPower(record.from_grid_limit))
-    .filter((value): value is number => value !== null && value > 0);
+export function formatPower(watts: number | null): string {
+  if (watts === null) return "—";
+  return `${new Intl.NumberFormat("en-US", { maximumFractionDigits: 1 }).format(wattsToKilowatts(watts))} kW`;
+}
 
-  const peakPlannedLoadWatts = loads.length > 0 ? Math.max(...loads) : null;
-  // A changing import limit is represented conservatively by its lowest valid daily value.
-  const contractLimitWatts = limits.length > 0 ? Math.min(...limits) : null;
+export function formatDashboardTime(timestamp: string | null, timeZone?: string): string {
+  if (!timestamp) return "Time unavailable";
+  const date = new Date(timestamp);
+  if (Number.isNaN(date.getTime())) return "Time unavailable";
 
-  if (peakPlannedLoadWatts === null || contractLimitWatts === null) {
-    return {
-      peakPlannedLoadWatts,
-      contractLimitWatts,
-      availableHeadroomWatts: null,
-      exceededByWatts: 0,
-      utilisationPercentage: null,
-      progressPercentage: 0,
-      status: "unavailable",
-    };
+  try {
+    return new Intl.DateTimeFormat("en-GB", {
+      hour: "2-digit",
+      minute: "2-digit",
+      hourCycle: "h23",
+      timeZone,
+    }).format(date);
+  } catch {
+    return "Time unavailable";
   }
+}
 
-  const headroom = contractLimitWatts - peakPlannedLoadWatts;
-  const utilisationPercentage = (peakPlannedLoadWatts / contractLimitWatts) * 100;
+function toCapacityPoint(
+  record: EnergyRecord,
+  direction: CapacityDirection,
+): GridCapacityPoint | null {
+  const power = getPower(direction === "import" ? record.from_grid : record.to_grid);
+  const limit = positiveFinite(
+    getPower(direction === "import" ? record.from_grid_limit : record.to_grid_limit),
+  );
+  if (power === null || limit === null) return null;
 
+  const utilisationPercentage = (power / limit) * 100;
   return {
-    peakPlannedLoadWatts,
-    contractLimitWatts,
-    availableHeadroomWatts: Math.max(0, headroom),
-    exceededByWatts: Math.max(0, -headroom),
+    timestamp: record.interval?.start ?? null,
+    powerWatts: power,
+    limitWatts: limit,
     utilisationPercentage,
-    progressPercentage: Math.min(100, Math.max(0, utilisationPercentage)),
-    status: headroom >= 0 ? "within-limit" : "exceeded",
+    headroomWatts: Math.max(0, limit - power),
+    exceededByWatts: Math.max(0, power - limit),
+    visualPercentage: Math.min(100, Math.max(0, utilisationPercentage)),
   };
 }
+
+function timestampOrder(timestamp: string | null): number {
+  if (!timestamp) return Number.POSITIVE_INFINITY;
+  const parsed = Date.parse(timestamp);
+  return Number.isNaN(parsed) ? Number.POSITIVE_INFINITY : parsed;
+}
+
+function selectMaximumPoint(
+  points: readonly GridCapacityPoint[],
+  value: (point: GridCapacityPoint) => number,
+): GridCapacityPoint | null {
+  return points.reduce<GridCapacityPoint | null>((selected, point) => {
+    if (!selected || value(point) > value(selected)) return point;
+    if (
+      value(point) === value(selected) &&
+      timestampOrder(point.timestamp) < timestampOrder(selected.timestamp)
+    ) {
+      return point;
+    }
+    return selected;
+  }, null);
+}
+
+export function getGridCapacityMetrics(
+  records: readonly EnergyRecord[],
+  direction: CapacityDirection = "import",
+): GridCapacityMetrics {
+  const points = records
+    .map((record) => toCapacityPoint(record, direction))
+    .filter((point): point is GridCapacityPoint => point !== null);
+  const maximumUtilisationPoint = selectMaximumPoint(
+    points,
+    (point) => point.utilisationPercentage,
+  );
+  const maximumPowerPoint = selectMaximumPoint(points, (point) => point.powerWatts);
+
+  if (!maximumUtilisationPoint) {
+    return { maximumUtilisationPoint: null, maximumPowerPoint: null, status: "unavailable" };
+  }
+
+  const utilisation = maximumUtilisationPoint.utilisationPercentage;
+  const status: CapacityStatus =
+    utilisation > 100
+      ? "exceeded"
+      : utilisation >= NEAR_CAPACITY_THRESHOLD_PERCENTAGE
+        ? "approaching-limit"
+        : "within-limit";
+
+  return { maximumUtilisationPoint, maximumPowerPoint, status };
+}
+
+export const getGridImportCapacityMetrics = (records: readonly EnergyRecord[]) =>
+  getGridCapacityMetrics(records, "import");
+
+export const getGridExportCapacityMetrics = (records: readonly EnergyRecord[]) =>
+  getGridCapacityMetrics(records, "export");
 
 function getIntervalHours(record: EnergyRecord): number {
   const start = record.interval?.start ? Date.parse(record.interval.start) : Number.NaN;
@@ -104,7 +190,6 @@ export function getDirectSolarEnergy(records: readonly EnergyRecord[]): number {
     const solar = record.breakdown?.used_from_solar;
     const measuredEnergy = positiveFinite(solar?.energy);
     if (measuredEnergy !== null) return total + measuredEnergy;
-
     const solarPower = getPower(solar);
     return total + (solarPower !== null ? solarPower * getIntervalHours(record) : 0);
   }, 0);
@@ -113,13 +198,11 @@ export function getDirectSolarEnergy(records: readonly EnergyRecord[]): number {
 function getSiteDemand(record: EnergyRecord): number | null {
   const directTotal = getPower(record.total_used);
   if (directTotal !== null) return directTotal;
-
   const components = [
     getPower(record.breakdown?.used_from_grid),
     getPower(record.breakdown?.used_from_solar),
     getPower(record.breakdown?.used_from_battery),
   ].filter((value) => value !== null);
-
   return components.length > 0 ? components.reduce((total, value) => total + value, 0) : null;
 }
 
@@ -136,14 +219,50 @@ function formatDuration(hours: number): string {
   return `${new Intl.NumberFormat("en-US", { maximumFractionDigits: 2 }).format(rounded)} ${rounded === 1 ? "hour" : "hours"}`;
 }
 
-export function getDailyZymplerActions(
-  planRecords: readonly EnergyRecord[],
-  activityRecords: readonly EnergyRecord[] = planRecords,
-): ZymplerAction[] {
-  const actions: ZymplerAction[] = [];
-  const demandValues = activityRecords.map(getSiteDemand).filter((value) => value !== null);
+function capacityAction(
+  metrics: GridCapacityMetrics,
+  direction: CapacityDirection,
+): ZymplerAction | null {
+  const point = metrics.maximumUtilisationPoint;
+  if (!point) return null;
+  const label = `grid ${direction}`;
+  const percentage = Math.round(point.utilisationPercentage);
+
+  if (metrics.status === "exceeded") {
+    return {
+      id: "capacity-warning",
+      title: `Planned ${label} limit exceeded`,
+      supportingValue: `${formatPower(point.exceededByWatts)} over the applicable limit`,
+      tone: "danger",
+    };
+  }
+  if (metrics.status === "approaching-limit") {
+    return {
+      id: "capacity-warning",
+      title: `Planned ${label} is approaching capacity`,
+      supportingValue: `${percentage}% maximum utilisation`,
+      tone: "warning",
+    };
+  }
+  if (point.powerWatts <= 0) return null;
+  return {
+    id: direction === "import" ? "grid-import" : "grid-export",
+    title: `Kept planned ${label} below ${percentage}% of capacity`,
+    tone: "success",
+  };
+}
+
+export function getDailyZymplerActions(planRecords: readonly EnergyRecord[]): ZymplerAction[] {
+  const warnings = [
+    capacityAction(getGridImportCapacityMetrics(planRecords), "import"),
+    capacityAction(getGridExportCapacityMetrics(planRecords), "export"),
+  ].filter(
+    (action): action is ZymplerAction => action !== null && action.id === "capacity-warning",
+  );
+  const actions: ZymplerAction[] = [...warnings];
+  const demandValues = planRecords.map(getSiteDemand).filter((value) => value !== null);
   const medianDemand = median(demandValues);
-  const chargingRecords = activityRecords.filter(
+  const chargingRecords = planRecords.filter(
     (record) => (getPower(record.breakdown?.grid_to_battery) ?? 0) > 0,
   );
 
@@ -161,34 +280,36 @@ export function getDailyZymplerActions(
         ? "Charged battery during low site demand"
         : "Charged battery from the grid",
       supportingValue: chargedAtLowDemand ? "At or below median site demand" : undefined,
+      tone: "success",
     });
   }
 
-  const batteryHours = getBatterySupplyDurationHours(activityRecords);
+  const batteryHours = getBatterySupplyDurationHours(planRecords);
   if (batteryHours > 0) {
     actions.push({
       id: "battery-supply",
       title: "Supplied the site from battery",
       supportingValue: formatDuration(batteryHours),
+      tone: "success",
     });
   }
 
-  const directSolarEnergy = getDirectSolarEnergy(activityRecords);
-  if (directSolarEnergy > 0) {
+  if (getDirectSolarEnergy(planRecords) > 0) {
     actions.push({
       id: "solar-usage",
       title: "Used available solar energy directly",
       supportingValue: "Solar supplied site demand",
+      tone: "success",
     });
   }
 
-  const capacity = getGridCapacityMetrics(planRecords);
-  if (capacity.status === "within-limit" && capacity.utilisationPercentage !== null) {
-    actions.push({
-      id: "grid-optimisation",
-      title: "Kept planned grid load within capacity",
-      supportingValue: `${Math.round(capacity.utilisationPercentage)}% maximum utilisation`,
-    });
+  for (const candidate of [
+    capacityAction(getGridImportCapacityMetrics(planRecords), "import"),
+    capacityAction(getGridExportCapacityMetrics(planRecords), "export"),
+  ]) {
+    if (candidate && candidate.id !== "capacity-warning" && actions.length < 4) {
+      actions.push(candidate);
+    }
   }
 
   return actions.slice(0, 4);
