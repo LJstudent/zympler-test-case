@@ -19,7 +19,11 @@ export function SystemInfoPanel() {
   return (
     <Card className="animate-panel-in overflow-hidden p-5 shadow-panel motion-reduce:animate-none">
       <CardHeader className="mb-4">
-        <CardTitle className="text-base tracking-[-0.02em]">System info</CardTitle>
+        <div className="flex items-baseline gap-2">
+          <CardTitle className="text-base tracking-[-0.02em]">System info</CardTitle>
+
+          <span className="text-xs text-gray-400">Last updated 1 min ago</span>
+        </div>
 
         <TooltipProvider delayDuration={300}>
           <Tooltip>
