@@ -2,19 +2,27 @@ import type { SystemAvailability } from "~/types/system-status";
 
 type LiveStatusIndicatorProps = {
   status: SystemAvailability;
+  visibleLabel: string;
+  accessibleLabel: string;
 };
 
-export function LiveStatusIndicator({ status }: LiveStatusIndicatorProps) {
+export function LiveStatusIndicator({
+  status,
+  visibleLabel,
+  accessibleLabel,
+}: LiveStatusIndicatorProps) {
+  const isOnline = status === "online";
+
   return (
     <span
       className="inline-flex items-center gap-2 text-xs font-medium text-slate-600"
-      aria-label="Status: Online"
+      aria-label={accessibleLabel}
     >
-      <span className="relative flex size-2.5" aria-hidden="true">
-        <span className="absolute inset-0 animate-status-pulse rounded-full bg-brand-green/45 motion-reduce:animate-none" />
-        <span className="relative m-auto size-2 rounded-full bg-emerald-500" />
-      </span>
-      {status === "online" ? "Online" : status}
+      <span
+        className={`size-2.5 shrink-0 rounded-full ${isOnline ? "animate-status-pulse bg-brand-green motion-reduce:animate-none" : "bg-slate-300"}`}
+        aria-hidden="true"
+      />
+      {isOnline ? visibleLabel : status}
     </span>
   );
 }

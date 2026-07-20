@@ -12,12 +12,12 @@
 @keyframes status-pulse {
   0%,
   100% {
-    opacity: 0.45;
+    opacity: 1;
     transform: scale(1);
   }
   50% {
-    opacity: 0;
-    transform: scale(1.85);
+    opacity: 0.72;
+    transform: scale(1.18);
   }
 }
 
@@ -55,7 +55,7 @@
 }
 
 @theme inline {
-  --animate-status-pulse: status-pulse 2.8s ease-in-out infinite;
+  --animate-status-pulse: status-pulse 2.2s ease-in-out infinite;
   --animate-panel-in: panel-in 320ms ease-out both;
   --animate-card-in: card-in 300ms ease-out var(--entrance-delay, 0ms) both;
   --animate-tooltip-in: tooltip-in 120ms ease-out both;

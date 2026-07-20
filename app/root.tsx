@@ -4,10 +4,10 @@ import type { Route } from "./+types/root";
 import "./app.css";
 
 export const meta: Route.MetaFunction = () => [
-  { title: "Zympler | System info" },
+  { title: "Zympler | Overview" },
   {
     name: "description",
-    content: "A concise overview of connected Zympler systems.",
+    content: "Live energy management and connected system status.",
   },
 ];
 
