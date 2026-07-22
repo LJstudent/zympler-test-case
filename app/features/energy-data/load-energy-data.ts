@@ -4,10 +4,13 @@ import workbookUrl from "~/data/hbe-export-nagel-2025.xlsx?url";
 
 import { getEnergyColumnIndexes } from "./excel-columns";
 import { parseEnergyRow } from "./parse-energy-row";
+import { parseEnergyTotals } from "./parse-energy-totals";
+import { calculateSolarChargingKpi } from "./solar-charging-kpi";
 import type { EnergyDataset } from "./types";
 
 const WORKSHEET_NAME = "Sheet1";
 const HEADER_ROW_INDEX = 3;
+const TOTALS_ROW_INDEX = 4;
 const FIRST_DATA_ROW_INDEX = 5;
 
 let energyDataPromise: Promise<EnergyDataset> | undefined;
@@ -60,6 +63,7 @@ async function fetchAndParseEnergyData(): Promise<EnergyDataset> {
   const range = utils.decode_range(worksheet["!ref"]);
   const headers = getRowValues(worksheet, HEADER_ROW_INDEX, range.e.c);
   const columns = getEnergyColumnIndexes(headers);
+  const totals = parseEnergyTotals(getRowValues(worksheet, TOTALS_ROW_INDEX, range.e.c), columns);
   const rows: EnergyDataset["rows"] = [];
   let invalidDateRows = 0;
 
@@ -89,7 +93,19 @@ async function fetchAndParseEnergyData(): Promise<EnergyDataset> {
     console.warn(`Skipped ${invalidDateRows} energy rows with invalid start or end dates.`);
   }
 
-  return { rows };
+  if (import.meta.env.DEV && Object.values(totals).some((value) => value < 0)) {
+    console.warn("The energy workbook contains negative aggregate energy totals.");
+  }
+
+  const solarChargingKpi = calculateSolarChargingKpi(totals);
+
+  if (import.meta.env.DEV && !solarChargingKpi.isDataConsistent) {
+    console.warn(
+      "The charger energy total differs from the combined solar and grid charger totals.",
+    );
+  }
+
+  return { rows, totals };
 }
 
 export function loadEnergyData(): Promise<EnergyDataset> {

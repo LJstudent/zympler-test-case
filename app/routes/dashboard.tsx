@@ -17,10 +17,10 @@ export function HydrateFallback() {
 
 export default function Dashboard({ loaderData }: Route.ComponentProps) {
   if (loaderData.rows.length === 0) {
-    return <DashboardLayout state="empty" />;
+    return <DashboardLayout state="empty" totals={loaderData.totals} />;
   }
 
-  return <DashboardLayout />;
+  return <DashboardLayout totals={loaderData.totals} />;
 }
 
 export function ErrorBoundary() {

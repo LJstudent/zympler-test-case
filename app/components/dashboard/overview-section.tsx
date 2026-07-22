@@ -1,37 +1,36 @@
 import type { ContentState } from "~/components/common/content-state";
 import { EmptyState, ErrorState } from "~/components/common/content-state";
 import { Card } from "~/components/ui/card";
-import { Skeleton } from "~/components/ui/skeleton";
+import { calculateSolarChargingKpi } from "~/features/energy-data/solar-charging-kpi";
+import type { EnergyTotals } from "~/features/energy-data/types";
 
 import { SectionHeading } from "./section-heading";
+import { SolarPoweredChargingCard } from "./solar-powered-charging-card";
+import { SolarPoweredChargingSkeleton } from "./solar-powered-charging-skeleton";
 
 type OverviewSectionProps = {
   state?: ContentState;
   errorMessage?: string;
   onRetry?: () => void;
+  totals?: EnergyTotals;
 };
 
 function OverviewSkeleton() {
   return (
-    <Card
-      aria-label="Loading Zympler overview"
-      aria-busy="true"
-      className="min-h-64 p-6 shadow-panel"
-    >
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        {[0, 1, 2].map((item) => (
-          <div key={item} className="rounded-xl border border-slate-100 p-4">
-            <Skeleton className="h-3 w-24" />
-            <Skeleton className="mt-5 h-7 w-20" />
-            <Skeleton className="mt-3 h-3 w-32" />
-          </div>
-        ))}
-      </div>
-    </Card>
+    <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
+      <SolarPoweredChargingSkeleton />
+    </div>
   );
 }
 
-export function OverviewSection({ state = "empty", errorMessage, onRetry }: OverviewSectionProps) {
+export function OverviewSection({
+  state = "empty",
+  errorMessage,
+  onRetry,
+  totals,
+}: OverviewSectionProps) {
+  const kpi = totals === undefined ? undefined : calculateSolarChargingKpi(totals);
+
   return (
     <section aria-labelledby="zympler-overview-heading" className="space-y-6">
       <div id="zympler-overview-heading">
@@ -40,14 +39,26 @@ export function OverviewSection({ state = "empty", errorMessage, onRetry }: Over
 
       {state === "loading" && <OverviewSkeleton />}
       {state === "error" && (
-        <Card className="min-h-64 p-6 shadow-panel">
-          <ErrorState message={errorMessage} onRetry={onRetry} />
-        </Card>
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
+          <Card className="min-h-64 p-6 shadow-panel">
+            <ErrorState
+              message={errorMessage ?? "The overview KPI data could not be loaded."}
+              onRetry={onRetry}
+            />
+          </Card>
+        </div>
       )}
-      {(state === "empty" || state === "ready") && (
-        <Card className="flex min-h-64 items-center justify-center p-6 shadow-panel">
-          <EmptyState message="Future KPI widgets will appear here." />
-        </Card>
+      {state === "empty" && (
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
+          <Card className="flex min-h-64 items-center justify-center p-6 shadow-panel">
+            <EmptyState message="No overview data available." />
+          </Card>
+        </div>
+      )}
+      {state === "ready" && totals !== undefined && kpi !== undefined && (
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
+          <SolarPoweredChargingCard totals={totals} kpi={kpi} />
+        </div>
       )}
     </section>
   );

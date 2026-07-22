@@ -1,5 +1,6 @@
 import type { ContentState } from "~/components/common/content-state";
 import { DashboardSidebar } from "~/components/sidebar/sidebar";
+import type { EnergyTotals } from "~/features/energy-data/types";
 
 import { OverviewSection } from "./overview-section";
 import { SystemStatusSection } from "./system-status-section";
@@ -8,10 +9,16 @@ type DashboardLayoutProps = {
   state?: ContentState;
   errorMessage?: string;
   onRetry?: () => void;
+  totals?: EnergyTotals;
 };
 
-export function DashboardLayout({ state = "ready", errorMessage, onRetry }: DashboardLayoutProps) {
-  const overviewState = state === "ready" ? "empty" : state;
+export function DashboardLayout({
+  state = "ready",
+  errorMessage,
+  onRetry,
+  totals,
+}: DashboardLayoutProps) {
+  const overviewState = state === "ready" && totals === undefined ? "empty" : state;
 
   return (
     <main className="min-h-dvh bg-white p-3 sm:p-4">
@@ -20,7 +27,12 @@ export function DashboardLayout({ state = "ready", errorMessage, onRetry }: Dash
 
         <div className="min-w-0 space-y-12 px-1 py-4 sm:px-2 lg:py-6 xl:px-4">
           <SystemStatusSection state={state} errorMessage={errorMessage} onRetry={onRetry} />
-          <OverviewSection state={overviewState} errorMessage={errorMessage} onRetry={onRetry} />
+          <OverviewSection
+            state={overviewState}
+            errorMessage={errorMessage}
+            onRetry={onRetry}
+            totals={totals}
+          />
         </div>
       </div>
     </main>

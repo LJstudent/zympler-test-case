@@ -1,5 +1,13 @@
 export interface EnergyDataset {
   rows: EnergyDataRow[];
+  totals: EnergyTotals;
+}
+
+export interface EnergyTotals {
+  solarGenerationKwh: number;
+  chargerEnergyKwh: number;
+  totalSolarToChargerKwh: number;
+  totalGridToChargerKwh: number;
 }
 
 export interface EnergyDataRow {
