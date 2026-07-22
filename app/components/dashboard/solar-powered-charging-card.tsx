@@ -1,15 +1,18 @@
-import { ArrowRight, SquareArrowOutUpRight } from "lucide-react";
-import { Link } from "react-router";
+import { ArrowRight } from "lucide-react";
 
 import solarIcon from "~/assets/systems/solar.svg";
 import chargerIcon from "~/assets/systems/charger.svg";
 import { Card, CardContent, CardHeader } from "~/components/ui/card";
-import { INTERACTIVE_CARD_STYLES } from "~/components/ui/interactive-card-styles";
 import { formatEnergy } from "~/features/energy-data/format-energy";
 import type { SolarChargingKpi } from "~/features/energy-data/solar-charging-kpi";
 import type { EnergyTotals } from "~/features/energy-data/types";
 
-import { SystemInfoTooltip } from "../system-info/system-info-tooltip";
+import {
+  OVERVIEW_KPI_CARD_STYLES,
+  OverviewKpiActions,
+  OverviewKpiFlowIcon,
+  OverviewKpiNavigationLink,
+} from "./overview-kpi-card-parts";
 
 type SolarPoweredChargingCardProps = {
   totals: EnergyTotals;
@@ -38,40 +41,29 @@ export function SolarPoweredChargingCard({ totals, kpi }: SolarPoweredChargingCa
   const formattedSolarPercentage = kpi.solarPercentage.toFixed(1);
 
   return (
-    <Card
-      aria-labelledby="solar-powered-charging-title"
-      className={`group relative overflow-hidden border-slate-200/90 p-5 shadow-sm focus-within:border-brand-blue-light focus-within:shadow-panel ${INTERACTIVE_CARD_STYLES} sm:p-6`}
-    >
-      <Link
+    <Card aria-labelledby="solar-powered-charging-title" className={OVERVIEW_KPI_CARD_STYLES}>
+      <OverviewKpiNavigationLink
         to="/overview/solar-powered-charging"
-        className="absolute inset-0 z-0 cursor-pointer rounded-2xl focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-brand-blue"
-        aria-label="Open solar-powered charging details"
-      >
-        <span className="sr-only">Open solar-powered charging details</span>
-      </Link>
+        accessibleLabel="Open solar-powered charging details"
+      />
 
       <CardHeader className="pointer-events-none relative z-10 items-center gap-3">
         <div className="flex min-w-0 items-center gap-2">
-          <span className="flex size-8 shrink-0 items-center justify-center rounded-lg bg-brand-blue-light/30 transition-colors duration-200 group-hover:bg-brand-blue-light/45">
+          <OverviewKpiFlowIcon>
             <img className="size-4.5" src={solarIcon} alt="" aria-hidden="true" />
-          </span>
+          </OverviewKpiFlowIcon>
 
           <ArrowRight className="size-4 shrink-0 text-slate-400" aria-hidden="true" />
 
-          <span className="flex size-8 shrink-0 items-center justify-center rounded-lg bg-brand-blue-light/30 transition-colors duration-200 group-hover:bg-brand-blue-light/45">
+          <OverviewKpiFlowIcon>
             <img className="size-4.5" src={chargerIcon} alt="" aria-hidden="true" />
-          </span>
+          </OverviewKpiFlowIcon>
         </div>
 
-        <div className="pointer-events-auto ml-auto flex shrink-0 items-center gap-1">
-          <SystemInfoTooltip
-            accessibleLabel="About solar-powered charging"
-            content="Shows how much of the energy delivered to the trucks came from on-site solar rather than the grid."
-          />
-          <span className="flex size-8 items-center justify-center rounded-lg text-slate-400 transition-colors duration-200 group-hover:text-brand-blue group-focus-within:text-brand-blue">
-            <SquareArrowOutUpRight className="size-4.5" aria-hidden="true" />
-          </span>
-        </div>
+        <OverviewKpiActions
+          tooltipLabel="About solar-powered charging"
+          tooltipContent="Shows how much of the energy delivered to the trucks came from on-site solar rather than the grid."
+        />
       </CardHeader>
 
       <CardContent className="pointer-events-none relative z-10 mt-7">

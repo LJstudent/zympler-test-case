@@ -20,8 +20,8 @@ export interface EnergyDataRow {
 export interface EnergyMeasurement {
   hbe: number;
   pricePerKwh: number | null;
-  gridImportKwh: number;
-  gridExportKwh: number;
+  gridImportKwh: number | null;
+  gridExportKwh: number | null;
   solarGenerationKwh: number;
   batteryChargeKwh: number;
   batteryDischargeKwh: number;

@@ -86,8 +86,8 @@ export function parseEnergyRow(
     measurement: {
       hbe: toNumberOrZero(values[columns.hbe]),
       pricePerKwh: toNullableNumber(values[columns.pricePerKwh]),
-      gridImportKwh: toNumberOrZero(values[columns.gridImport]),
-      gridExportKwh: toNumberOrZero(values[columns.gridExport]),
+      gridImportKwh: toNullableNumber(values[columns.gridImport]),
+      gridExportKwh: toNullableNumber(values[columns.gridExport]),
       solarGenerationKwh: toNumberOrZero(values[columns.solarGeneration]),
       batteryChargeKwh: toNumberOrZero(values[columns.batteryCharge]),
       batteryDischargeKwh: toNumberOrZero(values[columns.batteryDischarge]),

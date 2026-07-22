@@ -1,6 +1,6 @@
 import type { ContentState } from "~/components/common/content-state";
 import { DashboardSidebar } from "~/components/sidebar/sidebar";
-import type { EnergyTotals } from "~/features/energy-data/types";
+import type { EnergyDataRow, EnergyTotals } from "~/features/energy-data/types";
 
 import { OverviewSection } from "./overview-section";
 import { SystemStatusSection } from "./system-status-section";
@@ -10,6 +10,7 @@ type DashboardLayoutProps = {
   errorMessage?: string;
   onRetry?: () => void;
   totals?: EnergyTotals;
+  rows?: readonly EnergyDataRow[];
 };
 
 export function DashboardLayout({
@@ -17,6 +18,7 @@ export function DashboardLayout({
   errorMessage,
   onRetry,
   totals,
+  rows,
 }: DashboardLayoutProps) {
   const overviewState = state === "ready" && totals === undefined ? "empty" : state;
 
@@ -32,6 +34,7 @@ export function DashboardLayout({
             errorMessage={errorMessage}
             onRetry={onRetry}
             totals={totals}
+            rows={rows}
           />
         </div>
       </div>
