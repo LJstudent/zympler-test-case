@@ -11,6 +11,7 @@ export interface EnergyDataRow {
 
 export interface EnergyMeasurement {
   hbe: number;
+  pricePerKwh: number | null;
   gridImportKwh: number;
   gridExportKwh: number;
   solarGenerationKwh: number;

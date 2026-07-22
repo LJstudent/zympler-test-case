@@ -2,6 +2,7 @@ export const EXCEL_COLUMNS = {
   start: "start",
   end: "eind",
   hbe: "HBE",
+  pricePerKwh: "Price (kwh)",
   gridImport: "van net",
   gridExport: "naar net",
   solarGeneration: "van zon",
