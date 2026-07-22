@@ -1,7 +1,8 @@
-import { SquareArrowOutUpRight } from "lucide-react";
+import { ArrowRight, SquareArrowOutUpRight } from "lucide-react";
 import { Link } from "react-router";
 
 import solarIcon from "~/assets/systems/solar.svg";
+import chargerIcon from "~/assets/systems/charger.svg";
 import { Card, CardContent, CardHeader } from "~/components/ui/card";
 import { INTERACTIVE_CARD_STYLES } from "~/components/ui/interactive-card-styles";
 import { formatEnergy } from "~/features/energy-data/format-energy";
@@ -50,16 +51,16 @@ export function SolarPoweredChargingCard({ totals, kpi }: SolarPoweredChargingCa
       </Link>
 
       <CardHeader className="pointer-events-none relative z-10 items-center gap-3">
-        <div className="flex min-w-0 items-center gap-2.5">
-          <span className="flex size-8 shrink-0 items-center justify-center rounded-lg bg-brand-blue-light/30 text-brand-blue transition-colors duration-200 group-hover:bg-brand-blue-light/45">
+        <div className="flex min-w-0 items-center gap-2">
+          <span className="flex size-8 shrink-0 items-center justify-center rounded-lg bg-brand-blue-light/30 transition-colors duration-200 group-hover:bg-brand-blue-light/45">
             <img className="size-4.5" src={solarIcon} alt="" aria-hidden="true" />
           </span>
-          <h3
-            id="solar-powered-charging-title"
-            className="truncate text-sm font-semibold text-slate-950"
-          >
-            Solar-powered charging
-          </h3>
+
+          <ArrowRight className="size-4 shrink-0 text-slate-400" aria-hidden="true" />
+
+          <span className="flex size-8 shrink-0 items-center justify-center rounded-lg bg-brand-blue-light/30 transition-colors duration-200 group-hover:bg-brand-blue-light/45">
+            <img className="size-4.5" src={chargerIcon} alt="" aria-hidden="true" />
+          </span>
         </div>
 
         <div className="pointer-events-auto ml-auto flex shrink-0 items-center gap-1">
