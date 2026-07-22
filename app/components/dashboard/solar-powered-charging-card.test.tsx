@@ -1,4 +1,5 @@
 import { renderToStaticMarkup } from "react-dom/server";
+import { MemoryRouter } from "react-router";
 import { describe, expect, it } from "vitest";
 
 import { calculateSolarChargingKpi } from "~/features/energy-data/solar-charging-kpi";
@@ -14,10 +15,16 @@ const totals: EnergyTotals = {
 };
 
 describe("SolarPoweredChargingCard", () => {
-  it("displays the percentage rounded to one decimal place", () => {
-    const markup = renderToStaticMarkup(
-      <SolarPoweredChargingCard totals={totals} kpi={calculateSolarChargingKpi(totals)} />,
+  function renderCard(cardTotals = totals) {
+    return renderToStaticMarkup(
+      <MemoryRouter>
+        <SolarPoweredChargingCard totals={cardTotals} kpi={calculateSolarChargingKpi(cardTotals)} />
+      </MemoryRouter>,
     );
+  }
+
+  it("displays the percentage rounded to one decimal place", () => {
+    const markup = renderCard();
 
     expect(markup).toContain("15.2%");
     expect(markup).not.toContain("NaN%");
@@ -31,14 +38,18 @@ describe("SolarPoweredChargingCard", () => {
       totalSolarToChargerKwh: 0,
       totalGridToChargerKwh: 0,
     };
-    const markup = renderToStaticMarkup(
-      <SolarPoweredChargingCard
-        totals={emptyTotals}
-        kpi={calculateSolarChargingKpi(emptyTotals)}
-      />,
-    );
+    const markup = renderCard(emptyTotals);
 
     expect(markup).toContain("No truck charging recorded");
     expect(markup).not.toContain("0.0%");
+  });
+
+  it("provides separate accessible navigation and tooltip controls", () => {
+    const markup = renderCard();
+
+    expect(markup).toContain('href="/overview/solar-powered-charging"');
+    expect(markup).toContain('aria-label="Open solar-powered charging details"');
+    expect(markup).toContain('aria-label="About solar-powered charging"');
+    expect(markup).not.toMatch(/<a[^>]*>[^]*<button[^>]*>[^]*<\/button>[^]*<\/a>/);
   });
 });

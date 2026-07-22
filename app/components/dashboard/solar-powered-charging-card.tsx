@@ -1,9 +1,14 @@
-import { Sun } from "lucide-react";
+import { SquareArrowOutUpRight } from "lucide-react";
+import { Link } from "react-router";
 
+import solarIcon from "~/assets/systems/solar.svg";
 import { Card, CardContent, CardHeader } from "~/components/ui/card";
+import { INTERACTIVE_CARD_STYLES } from "~/components/ui/interactive-card-styles";
 import { formatEnergy } from "~/features/energy-data/format-energy";
 import type { SolarChargingKpi } from "~/features/energy-data/solar-charging-kpi";
 import type { EnergyTotals } from "~/features/energy-data/types";
+
+import { SystemInfoTooltip } from "../system-info/system-info-tooltip";
 
 type SolarPoweredChargingCardProps = {
   totals: EnergyTotals;
@@ -34,26 +39,41 @@ export function SolarPoweredChargingCard({ totals, kpi }: SolarPoweredChargingCa
   return (
     <Card
       aria-labelledby="solar-powered-charging-title"
-      className="overflow-hidden border-slate-200/90 p-5 shadow-panel sm:p-6"
+      className={`group relative overflow-hidden border-slate-200/90 p-5 shadow-sm focus-within:border-brand-blue-light focus-within:shadow-panel ${INTERACTIVE_CARD_STYLES} sm:p-6`}
     >
-      <CardHeader className="items-start gap-4">
-        <div>
-          <p className="text-[0.6875rem] font-semibold tracking-[0.12em] text-slate-400 uppercase">
-            Energy origin
-          </p>
+      <Link
+        to="/overview/solar-powered-charging"
+        className="absolute inset-0 z-0 cursor-pointer rounded-2xl focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-brand-blue"
+        aria-label="Open solar-powered charging details"
+      >
+        <span className="sr-only">Open solar-powered charging details</span>
+      </Link>
+
+      <CardHeader className="pointer-events-none relative z-10 items-center gap-3">
+        <div className="flex min-w-0 items-center gap-2.5">
+          <span className="flex size-8 shrink-0 items-center justify-center rounded-lg bg-brand-blue-light/30 text-brand-blue transition-colors duration-200 group-hover:bg-brand-blue-light/45">
+            <img className="size-4.5" src={solarIcon} alt="" aria-hidden="true" />
+          </span>
           <h3
             id="solar-powered-charging-title"
-            className="mt-1 text-sm font-semibold text-slate-950"
+            className="truncate text-sm font-semibold text-slate-950"
           >
             Solar-powered charging
           </h3>
         </div>
-        <div className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-brand-green/15 text-emerald-700">
-          <Sun className="size-5" aria-hidden="true" />
+
+        <div className="pointer-events-auto ml-auto flex shrink-0 items-center gap-1">
+          <SystemInfoTooltip
+            accessibleLabel="About solar-powered charging"
+            content="Shows how much of the energy delivered to the trucks came from on-site solar rather than the grid."
+          />
+          <span className="flex size-8 items-center justify-center rounded-lg text-slate-400 transition-colors duration-200 group-hover:text-brand-blue group-focus-within:text-brand-blue">
+            <SquareArrowOutUpRight className="size-4.5" aria-hidden="true" />
+          </span>
         </div>
       </CardHeader>
 
-      <CardContent className="mt-6">
+      <CardContent className="pointer-events-none relative z-10 mt-7">
         {!kpi.hasChargingEnergy ? (
           <div className="flex min-h-64 flex-col justify-center rounded-xl border border-dashed border-slate-200 bg-slate-50/60 p-5">
             <p className="text-base font-semibold text-slate-900">No truck charging recorded</p>

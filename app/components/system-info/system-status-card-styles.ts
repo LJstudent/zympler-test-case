@@ -1,7 +1,8 @@
+import { INTERACTIVE_CARD_STYLES } from "~/components/ui/interactive-card-styles";
+
 export const SYSTEM_STATUS_CARD_STYLES = {
   shell: "overflow-hidden rounded-2xl border border-slate-200/90 bg-white p-4 shadow-sm",
-  interactive:
-    "transition-[transform,box-shadow,border-color] duration-200 hover:-translate-y-px hover:border-brand-blue-light hover:shadow-panel motion-reduce:transform-none motion-reduce:transition-none",
+  interactive: INTERACTIVE_CARD_STYLES,
   topRow: "flex items-center",
   content: "mt-4 flex flex-wrap items-center gap-x-4 gap-y-3",
   identity: "flex min-w-0 flex-1 items-center gap-3",

@@ -8,14 +8,17 @@ export function SolarPoweredChargingSkeleton() {
       aria-busy="true"
       className="overflow-hidden border-slate-200/90 p-5 shadow-panel sm:p-6"
     >
-      <CardHeader className="items-start gap-4">
-        <div>
-          <Skeleton className="h-2.5 w-20" />
-          <Skeleton className="mt-2 h-4 w-40" />
+      <CardHeader className="items-center gap-3">
+        <div className="flex min-w-0 items-center gap-2.5">
+          <Skeleton className="size-8 shrink-0 rounded-lg" />
+          <Skeleton className="h-4 w-40 max-w-[45vw]" />
         </div>
-        <Skeleton className="size-10 rounded-xl" />
+        <div className="ml-auto flex shrink-0 items-center gap-1">
+          <Skeleton className="size-8 rounded-lg" />
+          <Skeleton className="size-8 rounded-lg" />
+        </div>
       </CardHeader>
-      <CardContent className="mt-6">
+      <CardContent className="mt-7">
         <Skeleton className="h-14 w-36 sm:h-16" />
         <Skeleton className="mt-4 h-4 w-full max-w-72" />
         <Skeleton className="mt-7 h-2.5 w-full rounded-full" />
