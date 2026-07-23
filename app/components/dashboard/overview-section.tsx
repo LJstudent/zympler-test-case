@@ -1,6 +1,6 @@
 import type { ContentState } from "~/components/common/content-state";
 import { EmptyState, ErrorState } from "~/components/common/content-state";
-import { Card } from "~/components/ui/card";
+import { Card, CardTitle } from "~/components/ui/card";
 import {
   GRID_MEASUREMENT_UNIT,
   SITE_GRID_CAPACITY_LIMITS,
@@ -11,7 +11,6 @@ import type { EnergyDataRow, EnergyTotals } from "~/features/energy-data/types";
 
 import { GridComplianceCard } from "./grid-compliance-card";
 import { GridComplianceSkeleton } from "./grid-compliance-skeleton";
-import { SectionHeading } from "./section-heading";
 import { SolarPoweredChargingCard } from "./solar-powered-charging-card";
 import { SolarPoweredChargingSkeleton } from "./solar-powered-charging-skeleton";
 
@@ -48,7 +47,7 @@ export function OverviewSection({
   return (
     <section aria-labelledby="zympler-overview-heading" className="space-y-6">
       <div id="zympler-overview-heading">
-        <SectionHeading>Zympler Overview</SectionHeading>
+        <CardTitle className="text-lg tracking-[-0.025em]">Zympler overview</CardTitle>
       </div>
 
       {state === "loading" && <OverviewSkeleton />}
