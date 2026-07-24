@@ -8,7 +8,7 @@ export function parseEnergyTotals(
 ): EnergyTotals {
   return {
     solarGenerationKwh: toNumberOrZero(values[columns.solarGeneration]),
-    chargerEnergyKwh: toNumberOrZero(values[columns.chargerEnergy]),
+    chargerEnergyKwh: toNumberOrZero(values[columns.toCharger]),
     totalSolarToChargerKwh: toNumberOrZero(values[columns.totalSolarToCharger]),
     totalGridToChargerKwh: toNumberOrZero(values[columns.totalGridToCharger]),
   };

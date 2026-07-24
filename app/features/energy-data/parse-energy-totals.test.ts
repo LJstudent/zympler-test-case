@@ -8,13 +8,13 @@ describe("parseEnergyTotals", () => {
     const headers = [
       EXCEL_COLUMNS.totalGridToCharger,
       EXCEL_COLUMNS.solarGeneration,
-      EXCEL_COLUMNS.chargerEnergy,
+      EXCEL_COLUMNS.toCharger,
       EXCEL_COLUMNS.totalSolarToCharger,
       ...Object.values(EXCEL_COLUMNS).filter(
         (header) =>
           header !== EXCEL_COLUMNS.totalGridToCharger &&
           header !== EXCEL_COLUMNS.solarGeneration &&
-          header !== EXCEL_COLUMNS.chargerEnergy &&
+          header !== EXCEL_COLUMNS.toCharger &&
           header !== EXCEL_COLUMNS.totalSolarToCharger,
       ),
     ];
@@ -22,7 +22,7 @@ describe("parseEnergyTotals", () => {
     const values: unknown[] = [];
 
     values[columns.solarGeneration] = 187_746.6;
-    values[columns.chargerEnergy] = 77_013.27103;
+    values[columns.toCharger] = 77_013.27103;
     values[columns.totalSolarToCharger] = 15_249.67097;
     values[columns.totalGridToCharger] = 61_472.94476;
 

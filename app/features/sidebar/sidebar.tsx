@@ -1,27 +1,33 @@
 import { LayoutDashboard } from "lucide-react";
 
 import batteryIcon from "~/assets/systems/battery.svg";
-import chargerIcon from "~/assets/systems/charger.svg";
 import solarIcon from "~/assets/systems/solar.svg";
 import { Card } from "~/components/ui/card";
 import type { ContentState } from "~/components/ui/content-state";
 import { Separator } from "~/components/ui/separator";
 import { Skeleton } from "~/components/ui/skeleton";
+import type { EnergyDataRow } from "~/features/energy-data";
 
+import { ChargerAssetCard } from "./charger-asset-card";
+import { createChargerAssetCardViewModel } from "./charger-asset-card-view-model";
+import { GridAssetCard } from "./grid-asset-card";
+import { createGridAssetCardViewModel } from "./grid-asset-card-view-model";
 import { SidebarAssetCard } from "./sidebar-asset-card";
 
 type DashboardSidebarProps = {
   state?: ContentState;
+  rows?: readonly EnergyDataRow[];
 };
 
 const SIDEBAR_ASSETS = [
-  { id: "grid", title: "Grid" },
-  { id: "charger", title: "Charger", iconSrc: chargerIcon },
   { id: "battery", title: "Battery", iconSrc: batteryIcon },
   { id: "solar", title: "Solar", iconSrc: solarIcon },
 ] as const;
 
-export function DashboardSidebar({ state = "ready" }: DashboardSidebarProps) {
+export function DashboardSidebar({ state = "ready", rows = [] }: DashboardSidebarProps) {
+  const gridViewModel = createGridAssetCardViewModel(rows);
+  const chargerViewModel = createChargerAssetCardViewModel(rows);
+
   return (
     <aside className="lg:sticky lg:top-4 lg:h-[calc(100dvh-2rem)]">
       <Card className="flex h-full min-h-0 flex-col overflow-hidden p-4 shadow-panel sm:p-5">
@@ -57,6 +63,8 @@ export function DashboardSidebar({ state = "ready" }: DashboardSidebarProps) {
           aria-label="Asset overview"
           aria-busy={state === "loading"}
         >
+          <GridAssetCard state={state} viewModel={gridViewModel} />
+          <ChargerAssetCard state={state} viewModel={chargerViewModel} />
           {SIDEBAR_ASSETS.map((asset) => (
             <SidebarAssetCard
               key={asset.id}

@@ -1,4 +1,5 @@
 import { Network } from "lucide-react";
+import type { ReactNode } from "react";
 
 import { Card } from "~/components/ui/card";
 import { EmptyState, ErrorState } from "~/components/ui/content-state";
@@ -9,6 +10,9 @@ type SidebarAssetCardProps = {
   title: string;
   iconSrc?: string;
   state?: ContentState;
+  children?: ReactNode;
+  emptyMessage?: string;
+  loadingContent?: ReactNode;
 };
 
 const PLACEHOLDER_METRICS = ["Status", "Power", "Updated"] as const;
@@ -32,9 +36,16 @@ export function SidebarAssetCardSkeleton() {
   );
 }
 
-export function SidebarAssetCard({ title, iconSrc, state = "ready" }: SidebarAssetCardProps) {
+export function SidebarAssetCard({
+  title,
+  iconSrc,
+  state = "ready",
+  children,
+  emptyMessage,
+  loadingContent,
+}: SidebarAssetCardProps) {
   if (state === "loading") {
-    return <SidebarAssetCardSkeleton />;
+    return loadingContent ?? <SidebarAssetCardSkeleton />;
   }
 
   return (
@@ -56,19 +67,20 @@ export function SidebarAssetCard({ title, iconSrc, state = "ready" }: SidebarAss
         </div>
 
         {state === "error" && <ErrorState compact />}
-        {state === "empty" && <EmptyState compact />}
-        {state === "ready" && (
-          <dl className="grid grid-cols-3 gap-3">
-            {PLACEHOLDER_METRICS.map((metric) => (
-              <div key={metric} className="min-w-0">
-                <dt className="truncate text-[0.625rem] font-medium uppercase tracking-[0.08em] text-slate-400">
-                  {metric}
-                </dt>
-                <dd className="mt-1 text-sm font-medium text-slate-500">—</dd>
-              </div>
-            ))}
-          </dl>
-        )}
+        {state === "empty" && <EmptyState compact message={emptyMessage} />}
+        {state === "ready" &&
+          (children ?? (
+            <dl className="grid grid-cols-3 gap-3">
+              {PLACEHOLDER_METRICS.map((metric) => (
+                <div key={metric} className="min-w-0">
+                  <dt className="truncate text-[0.625rem] font-medium uppercase tracking-[0.08em] text-slate-400">
+                    {metric}
+                  </dt>
+                  <dd className="mt-1 text-sm font-medium text-slate-500">—</dd>
+                </div>
+              ))}
+            </dl>
+          ))}
       </button>
     </Card>
   );
