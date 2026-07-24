@@ -1,3 +1,5 @@
+import { useMemo } from "react";
+
 import type { ContentState } from "~/components/common/content-state";
 import { EmptyState, ErrorState } from "~/components/common/content-state";
 import { Card, CardTitle } from "~/components/ui/card";
@@ -7,12 +9,15 @@ import {
 } from "~/features/energy-data/grid-capacity-config";
 import { calculateGridComplianceKpi } from "~/features/energy-data/grid-compliance-kpi";
 import { calculateSolarChargingKpi } from "~/features/energy-data/solar-charging-kpi";
+import { calculateSmartChargingKpi } from "~/features/energy-data/smart-charging-kpi";
 import type { EnergyDataRow, EnergyTotals } from "~/features/energy-data/types";
 
 import { GridComplianceCard } from "./grid-compliance-card";
 import { GridComplianceSkeleton } from "./grid-compliance-skeleton";
 import { SolarPoweredChargingCard } from "./solar-powered-charging-card";
 import { SolarPoweredChargingSkeleton } from "./solar-powered-charging-skeleton";
+import { SmartChargingCard } from "./smart-charging-card";
+import { SmartChargingSkeleton } from "./smart-charging-skeleton";
 
 type OverviewSectionProps = {
   state?: ContentState;
@@ -24,9 +29,10 @@ type OverviewSectionProps = {
 
 function OverviewSkeleton() {
   return (
-    <div className="grid grid-cols-1 items-stretch gap-4 md:grid-cols-2">
+    <div className="grid grid-cols-1 items-stretch gap-4 md:grid-cols-2 xl:grid-cols-3">
       <SolarPoweredChargingSkeleton />
       <GridComplianceSkeleton />
+      <SmartChargingSkeleton />
     </div>
   );
 }
@@ -38,11 +44,21 @@ export function OverviewSection({
   totals,
   rows,
 }: OverviewSectionProps) {
-  const solarKpi = totals === undefined ? undefined : calculateSolarChargingKpi(totals);
-  const gridKpi =
-    rows === undefined
-      ? undefined
-      : calculateGridComplianceKpi(rows, SITE_GRID_CAPACITY_LIMITS, GRID_MEASUREMENT_UNIT);
+  const solarKpi = useMemo(
+    () => (totals === undefined ? undefined : calculateSolarChargingKpi(totals)),
+    [totals],
+  );
+  const gridKpi = useMemo(
+    () =>
+      rows === undefined
+        ? undefined
+        : calculateGridComplianceKpi(rows, SITE_GRID_CAPACITY_LIMITS, GRID_MEASUREMENT_UNIT),
+    [rows],
+  );
+  const smartChargingKpi = useMemo(
+    () => (rows === undefined ? undefined : calculateSmartChargingKpi(rows)),
+    [rows],
+  );
 
   return (
     <section aria-labelledby="zympler-overview-heading" className="space-y-6">
@@ -71,10 +87,12 @@ export function OverviewSection({
       {state === "ready" &&
         totals !== undefined &&
         solarKpi !== undefined &&
-        gridKpi !== undefined && (
-          <div className="grid grid-cols-1 items-stretch gap-4 md:grid-cols-2">
+        gridKpi !== undefined &&
+        smartChargingKpi !== undefined && (
+          <div className="grid grid-cols-1 items-stretch gap-4 md:grid-cols-2 xl:grid-cols-3">
             <SolarPoweredChargingCard totals={totals} kpi={solarKpi} />
             <GridComplianceCard kpi={gridKpi} />
+            <SmartChargingCard kpi={smartChargingKpi} />
           </div>
         )}
     </section>
