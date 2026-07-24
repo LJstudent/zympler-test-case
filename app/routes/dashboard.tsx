@@ -1,12 +1,12 @@
 import { isRouteErrorResponse, useRouteError } from "react-router";
 
-import { DashboardLayout } from "~/components/dashboard/dashboard-layout";
-import { loadEnergyData } from "~/features/energy-data/load-energy-data";
+import { loadOverviewData } from "~/features/overview";
+import { DashboardLayout } from "~/layouts/dashboard-layout";
 
 import type { Route } from "./+types/dashboard";
 
 export async function clientLoader() {
-  return loadEnergyData();
+  return loadOverviewData();
 }
 
 clientLoader.hydrate = true as const;
