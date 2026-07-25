@@ -5,7 +5,7 @@ export const EXCEL_COLUMNS = {
   pricePerKwh: "Price (kwh)",
   fromGrid: "van net",
   toGrid: "naar net",
-  solarGeneration: "van zon",
+  fromSolar: "van zon",
   batteryDischarge: "van batterij",
   batteryCharge: "naar batterij",
   toCharger: "naar lader",

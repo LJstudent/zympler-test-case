@@ -7,13 +7,13 @@ describe("parseEnergyTotals", () => {
   it("resolves and reads aggregate totals using configured Excel column names", () => {
     const headers = [
       EXCEL_COLUMNS.totalGridToCharger,
-      EXCEL_COLUMNS.solarGeneration,
+      EXCEL_COLUMNS.fromSolar,
       EXCEL_COLUMNS.toCharger,
       EXCEL_COLUMNS.totalSolarToCharger,
       ...Object.values(EXCEL_COLUMNS).filter(
         (header) =>
           header !== EXCEL_COLUMNS.totalGridToCharger &&
-          header !== EXCEL_COLUMNS.solarGeneration &&
+          header !== EXCEL_COLUMNS.fromSolar &&
           header !== EXCEL_COLUMNS.toCharger &&
           header !== EXCEL_COLUMNS.totalSolarToCharger,
       ),
@@ -21,7 +21,7 @@ describe("parseEnergyTotals", () => {
     const columns = getEnergyColumnIndexes(headers);
     const values: unknown[] = [];
 
-    values[columns.solarGeneration] = 187_746.6;
+    values[columns.fromSolar] = 187_746.6;
     values[columns.toCharger] = 77_013.27103;
     values[columns.totalSolarToCharger] = 15_249.67097;
     values[columns.totalGridToCharger] = 61_472.94476;

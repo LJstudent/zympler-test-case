@@ -80,7 +80,28 @@ export function AssetCardMetrics({ metrics }: { metrics: readonly AssetCardMetri
   );
 }
 
-export function AssetCardPreviewSkeleton() {
+export function CenteredAssetCardMetric({ metric }: { metric: AssetCardMetric }) {
+  return (
+    <dl className="mt-4 text-center">
+      <div className="min-w-0">
+        <dt className="truncate text-[0.625rem] font-medium uppercase tracking-[0.08em] text-slate-400">
+          {metric.label}
+        </dt>
+        <dd className="mt-1 truncate text-sm font-semibold text-slate-950 tabular-nums">
+          {metric.value}
+        </dd>
+      </div>
+    </dl>
+  );
+}
+
+type AssetCardPreviewSkeletonProps = {
+  metricLayout?: "two-column" | "centered";
+};
+
+export function AssetCardPreviewSkeleton({
+  metricLayout = "two-column",
+}: AssetCardPreviewSkeletonProps) {
   return (
     <Card aria-hidden="true" className="overflow-hidden p-4 shadow-sm">
       <div className="mb-4 flex items-center gap-3">
@@ -88,14 +109,21 @@ export function AssetCardPreviewSkeleton() {
         <Skeleton className="h-4 w-20" />
       </div>
       <Skeleton className="h-24 w-full rounded-lg" />
-      <div className="mt-4 grid grid-cols-2 gap-4">
-        {[0, 1].map((column) => (
-          <div key={column} className="min-w-0 space-y-2">
-            <Skeleton className="h-2.5 w-12" />
-            <Skeleton className="h-4 w-16" />
-          </div>
-        ))}
-      </div>
+      {metricLayout === "centered" ? (
+        <div className="mt-4 flex flex-col items-center space-y-2">
+          <Skeleton className="h-2.5 w-12" />
+          <Skeleton className="h-4 w-16" />
+        </div>
+      ) : (
+        <div className="mt-4 grid grid-cols-2 gap-4">
+          {[0, 1].map((column) => (
+            <div key={column} className="min-w-0 space-y-2">
+              <Skeleton className="h-2.5 w-12" />
+              <Skeleton className="h-4 w-16" />
+            </div>
+          ))}
+        </div>
+      )}
     </Card>
   );
 }

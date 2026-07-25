@@ -1,32 +1,30 @@
 import { LayoutDashboard } from "lucide-react";
 
-import batteryIcon from "~/assets/systems/battery.svg";
-import solarIcon from "~/assets/systems/solar.svg";
 import { Card } from "~/components/ui/card";
 import type { ContentState } from "~/components/ui/content-state";
 import { Separator } from "~/components/ui/separator";
 import { Skeleton } from "~/components/ui/skeleton";
 import type { EnergyDataRow } from "~/features/energy-data";
 
+import { BatteryAssetCard } from "./battery-asset-card";
+import { createBatteryAssetCardViewModel } from "./battery-asset-card-view-model";
 import { ChargerAssetCard } from "./charger-asset-card";
 import { createChargerAssetCardViewModel } from "./charger-asset-card-view-model";
 import { GridAssetCard } from "./grid-asset-card";
 import { createGridAssetCardViewModel } from "./grid-asset-card-view-model";
-import { SidebarAssetCard } from "./sidebar-asset-card";
+import { SolarAssetCard } from "./solar-asset-card";
+import { createSolarAssetCardViewModel } from "./solar-asset-card-view-model";
 
 type DashboardSidebarProps = {
   state?: ContentState;
   rows?: readonly EnergyDataRow[];
 };
 
-const SIDEBAR_ASSETS = [
-  { id: "battery", title: "Battery", iconSrc: batteryIcon },
-  { id: "solar", title: "Solar", iconSrc: solarIcon },
-] as const;
-
 export function DashboardSidebar({ state = "ready", rows = [] }: DashboardSidebarProps) {
   const gridViewModel = createGridAssetCardViewModel(rows);
   const chargerViewModel = createChargerAssetCardViewModel(rows);
+  const batteryViewModel = createBatteryAssetCardViewModel(rows);
+  const solarViewModel = createSolarAssetCardViewModel(rows);
 
   return (
     <aside className="lg:sticky lg:top-4 lg:h-[calc(100dvh-2rem)]">
@@ -65,14 +63,8 @@ export function DashboardSidebar({ state = "ready", rows = [] }: DashboardSideba
         >
           <GridAssetCard state={state} viewModel={gridViewModel} />
           <ChargerAssetCard state={state} viewModel={chargerViewModel} />
-          {SIDEBAR_ASSETS.map((asset) => (
-            <SidebarAssetCard
-              key={asset.id}
-              title={asset.title}
-              iconSrc={"iconSrc" in asset ? asset.iconSrc : undefined}
-              state={state}
-            />
-          ))}
+          <BatteryAssetCard state={state} viewModel={batteryViewModel} />
+          <SolarAssetCard state={state} viewModel={solarViewModel} />
         </div>
       </Card>
     </aside>
