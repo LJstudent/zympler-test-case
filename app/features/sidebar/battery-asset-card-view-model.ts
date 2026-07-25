@@ -2,17 +2,11 @@ import type { EnergyDataRow } from "~/features/energy-data";
 
 import {
   filterAssetRowsByDate,
+  formatAssetEnergy,
   getLatestAssetDate,
   readNonNegativeEnergy,
   sortAssetRowsChronologically,
 } from "./asset-card-data";
-
-const BATTERY_PROFIT_FORMATTER = new Intl.NumberFormat("nl-NL", {
-  style: "currency",
-  currency: "EUR",
-  minimumFractionDigits: 2,
-  maximumFractionDigits: 2,
-});
 
 export interface BatteryActivityPoint {
   timestamp: number;
@@ -21,7 +15,7 @@ export interface BatteryActivityPoint {
 
 export interface BatteryAssetCardViewModel {
   activity: BatteryActivityPoint[];
-  profitDisplay: string;
+  energyShiftedDisplay: string;
 }
 
 // The parsed domain model stores both battery flows as interval energy in kWh.
@@ -31,11 +25,6 @@ export function readBatteryChargeEnergy(row: EnergyDataRow): number | null {
 
 export function readBatteryDischargeEnergy(row: EnergyDataRow): number | null {
   return readNonNegativeEnergy(row.measurement.batteryDischargeKwh);
-}
-
-export function readMarketPricePerKwh(row: EnergyDataRow): number | null {
-  const price = row.measurement.pricePerKwh;
-  return price !== null && Number.isFinite(price) ? price : null;
 }
 
 function hasValidBatteryMeasurement(row: EnergyDataRow): boolean {
@@ -58,39 +47,19 @@ export function buildSignedBatteryActivity(rows: readonly EnergyDataRow[]): Batt
   });
 }
 
-export function calculateIntervalBatteryProfit(row: EnergyDataRow): number | null {
-  const chargedKwh = readBatteryChargeEnergy(row);
-  const dischargedKwh = readBatteryDischargeEnergy(row);
-  const pricePerKwh = readMarketPricePerKwh(row);
-
-  if (chargedKwh === null || dischargedKwh === null || pricePerKwh === null) {
-    return null;
-  }
-
-  const intervalProfit = dischargedKwh * pricePerKwh - chargedKwh * pricePerKwh;
-
-  return Number.isFinite(intervalProfit) ? intervalProfit : null;
-}
-
-export function calculateDailyBatteryProfit(rows: readonly EnergyDataRow[]): number | null {
-  let pricedIntervalCount = 0;
-  let dailyProfit = 0;
+export function calculateDailyEnergyShifted(rows: readonly EnergyDataRow[]): number {
+  let totalEnergyShifted = 0;
 
   for (const row of rows) {
-    const intervalProfit = calculateIntervalBatteryProfit(row);
+    const chargedKwh = readBatteryChargeEnergy(row);
+    const dischargedKwh = readBatteryDischargeEnergy(row);
 
-    if (intervalProfit !== null) {
-      dailyProfit += intervalProfit;
-      pricedIntervalCount += 1;
+    if (chargedKwh !== null && dischargedKwh !== null) {
+      totalEnergyShifted += chargedKwh + dischargedKwh;
     }
   }
 
-  return pricedIntervalCount > 0 && Number.isFinite(dailyProfit) ? dailyProfit : null;
-}
-
-export function formatBatteryProfit(profit: number): string {
-  const safeProfit = Number.isFinite(profit) && !Object.is(profit, -0) ? profit : 0;
-  return BATTERY_PROFIT_FORMATTER.format(safeProfit).replace("-", "−");
+  return Number.isFinite(totalEnergyShifted) ? totalEnergyShifted : 0;
 }
 
 export function createBatteryAssetCardViewModel(
@@ -105,10 +74,10 @@ export function createBatteryAssetCardViewModel(
   const latestRows = sortAssetRowsChronologically(
     filterAssetRowsByDate(rows, latestDate, hasValidBatteryMeasurement),
   );
-  const dailyProfit = calculateDailyBatteryProfit(latestRows);
+  const dailyEnergyShifted = calculateDailyEnergyShifted(latestRows);
 
   return {
     activity: buildSignedBatteryActivity(latestRows),
-    profitDisplay: dailyProfit === null ? "—" : formatBatteryProfit(dailyProfit),
+    energyShiftedDisplay: formatAssetEnergy(dailyEnergyShifted),
   };
 }

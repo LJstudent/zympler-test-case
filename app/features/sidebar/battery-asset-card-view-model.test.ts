@@ -4,10 +4,8 @@ import type { EnergyDataRow } from "~/features/energy-data";
 
 import {
   buildSignedBatteryActivity,
-  calculateDailyBatteryProfit,
-  calculateIntervalBatteryProfit,
+  calculateDailyEnergyShifted,
   createBatteryAssetCardViewModel,
-  formatBatteryProfit,
 } from "./battery-asset-card-view-model";
 
 function batteryRow(
@@ -54,54 +52,51 @@ describe("battery asset card view model", () => {
     expect(viewModel?.activity).toEqual([
       {
         timestamp: new Date("2025-12-31T00:00:00Z").getTime(),
-        batteryActivityKwh: 10,
+        batteryActivityKwh: -10,
       },
       {
         timestamp: new Date("2025-12-31T00:15:00Z").getTime(),
-        batteryActivityKwh: -4,
+        batteryActivityKwh: 4,
       },
     ]);
-    expect(viewModel?.profitDisplay.replace(/\s/g, " ")).toBe("€ 2,10");
+    expect(viewModel?.energyShiftedDisplay).toBe("14 kWh");
   });
 
-  it("calculates revenue minus cost for each priced interval before summing", () => {
-    const discharge = batteryRow("2025-12-31T00:00:00Z", 0, 10, 0.25);
-    const charge = batteryRow("2025-12-31T00:15:00Z", 4, 0, 0.1);
+  it("adds all charging and discharging throughput without dividing by two", () => {
+    const discharge = batteryRow("2025-12-31T00:00:00Z", 0, 182, 0.25);
+    const charge = batteryRow("2025-12-31T00:15:00Z", 154, 0, 0.1);
 
-    expect(calculateIntervalBatteryProfit(discharge)).toBe(2.5);
-    expect(calculateIntervalBatteryProfit(charge)).toBe(-0.4);
-    expect(calculateDailyBatteryProfit([discharge, charge])).toBe(2.1);
+    expect(calculateDailyEnergyShifted([discharge, charge])).toBe(336);
   });
 
-  it("excludes unpriced intervals without failing priced activity", () => {
+  it("includes unpriced intervals in energy shifted", () => {
     const rows = [
       batteryRow("2025-12-31T00:00:00Z", 2, 0, null),
       batteryRow("2025-12-31T00:15:00Z", 0, 5, 0.2),
     ];
 
-    expect(calculateDailyBatteryProfit(rows)).toBe(1);
+    expect(calculateDailyEnergyShifted(rows)).toBe(7);
     expect(buildSignedBatteryActivity(rows).map((point) => point.batteryActivityKwh)).toEqual([
-      -2, 5,
+      2, -5,
     ]);
   });
 
-  it("distinguishes zero profit, unavailable prices, and invalid measurements", () => {
+  it("formats zero and fractional throughput as kWh and large throughput as MWh", () => {
     expect(
-      createBatteryAssetCardViewModel([
-        batteryRow("2025-12-31T00:00:00Z", 5, 5, 0.2),
-      ])?.profitDisplay.replace(/\s/g, " "),
-    ).toBe("€ 0,00");
+      createBatteryAssetCardViewModel([batteryRow("2025-12-31T00:00:00Z", 5, 5, 0.2)])
+        ?.energyShiftedDisplay,
+    ).toBe("10 kWh");
 
     expect(
-      createBatteryAssetCardViewModel([batteryRow("2025-12-31T00:00:00Z", 5, 0, null)]),
-    ).toMatchObject({ profitDisplay: "—" });
+      createBatteryAssetCardViewModel([batteryRow("2025-12-31T00:00:00Z", 154.25, 182.25, null)]),
+    ).toMatchObject({ energyShiftedDisplay: "336.5 kWh" });
+
+    expect(
+      createBatteryAssetCardViewModel([batteryRow("2025-12-31T00:00:00Z", 1_200, 0, null)]),
+    ).toMatchObject({ energyShiftedDisplay: "1.2 MWh" });
 
     expect(
       createBatteryAssetCardViewModel([batteryRow("2025-12-31T00:00:00Z", Number.NaN, -1, 0.2)]),
     ).toBeNull();
-  });
-
-  it("keeps negative currency values visibly negative", () => {
-    expect(formatBatteryProfit(-12.48).replace(/\s/g, " ")).toBe("€ −12,48");
   });
 });

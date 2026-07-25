@@ -23,7 +23,12 @@ function BatteryAssetCardContent({ viewModel }: { viewModel: BatteryAssetCardVie
         gradientId="battery-activity-fill"
         showZeroLine
       />
-      <CenteredAssetCardMetric metric={{ label: "Profit", value: viewModel.profitDisplay }} />
+      <CenteredAssetCardMetric
+        metric={{
+          label: "Energy shifted",
+          value: viewModel.energyShiftedDisplay,
+        }}
+      />
     </>
   );
 }

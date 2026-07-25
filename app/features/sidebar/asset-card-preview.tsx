@@ -4,6 +4,7 @@ import { Card } from "~/components/ui/card";
 import { ChartContainer } from "~/components/ui/chart";
 import type { ChartConfig } from "~/components/ui/chart";
 import { Skeleton } from "~/components/ui/skeleton";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "~/components/ui/tooltip";
 
 export const ASSET_ACTIVITY_CHART_CONFIG = {
   activity: {
@@ -61,6 +62,10 @@ export function CompactAssetAreaChart({
 export interface AssetCardMetric {
   label: string;
   value: string;
+  tooltip?: {
+    title: string;
+    description: string;
+  };
 }
 
 export function AssetCardMetrics({ metrics }: { metrics: readonly AssetCardMetric[] }) {
@@ -81,15 +86,36 @@ export function AssetCardMetrics({ metrics }: { metrics: readonly AssetCardMetri
 }
 
 export function CenteredAssetCardMetric({ metric }: { metric: AssetCardMetric }) {
+  const label = (
+    <dt className="truncate text-[0.625rem] font-medium uppercase tracking-[0.08em] text-slate-400">
+      {metric.label}
+    </dt>
+  );
+
   return (
     <dl className="mt-4 text-center">
       <div className="min-w-0">
-        <dt className="truncate text-[0.625rem] font-medium uppercase tracking-[0.08em] text-slate-400">
-          {metric.label}
-        </dt>
+        {metric.tooltip === undefined ? (
+          label
+        ) : (
+          <TooltipProvider delayDuration={300}>
+            <Tooltip>
+              <TooltipTrigger asChild>{label}</TooltipTrigger>
+              <TooltipContent side="top" align="center">
+                <p className="font-semibold">{metric.tooltip.title}</p>
+                <p className="mt-1 whitespace-pre-line">{metric.tooltip.description}</p>
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
+        )}
         <dd className="mt-1 truncate text-sm font-semibold text-slate-950 tabular-nums">
           {metric.value}
         </dd>
+        {metric.tooltip === undefined ? null : (
+          <span className="sr-only">
+            {metric.tooltip.title}. {metric.tooltip.description}
+          </span>
+        )}
       </div>
     </dl>
   );
