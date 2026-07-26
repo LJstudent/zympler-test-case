@@ -1,3 +1,4 @@
+import gridIcon from "~/assets/systems/utility-pole.svg";
 import type { ContentState } from "~/components/ui/content-state";
 
 import {
@@ -38,6 +39,7 @@ export function GridAssetCard({ state = "ready", viewModel }: GridAssetCardProps
   return (
     <SidebarAssetCard
       title="Grid"
+      iconSrc={gridIcon}
       state={resolvedState}
       emptyMessage="No grid data available"
       loadingContent={<AssetCardPreviewSkeleton />}

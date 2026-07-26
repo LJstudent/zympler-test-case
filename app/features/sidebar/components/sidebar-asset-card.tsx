@@ -1,4 +1,4 @@
-import { Network } from "lucide-react";
+import { Zap } from "lucide-react";
 import type { ReactNode } from "react";
 
 import { Card } from "~/components/ui/card";
@@ -58,7 +58,7 @@ export function SidebarAssetCard({
         <div className="mb-4 flex items-center gap-3">
           <span className="flex size-8 items-center justify-center rounded-lg bg-brand-blue-light/30 text-brand-blue transition-colors duration-150 group-hover:bg-brand-blue-light/45">
             {iconSrc === undefined ? (
-              <Network className="size-4" aria-hidden="true" />
+              <Zap className="size-4" aria-hidden="true" />
             ) : (
               <img src={iconSrc} alt="" aria-hidden="true" className="size-4" />
             )}
