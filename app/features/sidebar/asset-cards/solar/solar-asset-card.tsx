@@ -5,8 +5,8 @@ import {
   AssetCardPreviewSkeleton,
   CenteredAssetCardMetric,
   CompactAssetAreaChart,
-} from "./asset-card-preview";
-import { SidebarAssetCard } from "./sidebar-asset-card";
+} from "../../components/asset-card-preview";
+import { SidebarAssetCard } from "../../components/sidebar-asset-card";
 import type { SolarAssetCardViewModel } from "./solar-asset-card-view-model";
 
 type SolarAssetCardProps = {

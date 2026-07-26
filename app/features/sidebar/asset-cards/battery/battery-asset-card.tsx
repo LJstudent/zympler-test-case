@@ -5,9 +5,9 @@ import {
   AssetCardPreviewSkeleton,
   CenteredAssetCardMetric,
   CompactAssetAreaChart,
-} from "./asset-card-preview";
+} from "../../components/asset-card-preview";
 import type { BatteryAssetCardViewModel } from "./battery-asset-card-view-model";
-import { SidebarAssetCard } from "./sidebar-asset-card";
+import { SidebarAssetCard } from "../../components/sidebar-asset-card";
 
 type BatteryAssetCardProps = {
   state?: ContentState;

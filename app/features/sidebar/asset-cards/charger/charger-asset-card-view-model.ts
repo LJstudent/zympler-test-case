@@ -7,7 +7,7 @@ import {
   getLatestAssetDate,
   readNonNegativeEnergy,
   sortAssetRowsChronologically,
-} from "./asset-card-data";
+} from "../../data/asset-card-data";
 
 export interface ChargerActivityPoint {
   timestamp: number;
@@ -82,9 +82,7 @@ export function createChargerAssetCardViewModel(
   const hasConsistentSourceData = directSolarEnergy <= totalChargedEnergy;
 
   if (import.meta.env.DEV && !hasConsistentSourceData) {
-    console.warn(
-      "Direct solar-to-charger energy exceeds total charged energy for the latest day.",
-    );
+    console.warn("Direct solar-to-charger energy exceeds total charged energy for the latest day.");
   }
 
   return {

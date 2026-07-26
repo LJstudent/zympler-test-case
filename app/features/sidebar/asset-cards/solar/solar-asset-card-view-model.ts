@@ -6,7 +6,7 @@ import {
   getLatestAssetDate,
   readNonNegativeEnergy,
   sortAssetRowsChronologically,
-} from "./asset-card-data";
+} from "../../data/asset-card-data";
 
 export interface SolarActivityPoint {
   timestamp: number;

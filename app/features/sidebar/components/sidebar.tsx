@@ -6,14 +6,14 @@ import { Separator } from "~/components/ui/separator";
 import { Skeleton } from "~/components/ui/skeleton";
 import type { EnergyDataRow } from "~/features/energy-data";
 
-import { BatteryAssetCard } from "./battery-asset-card";
-import { createBatteryAssetCardViewModel } from "./battery-asset-card-view-model";
-import { ChargerAssetCard } from "./charger-asset-card";
-import { createChargerAssetCardViewModel } from "./charger-asset-card-view-model";
-import { GridAssetCard } from "./grid-asset-card";
-import { createGridAssetCardViewModel } from "./grid-asset-card-view-model";
-import { SolarAssetCard } from "./solar-asset-card";
-import { createSolarAssetCardViewModel } from "./solar-asset-card-view-model";
+import { BatteryAssetCard } from "../asset-cards/battery/battery-asset-card";
+import { createBatteryAssetCardViewModel } from "../asset-cards/battery/battery-asset-card-view-model";
+import { ChargerAssetCard } from "../asset-cards/charger/charger-asset-card";
+import { createChargerAssetCardViewModel } from "../asset-cards/charger/charger-asset-card-view-model";
+import { GridAssetCard } from "../asset-cards/grid/grid-asset-card";
+import { createGridAssetCardViewModel } from "../asset-cards/grid/grid-asset-card-view-model";
+import { SolarAssetCard } from "../asset-cards/solar/solar-asset-card";
+import { createSolarAssetCardViewModel } from "../asset-cards/solar/solar-asset-card-view-model";
 
 type DashboardSidebarProps = {
   state?: ContentState;
