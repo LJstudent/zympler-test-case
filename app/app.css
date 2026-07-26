@@ -54,30 +54,6 @@
   }
 }
 
-@keyframes route-exit-left {
-  to {
-    transform: translate3d(-100%, 0, 0);
-  }
-}
-
-@keyframes route-enter-right {
-  from {
-    transform: translate3d(100%, 0, 0);
-  }
-}
-
-@keyframes route-exit-right {
-  to {
-    transform: translate3d(100%, 0, 0);
-  }
-}
-
-@keyframes route-enter-left {
-  from {
-    transform: translate3d(-100%, 0, 0);
-  }
-}
-
 @theme inline {
   --animate-status-pulse: status-pulse 2.2s ease-in-out infinite;
   --animate-panel-in: panel-in 320ms ease-out both;
@@ -108,48 +84,6 @@
   button {
     font: inherit;
   }
-}
-
-.dashboard-sidebar {
-  view-transition-name: dashboard-sidebar;
-}
-
-.dashboard-route-content {
-  view-transition-name: dashboard-route-content;
-  contain: paint;
-}
-
-::view-transition-group(dashboard-sidebar) {
-  animation: none;
-}
-
-::view-transition-old(dashboard-sidebar),
-::view-transition-new(dashboard-sidebar) {
-  animation: none;
-  mix-blend-mode: normal;
-}
-
-::view-transition-group(dashboard-route-content) {
-  animation-duration: 280ms;
-  animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
-}
-
-::view-transition-old(dashboard-route-content) {
-  animation: route-exit-left 280ms cubic-bezier(0.4, 0, 1, 1) both;
-  mix-blend-mode: normal;
-}
-
-::view-transition-new(dashboard-route-content) {
-  animation: route-enter-right 280ms cubic-bezier(0, 0, 0.2, 1) both;
-  mix-blend-mode: normal;
-}
-
-html[data-navigation-direction="back"]::view-transition-old(dashboard-route-content) {
-  animation-name: route-exit-right;
-}
-
-html[data-navigation-direction="back"]::view-transition-new(dashboard-route-content) {
-  animation-name: route-enter-left;
 }
 
 @media (prefers-reduced-motion: reduce) {
