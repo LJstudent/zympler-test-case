@@ -1,4 +1,5 @@
 import { LayoutDashboard } from "lucide-react";
+import { Link } from "react-router";
 
 import { Card } from "~/components/ui/card";
 import type { ContentState } from "~/components/ui/content-state";
@@ -18,28 +19,41 @@ import { createSolarAssetCardViewModel } from "../asset-cards/solar/solar-asset-
 type DashboardSidebarProps = {
   state?: ContentState;
   rows?: readonly EnergyDataRow[];
+  activePage?: "overview" | "grid";
 };
 
-export function DashboardSidebar({ state = "ready", rows = [] }: DashboardSidebarProps) {
+export function DashboardSidebar({
+  state = "ready",
+  rows = [],
+  activePage = "overview",
+}: DashboardSidebarProps) {
   const gridViewModel = createGridAssetCardViewModel(rows);
   const chargerViewModel = createChargerAssetCardViewModel(rows);
   const batteryViewModel = createBatteryAssetCardViewModel(rows);
   const solarViewModel = createSolarAssetCardViewModel(rows);
 
   return (
-    <aside className="lg:sticky lg:top-4 lg:h-[calc(100dvh-2rem)]">
+    <aside className="dashboard-sidebar lg:sticky lg:top-4 lg:h-[calc(100dvh-2rem)]">
       <Card className="flex h-full min-h-0 flex-col overflow-hidden p-4 shadow-panel sm:p-5">
         <header className="shrink-0">
           <p className="text-[1.65rem] font-bold tracking-[-0.055em] text-brand-green">Zympler</p>
           <nav className="mt-5" aria-label="Primary navigation">
-            <button
-              type="button"
-              aria-current="page"
-              className="flex w-full items-center gap-3 rounded-xl bg-brand-blue px-4 py-3 text-left text-sm font-semibold text-white shadow-[0_6px_18px_rgb(0_62_208_/_0.18)] transition-[background-color,transform] duration-150 hover:bg-blue-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-blue motion-reduce:transform-none motion-reduce:transition-none"
+            <Link
+              to="/"
+              viewTransition
+              aria-current={activePage === "overview" ? "page" : undefined}
+              onClick={() => {
+                document.documentElement.dataset.navigationDirection = "back";
+              }}
+              className={`flex w-full items-center gap-3 rounded-xl px-4 py-3 text-left text-sm font-semibold transition-[background-color,color,transform] duration-150 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-blue motion-reduce:transform-none motion-reduce:transition-none ${
+                activePage === "overview"
+                  ? "bg-brand-blue text-white shadow-[0_6px_18px_rgb(0_62_208_/_0.18)] hover:bg-blue-700"
+                  : "bg-blue-50 text-brand-blue hover:bg-blue-100"
+              }`}
             >
               <LayoutDashboard className="size-4" aria-hidden="true" />
               Zympler Overview
-            </button>
+            </Link>
           </nav>
           <Separator className="my-5" />
           <div className="mb-3 flex items-center justify-between px-1">
@@ -61,7 +75,12 @@ export function DashboardSidebar({ state = "ready", rows = [] }: DashboardSideba
           aria-label="Asset overview"
           aria-busy={state === "loading"}
         >
-          <GridAssetCard state={state} viewModel={gridViewModel} />
+          <GridAssetCard
+            state={state}
+            viewModel={gridViewModel}
+            isActive={activePage === "grid"}
+            enableNavigation
+          />
           <ChargerAssetCard state={state} viewModel={chargerViewModel} />
           <BatteryAssetCard state={state} viewModel={batteryViewModel} />
           <SolarAssetCard state={state} viewModel={solarViewModel} />

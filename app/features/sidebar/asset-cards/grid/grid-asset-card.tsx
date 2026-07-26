@@ -12,6 +12,8 @@ import { SidebarAssetCard } from "../../components/sidebar-asset-card";
 type GridAssetCardProps = {
   state?: ContentState;
   viewModel: GridAssetCardViewModel | null;
+  isActive?: boolean;
+  enableNavigation?: boolean;
 };
 
 function GridAssetCardContent({ viewModel }: { viewModel: GridAssetCardViewModel }) {
@@ -33,7 +35,12 @@ function GridAssetCardContent({ viewModel }: { viewModel: GridAssetCardViewModel
   );
 }
 
-export function GridAssetCard({ state = "ready", viewModel }: GridAssetCardProps) {
+export function GridAssetCard({
+  state = "ready",
+  viewModel,
+  isActive = false,
+  enableNavigation = false,
+}: GridAssetCardProps) {
   const resolvedState = state === "ready" && viewModel === null ? "empty" : state;
 
   return (
@@ -43,6 +50,8 @@ export function GridAssetCard({ state = "ready", viewModel }: GridAssetCardProps
       state={resolvedState}
       emptyMessage="No grid data available"
       loadingContent={<AssetCardPreviewSkeleton />}
+      to={enableNavigation ? "/overview/grid-compliance" : undefined}
+      isActive={isActive}
     >
       {viewModel === null ? null : <GridAssetCardContent viewModel={viewModel} />}
     </SidebarAssetCard>
