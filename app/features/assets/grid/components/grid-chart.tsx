@@ -3,7 +3,9 @@ import { Bar, BarChart, CartesianGrid, Cell, ReferenceLine, Tooltip, XAxis, YAxi
 import { ChartContainer } from "~/components/ui/chart";
 
 import { GRID_CAPACITY_LIMITS } from "../constants/grid-constants";
+import { formatGridAxisTimestamp, getMonthRawAxisTicks } from "../lib/format-grid-chart";
 import type {
+  GridAggregation,
   GridChartDatum,
   GridChartSeries,
   GridMetric,
@@ -16,6 +18,7 @@ type GridChartProps = {
   series: readonly GridChartSeries[];
   metric: GridMetric;
   timeView: GridTimeView;
+  aggregation: GridAggregation;
   breakdown: boolean;
   animationKey: string;
   highlightedTimestampMs?: number;
@@ -33,11 +36,14 @@ export function GridChart({
   series,
   metric,
   timeView,
+  aggregation,
   breakdown,
   animationKey,
   highlightedTimestampMs,
 }: GridChartProps) {
   const showCapacity = timeView === "day" && metric === "power";
+  const isMonthRaw = timeView === "month" && aggregation === "raw";
+  const monthRawTicks = isMonthRaw ? getMonthRawAxisTicks(data) : undefined;
 
   return (
     <ChartContainer
@@ -49,14 +55,23 @@ export function GridChart({
       <BarChart
         data={data}
         stackOffset="sign"
+        barCategoryGap={isMonthRaw ? 0 : "10%"}
+        barGap={0}
         margin={{ top: 16, right: 12, bottom: 8, left: 2 }}
       >
         <CartesianGrid vertical={false} stroke="#e2e8f0" strokeDasharray="3 4" />
         <XAxis
-          dataKey="label"
+          dataKey="timestampMs"
+          type="category"
+          allowDuplicatedCategory={false}
           tickLine={false}
           axisLine={false}
-          minTickGap={28}
+          ticks={monthRawTicks}
+          interval={isMonthRaw ? 0 : "preserveStartEnd"}
+          minTickGap={isMonthRaw ? 0 : 28}
+          tickFormatter={(timestamp: number) =>
+            formatGridAxisTimestamp(new Date(timestamp), timeView, aggregation)
+          }
           tick={{ fill: "#64748b", fontSize: 11 }}
           dy={8}
         />
@@ -68,12 +83,24 @@ export function GridChart({
           tick={{ fill: "#64748b", fontSize: 11 }}
         />
         <Tooltip
-          cursor={{ fill: "#bdd2ff", fillOpacity: 0.16 }}
+          cursor={
+            isMonthRaw
+              ? {
+                  fill: "#315fa8",
+                  fillOpacity: 0.12,
+                  stroke: "#315fa8",
+                  strokeOpacity: 0.45,
+                  strokeWidth: 1,
+                }
+              : { fill: "#bdd2ff", fillOpacity: 0.16 }
+          }
+          shared
           content={
             <GridChartTooltip
               series={series}
               metric={metric}
               timeView={timeView}
+              aggregation={aggregation}
               breakdown={breakdown}
             />
           }
@@ -115,16 +142,18 @@ export function GridChart({
             fill={item.color}
             stackId={item.stackId}
             radius={
-              breakdown
-                ? item.key === "ownUse"
-                  ? [3, 3, 0, 0]
-                  : item.key === "gridBatteryToGrid"
-                    ? [0, 0, 3, 3]
-                    : 0
-                : [3, 3, 0, 0]
+              isMonthRaw
+                ? 0
+                : breakdown
+                  ? item.key === "ownUse"
+                    ? [3, 3, 0, 0]
+                    : item.key === "gridBatteryToGrid"
+                      ? [0, 0, 3, 3]
+                      : 0
+                  : [3, 3, 0, 0]
             }
-            maxBarSize={timeView === "day" ? 14 : 28}
-            isAnimationActive
+            maxBarSize={isMonthRaw ? 2 : timeView === "day" ? 14 : 28}
+            isAnimationActive={!isMonthRaw}
             animationBegin={0}
             animationDuration={420}
             animationEasing="ease-out"

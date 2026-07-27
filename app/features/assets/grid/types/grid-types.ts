@@ -20,7 +20,7 @@ export type GridPeriodOption = {
 };
 
 export type GridChartDatum = {
-  timestamp: Date;
+  timestamp: string;
   timestampMs: number;
   intervalEndMs: number;
   label: string;

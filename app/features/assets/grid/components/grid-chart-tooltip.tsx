@@ -1,6 +1,7 @@
 import { GRID_EXPLANATIONS } from "../constants/grid-constants";
-import { formatGridTimestamp, formatGridValue } from "../lib/format-grid-chart";
+import { formatGridTooltipTimestamp, formatGridValue } from "../lib/format-grid-chart";
 import type {
+  GridAggregation,
   GridChartDatum,
   GridChartSeries,
   GridMetric,
@@ -19,23 +20,27 @@ type GridChartTooltipProps = {
   series: readonly GridChartSeries[];
   metric: GridMetric;
   timeView: GridTimeView;
+  aggregation: GridAggregation;
   breakdown: boolean;
 };
 
 export function GridChartTooltip({
   active,
-  payload,
+  payload: activePayload,
   series,
   metric,
   timeView,
+  aggregation,
   breakdown,
 }: GridChartTooltipProps) {
-  const datum = payload?.[0]?.payload;
-  if (active !== true || datum === undefined) return null;
+  const activePoint = activePayload?.[0]?.payload;
+  if (active !== true || activePoint === undefined) return null;
 
   return (
     <div className="min-w-56 rounded-xl border border-slate-700 bg-slate-950 p-3 text-white shadow-xl">
-      <p className="mb-2 text-xs font-semibold">{formatGridTimestamp(datum.timestamp, timeView)}</p>
+      <p className="mb-2 text-xs font-semibold">
+        {formatGridTooltipTimestamp(new Date(activePoint.timestamp), timeView, aggregation)}
+      </p>
       <dl className="space-y-1.5">
         {series.map((item) => (
           <div key={item.key} className="flex items-center justify-between gap-5 text-xs">
@@ -43,7 +48,9 @@ export function GridChartTooltip({
               <span className="size-2 rounded-sm" style={{ backgroundColor: item.color }} />
               {item.label}
             </dt>
-            <dd className="font-medium tabular-nums">{formatGridValue(datum[item.key], metric)}</dd>
+            <dd className="font-medium tabular-nums">
+              {formatGridValue(activePoint[item.key], metric)}
+            </dd>
           </div>
         ))}
         {breakdown && (
@@ -51,13 +58,13 @@ export function GridChartTooltip({
             <div className="flex items-center justify-between gap-5">
               <dt className="font-medium text-slate-300">Import total</dt>
               <dd className="font-semibold tabular-nums">
-                {formatGridValue(datum.gridImport, metric)}
+                {formatGridValue(activePoint.gridImport, metric)}
               </dd>
             </div>
             <div className="flex items-center justify-between gap-5">
               <dt className="font-medium text-slate-300">Export total</dt>
               <dd className="font-semibold tabular-nums">
-                {formatGridValue(datum.gridExport, metric)}
+                {formatGridValue(activePoint.gridExport, metric)}
               </dd>
             </div>
           </div>

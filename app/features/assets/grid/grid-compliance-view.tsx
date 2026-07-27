@@ -17,6 +17,7 @@ import { GridLegend } from "./components/grid-legend";
 import { GridToolbar } from "./components/grid-toolbar";
 import { GridViolationsPanel } from "./components/grid-violations-panel";
 import { useGridView } from "./hooks/use-grid-view";
+import { formatGridResolution } from "./lib/format-grid-resolution";
 
 type GridComplianceViewProps = {
   rows: readonly EnergyDataRow[];
@@ -86,7 +87,11 @@ export function GridComplianceView({ rows }: GridComplianceViewProps) {
               </p>
             </div>
             <span className="rounded-full bg-slate-100 px-2.5 py-1 text-[0.6875rem] font-semibold text-slate-500">
-              {grid.chartData.length.toLocaleString("en")} bars
+              {formatGridResolution(
+                grid.chartData.length,
+                selection.timeView,
+                selection.aggregation,
+              )}
             </span>
           </div>
           {grid.chartData.length === 0 ? (
@@ -101,6 +106,7 @@ export function GridComplianceView({ rows }: GridComplianceViewProps) {
                   series={series}
                   metric={selection.metric}
                   timeView={selection.timeView}
+                  aggregation={selection.aggregation}
                   breakdown={selection.breakdown}
                   animationKey={animationKey}
                   highlightedTimestampMs={highlightedTimestampMs}

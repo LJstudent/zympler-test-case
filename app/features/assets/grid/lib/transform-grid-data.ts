@@ -241,7 +241,7 @@ export function transformGridData(
       return {
         ...reconciled,
         ...values,
-        timestamp: new Date(bucket.timestampMs),
+        timestamp: new Date(bucket.timestampMs).toISOString(),
         label: formatBucket(new Date(bucket.timestampMs), view, aggregation),
         importViolation: metric === "power" && values.gridImport > GRID_CAPACITY_LIMITS.importKw,
         exportViolation: metric === "power" && values.gridExport < -GRID_CAPACITY_LIMITS.exportKw,

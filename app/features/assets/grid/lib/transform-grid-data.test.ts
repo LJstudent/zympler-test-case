@@ -83,6 +83,25 @@ describe("transformGridData", () => {
     });
   });
 
+  it("preserves the full timestamp on every Month Raw hourly datum", () => {
+    const hourly = transformGridData(
+      [row("2025-01-01T14:00:00Z", 1, 0), row("2025-01-02T09:00:00Z", 1, 0)],
+      "month",
+      "raw",
+      "energy",
+      "2025-01",
+    );
+
+    expect(hourly.map((datum) => datum.timestamp)).toEqual([
+      "2025-01-01T14:00:00.000Z",
+      "2025-01-02T09:00:00.000Z",
+    ]);
+    expect(hourly.map((datum) => datum.timestampMs)).toEqual([
+      Date.parse("2025-01-01T14:00:00Z"),
+      Date.parse("2025-01-02T09:00:00Z"),
+    ]);
+  });
+
   it("converts quarter-hour energy to power and marks limit violations", () => {
     const data = transformGridData(
       [row("2025-01-01T00:00:00Z", 200, 130)],
