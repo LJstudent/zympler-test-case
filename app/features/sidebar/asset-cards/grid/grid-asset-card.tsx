@@ -40,6 +40,7 @@ export function GridAssetCard({ state = "ready", viewModel }: GridAssetCardProps
     <SidebarAssetCard
       title="Grid"
       iconSrc={gridIcon}
+      to="/overview/grid-compliance"
       state={resolvedState}
       emptyMessage="No grid data available"
       loadingContent={<AssetCardPreviewSkeleton />}

@@ -1,4 +1,5 @@
 import { LayoutDashboard } from "lucide-react";
+import { Link } from "react-router";
 
 import { Card } from "~/components/ui/card";
 import type { ContentState } from "~/components/ui/content-state";
@@ -18,9 +19,14 @@ import { createSolarAssetCardViewModel } from "../asset-cards/solar/solar-asset-
 type DashboardSidebarProps = {
   state?: ContentState;
   rows?: readonly EnergyDataRow[];
+  activePage?: "overview" | "grid";
 };
 
-export function DashboardSidebar({ state = "ready", rows = [] }: DashboardSidebarProps) {
+export function DashboardSidebar({
+  state = "ready",
+  rows = [],
+  activePage = "overview",
+}: DashboardSidebarProps) {
   const gridViewModel = createGridAssetCardViewModel(rows);
   const chargerViewModel = createChargerAssetCardViewModel(rows);
   const batteryViewModel = createBatteryAssetCardViewModel(rows);
@@ -32,14 +38,18 @@ export function DashboardSidebar({ state = "ready", rows = [] }: DashboardSideba
         <header className="shrink-0">
           <p className="text-[1.65rem] font-bold tracking-[-0.055em] text-brand-green">Zympler</p>
           <nav className="mt-5" aria-label="Primary navigation">
-            <button
-              type="button"
-              aria-current="page"
-              className="flex w-full items-center gap-3 rounded-xl bg-brand-blue px-4 py-3 text-left text-sm font-semibold text-white shadow-[0_6px_18px_rgb(0_62_208_/_0.18)] transition-[background-color,transform] duration-150 hover:bg-blue-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-blue motion-reduce:transform-none motion-reduce:transition-none"
+            <Link
+              to="/"
+              aria-current={activePage === "overview" ? "page" : undefined}
+              className={`flex w-full items-center gap-3 rounded-xl px-4 py-3 text-left text-sm font-semibold transition-[background-color,color,transform] duration-150 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-blue motion-reduce:transform-none motion-reduce:transition-none ${
+                activePage === "overview"
+                  ? "bg-brand-blue text-white shadow-[0_6px_18px_rgb(0_62_208_/_0.18)] hover:bg-blue-700"
+                  : "text-slate-600 hover:bg-slate-100 hover:text-slate-950"
+              }`}
             >
               <LayoutDashboard className="size-4" aria-hidden="true" />
               Zympler Overview
-            </button>
+            </Link>
           </nav>
           <Separator className="my-5" />
           <div className="mb-3 flex items-center justify-between px-1">

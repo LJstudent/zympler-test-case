@@ -1,4 +1,5 @@
 import { renderToStaticMarkup } from "react-dom/server";
+import { MemoryRouter } from "react-router";
 import { describe, expect, it } from "vitest";
 
 import { GridAssetCard } from "./grid-asset-card";
@@ -6,16 +7,18 @@ import { GridAssetCard } from "./grid-asset-card";
 describe("GridAssetCard", () => {
   it("renders accessible daily totals and a decorative chart", () => {
     const markup = renderToStaticMarkup(
-      <GridAssetCard
-        viewModel={{
-          activity: [
-            { timestamp: 1, netGridKwh: 4 },
-            { timestamp: 2, netGridKwh: -2 },
-          ],
-          importDisplay: "1.82 MWh",
-          exportDisplay: "324 kWh",
-        }}
-      />,
+      <MemoryRouter>
+        <GridAssetCard
+          viewModel={{
+            activity: [
+              { timestamp: 1, netGridKwh: 4 },
+              { timestamp: 2, netGridKwh: -2 },
+            ],
+            importDisplay: "1.82 MWh",
+            exportDisplay: "324 kWh",
+          }}
+        />
+      </MemoryRouter>,
     );
 
     expect(markup).toContain(">Grid<");
@@ -28,14 +31,22 @@ describe("GridAssetCard", () => {
   });
 
   it("uses the shared empty state instead of zero totals", () => {
-    const markup = renderToStaticMarkup(<GridAssetCard viewModel={null} />);
+    const markup = renderToStaticMarkup(
+      <MemoryRouter>
+        <GridAssetCard viewModel={null} />
+      </MemoryRouter>,
+    );
 
     expect(markup).toContain("No grid data available");
     expect(markup).not.toContain("0 kWh");
   });
 
   it("keeps the chart and metric skeleton layout while loading", () => {
-    const markup = renderToStaticMarkup(<GridAssetCard state="loading" viewModel={null} />);
+    const markup = renderToStaticMarkup(
+      <MemoryRouter>
+        <GridAssetCard state="loading" viewModel={null} />
+      </MemoryRouter>,
+    );
 
     expect(markup).toContain("h-24");
     expect(markup).toContain("grid-cols-2");
