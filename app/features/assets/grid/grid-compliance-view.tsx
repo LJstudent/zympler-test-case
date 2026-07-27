@@ -1,6 +1,7 @@
-import { Activity, ArrowLeft } from "lucide-react";
+import { ArrowLeft } from "lucide-react";
 import { Link } from "react-router";
 
+import gridIcon from "~/assets/systems/utility-pole.svg";
 import { Card } from "~/components/ui/card";
 import { EmptyState } from "~/components/ui/content-state";
 import type { EnergyDataRow } from "~/features/energy-data";
@@ -48,8 +49,8 @@ export function GridComplianceView({ rows }: GridComplianceViewProps) {
             Zympler Overview
           </Link>
           <div className="flex items-center gap-3">
-            <span className="flex size-10 items-center justify-center rounded-xl bg-brand-blue text-white shadow-[0_6px_18px_rgb(0_62_208_/_0.18)]">
-              <Activity className="size-5" aria-hidden="true" />
+            <span className="flex size-10 items-center justify-center rounded-xl bg-brand-blue-light/30 text-brand-blue shadow-[0_6px_18px_rgb(0_62_208_/_0.12)]">
+              <img src={gridIcon} alt="" aria-hidden="true" className="size-5" />
             </span>
             <div>
               <h1 className="text-2xl font-semibold tracking-[-0.035em] text-slate-950">Grid</h1>

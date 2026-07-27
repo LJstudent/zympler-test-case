@@ -33,8 +33,6 @@ export function GridChartTooltip({
   const datum = payload?.[0]?.payload;
   if (active !== true || datum === undefined) return null;
 
-  const total = series.reduce((sum, item) => sum + datum[item.key], 0);
-
   return (
     <div className="min-w-56 rounded-xl border border-slate-700 bg-slate-950 p-3 text-white shadow-xl">
       <p className="mb-2 text-xs font-semibold">{formatGridTimestamp(datum.timestamp, timeView)}</p>
@@ -49,9 +47,19 @@ export function GridChartTooltip({
           </div>
         ))}
         {breakdown && (
-          <div className="mt-2 flex items-center justify-between gap-5 border-t border-slate-700 pt-2 text-xs">
-            <dt className="font-medium text-slate-300">Net total</dt>
-            <dd className="font-semibold tabular-nums">{formatGridValue(total, metric)}</dd>
+          <div className="mt-2 space-y-1.5 border-t border-slate-700 pt-2 text-xs">
+            <div className="flex items-center justify-between gap-5">
+              <dt className="font-medium text-slate-300">Import total</dt>
+              <dd className="font-semibold tabular-nums">
+                {formatGridValue(datum.gridImport, metric)}
+              </dd>
+            </div>
+            <div className="flex items-center justify-between gap-5">
+              <dt className="font-medium text-slate-300">Export total</dt>
+              <dd className="font-semibold tabular-nums">
+                {formatGridValue(datum.gridExport, metric)}
+              </dd>
+            </div>
           </div>
         )}
       </dl>

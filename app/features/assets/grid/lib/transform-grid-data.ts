@@ -127,11 +127,48 @@ function addRow(bucket: GridBucket, row: EnergyDataRow): void {
   bucket.gridBatteryToGrid -= Math.max(row.flows.battery.gridOrigin.toGridKwh, 0);
   bucket.gridToBattery += gridToBattery;
   bucket.gridToCharger += gridToCharger;
-  bucket.ownUse += Math.max(gridImport - gridToBattery - gridToCharger, 0);
 }
 
 function toPower(value: number, durationHours: number): number {
   return durationHours > 0 ? value / durationHours : 0;
+}
+
+function reconcileBreakdown(bucket: GridBucket): GridBucket {
+  const importTotal = Math.max(bucket.gridImport, 0);
+  const importDestinations = [Math.max(bucket.gridToCharger, 0), Math.max(bucket.gridToBattery, 0)];
+  const knownImportTotal = importDestinations[0] + importDestinations[1];
+  const importIsOverAllocated = knownImportTotal > importTotal && knownImportTotal > 0;
+  const gridToCharger = importIsOverAllocated
+    ? (importDestinations[0] / knownImportTotal) * importTotal
+    : importDestinations[0];
+  const gridToBattery = importIsOverAllocated ? importTotal - gridToCharger : importDestinations[1];
+  const ownUse = importIsOverAllocated
+    ? 0
+    : Math.max(importTotal - gridToCharger - gridToBattery, 0);
+
+  const exportTotal = Math.max(-bucket.gridExport, 0);
+  const exportSources = [
+    Math.max(-bucket.solarToGrid, 0),
+    Math.max(-bucket.solarBatteryToGrid, 0),
+    Math.max(-bucket.gridBatteryToGrid, 0),
+  ];
+  const knownExportTotal = exportSources.reduce((sum, value) => sum + value, 0);
+  const normalizedExportSources =
+    exportTotal === 0
+      ? [0, 0, 0]
+      : knownExportTotal === 0
+        ? [exportTotal, 0, 0]
+        : exportSources.map((value) => (value / knownExportTotal) * exportTotal);
+
+  return {
+    ...bucket,
+    gridToCharger,
+    gridToBattery,
+    ownUse,
+    solarToGrid: -normalizedExportSources[0],
+    solarBatteryToGrid: -normalizedExportSources[1],
+    gridBatteryToGrid: -(exportTotal - normalizedExportSources[0] - normalizedExportSources[1]),
+  };
 }
 
 export function getGridPeriodOptions(
@@ -185,23 +222,24 @@ export function transformGridData(
   return [...buckets.values()]
     .sort((a, b) => a.timestampMs - b.timestampMs)
     .map((bucket) => {
+      const reconciled = reconcileBreakdown(bucket);
       const durationHours = (bucket.intervalEndMs - bucket.timestampMs) / HOUR_MS;
       const values =
         metric === "power"
           ? {
-              gridImport: toPower(bucket.gridImport, durationHours),
-              gridExport: toPower(bucket.gridExport, durationHours),
-              solarToGrid: toPower(bucket.solarToGrid, durationHours),
-              solarBatteryToGrid: toPower(bucket.solarBatteryToGrid, durationHours),
-              gridBatteryToGrid: toPower(bucket.gridBatteryToGrid, durationHours),
-              gridToBattery: toPower(bucket.gridToBattery, durationHours),
-              gridToCharger: toPower(bucket.gridToCharger, durationHours),
-              ownUse: toPower(bucket.ownUse, durationHours),
+              gridImport: toPower(reconciled.gridImport, durationHours),
+              gridExport: toPower(reconciled.gridExport, durationHours),
+              solarToGrid: toPower(reconciled.solarToGrid, durationHours),
+              solarBatteryToGrid: toPower(reconciled.solarBatteryToGrid, durationHours),
+              gridBatteryToGrid: toPower(reconciled.gridBatteryToGrid, durationHours),
+              gridToBattery: toPower(reconciled.gridToBattery, durationHours),
+              gridToCharger: toPower(reconciled.gridToCharger, durationHours),
+              ownUse: toPower(reconciled.ownUse, durationHours),
             }
-          : bucket;
+          : reconciled;
 
       return {
-        ...bucket,
+        ...reconciled,
         ...values,
         timestamp: new Date(bucket.timestampMs),
         label: formatBucket(new Date(bucket.timestampMs), view, aggregation),

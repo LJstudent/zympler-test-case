@@ -46,7 +46,11 @@ export function GridChart({
       className="h-[24rem] w-full"
       aria-label={`Grid ${metric} bar chart`}
     >
-      <BarChart data={data} margin={{ top: 16, right: 12, bottom: 8, left: 2 }}>
+      <BarChart
+        data={data}
+        stackOffset="sign"
+        margin={{ top: 16, right: 12, bottom: 8, left: 2 }}
+      >
         <CartesianGrid vertical={false} stroke="#e2e8f0" strokeDasharray="3 4" />
         <XAxis
           dataKey="label"
@@ -103,14 +107,22 @@ export function GridChart({
             />
           </>
         )}
-        {series.map((item, index) => (
+        {series.map((item) => (
           <Bar
             key={item.key}
             dataKey={item.key}
             name={item.label}
             fill={item.color}
             stackId={item.stackId}
-            radius={breakdown ? (index === series.length - 1 ? [3, 3, 0, 0] : 0) : [3, 3, 0, 0]}
+            radius={
+              breakdown
+                ? item.key === "ownUse"
+                  ? [3, 3, 0, 0]
+                  : item.key === "gridBatteryToGrid"
+                    ? [0, 0, 3, 3]
+                    : 0
+                : [3, 3, 0, 0]
+            }
             maxBarSize={timeView === "day" ? 14 : 28}
             isAnimationActive
             animationBegin={0}

@@ -12,27 +12,48 @@ export const GRID_TIME_VIEWS: readonly { value: GridTimeView; label: string }[] 
 ];
 
 export const DEFAULT_GRID_SERIES: readonly GridChartSeries[] = [
-  { key: "gridImport", label: "Grid Import", color: "#003ed0" },
-  { key: "gridExport", label: "Grid Export", color: "#00b878" },
+  { key: "gridImport", label: "Grid Import", color: "#315fa8" },
+  { key: "gridExport", label: "Grid Export", color: "#7f9cc8" },
 ];
 
 export const BREAKDOWN_GRID_SERIES: readonly GridChartSeries[] = [
-  { key: "solarToGrid", label: "Solar → Grid", color: "#00c987", stackId: "grid" },
+  {
+    key: "solarToGrid",
+    label: "Solar → Grid",
+    color: "#FBBF24", // Amber 400
+    stackId: "grid",
+  },
   {
     key: "solarBatteryToGrid",
     label: "Battery (Solar) → Grid",
-    color: "#38bdf8",
+    color: "#A78BFA", // Violet 300
     stackId: "grid",
   },
   {
     key: "gridBatteryToGrid",
     label: "Battery (Grid) → Grid",
-    color: "#818cf8",
+    color: "#7C3AED", // Violet 600
     stackId: "grid",
   },
-  { key: "gridToBattery", label: "Grid → Battery", color: "#003ed0", stackId: "grid" },
-  { key: "gridToCharger", label: "Grid → Charger", color: "#7c3aed", stackId: "grid" },
-  { key: "ownUse", label: "Own Use", color: "#f59e0b", stackId: "grid" },
+
+  {
+    key: "gridToBattery",
+    label: "Grid → Battery",
+    color: "#22C55E", // Green 500
+    stackId: "grid",
+  },
+  {
+    key: "gridToCharger",
+    label: "Grid → Charger",
+    color: "#0EA5E9", // Sky 500
+    stackId: "grid",
+  },
+  {
+    key: "ownUse",
+    label: "Own Use",
+    color: "#CBD5E1", // Slate 300
+    stackId: "grid",
+  },
 ];
 
 export const GRID_EXPLANATIONS = {

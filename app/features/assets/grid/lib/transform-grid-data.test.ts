@@ -97,6 +97,43 @@ describe("transformGridData", () => {
     expect(data[0].importViolation).toBe(true);
     expect(data[0].exportViolation).toBe(true);
   });
+
+  it("reconciles positive and negative breakdowns to their measured totals", () => {
+    const inconsistent = row("2025-01-01T00:00:00Z", 10, 12, 8, 7);
+    inconsistent.flows.solar.toGridKwh = 2;
+    inconsistent.flows.battery.solarOrigin.toGridKwh = 1;
+    inconsistent.flows.battery.gridOrigin.toGridKwh = 1;
+
+    const [datum] = transformGridData([inconsistent], "day", "raw", "energy", "2025-01-01");
+
+    expect(datum.gridToCharger).toBeGreaterThanOrEqual(0);
+    expect(datum.gridToBattery).toBeGreaterThanOrEqual(0);
+    expect(datum.ownUse).toBe(0);
+    expect(datum.gridToCharger + datum.gridToBattery + datum.ownUse).toBeCloseTo(
+      datum.gridImport,
+      12,
+    );
+    expect(datum.solarToGrid).toBeLessThanOrEqual(0);
+    expect(datum.solarBatteryToGrid).toBeLessThanOrEqual(0);
+    expect(datum.gridBatteryToGrid).toBeLessThanOrEqual(0);
+    expect(datum.solarToGrid + datum.solarBatteryToGrid + datum.gridBatteryToGrid).toBeCloseTo(
+      datum.gridExport,
+      12,
+    );
+  });
+
+  it("uses non-negative own use as the remainder of measured import", () => {
+    const [datum] = transformGridData(
+      [row("2025-01-01T00:00:00Z", 10, 0, 2, 3)],
+      "day",
+      "raw",
+      "energy",
+      "2025-01-01",
+    );
+
+    expect(datum.ownUse).toBe(5);
+    expect(datum.ownUse).toBeGreaterThanOrEqual(0);
+  });
 });
 
 describe("calculateGridCapacityViolations", () => {
