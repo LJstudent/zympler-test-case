@@ -19,7 +19,7 @@ import { createSolarAssetCardViewModel } from "../asset-cards/solar/solar-asset-
 type DashboardSidebarProps = {
   state?: ContentState;
   rows?: readonly EnergyDataRow[];
-  activePage?: "overview" | "grid";
+  activePage?: "overview" | "grid" | "solar" | "charger" | "battery";
 };
 
 export function DashboardSidebar({

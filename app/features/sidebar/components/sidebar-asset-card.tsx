@@ -1,6 +1,6 @@
 import { Zap } from "lucide-react";
 import type { ReactNode } from "react";
-import { Link } from "react-router";
+import { Link, useInRouterContext } from "react-router";
 
 import { Card } from "~/components/ui/card";
 import { EmptyState, ErrorState } from "~/components/ui/content-state";
@@ -47,6 +47,7 @@ export function SidebarAssetCard({
   loadingContent,
   to,
 }: SidebarAssetCardProps) {
+  const isInRouter = useInRouterContext();
   if (state === "loading") {
     return loadingContent ?? <SidebarAssetCardSkeleton />;
   }
@@ -92,7 +93,7 @@ export function SidebarAssetCard({
         >
           {content}
         </button>
-      ) : (
+      ) : isInRouter ? (
         <Link
           to={to}
           className="block w-full cursor-pointer p-4 text-left focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-brand-blue"
@@ -100,6 +101,14 @@ export function SidebarAssetCard({
         >
           {content}
         </Link>
+      ) : (
+        <a
+          href={to}
+          className="block w-full cursor-pointer p-4 text-left focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-brand-blue"
+          aria-label={`Open ${title} details`}
+        >
+          {content}
+        </a>
       )}
     </Card>
   );

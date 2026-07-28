@@ -1,16 +1,16 @@
-type GridSegmentedControlProps<T extends string> = {
+type AssetSegmentedControlProps<Value extends string> = {
   label: string;
-  value: T;
-  options: readonly { value: T; label: string; disabled?: boolean }[];
-  onChange: (value: T) => void;
+  value: Value;
+  options: readonly { value: Value; label: string; disabled?: boolean }[];
+  onChange: (value: Value) => void;
 };
 
-export function GridSegmentedControl<T extends string>({
+export function AssetSegmentedControl<Value extends string>({
   label,
   value,
   options,
   onChange,
-}: GridSegmentedControlProps<T>) {
+}: AssetSegmentedControlProps<Value>) {
   return (
     <fieldset className="min-w-0">
       <legend className="mb-1.5 text-[0.625rem] font-semibold uppercase tracking-[0.1em] text-slate-400">

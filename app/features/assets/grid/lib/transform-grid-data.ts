@@ -1,4 +1,11 @@
 import type { EnergyDataRow } from "~/features/energy-data";
+import {
+  formatAssetBucket,
+  getAssetPeriodKey,
+  getAssetPeriodOptions,
+  groupAssetRows,
+  HOUR_MS,
+} from "../../shared";
 
 import { GRID_CAPACITY_LIMITS } from "../constants/grid-constants";
 import type {
@@ -10,94 +17,18 @@ import type {
   GridTimeView,
 } from "../types/grid-types";
 
-const HOUR_MS = 60 * 60 * 1_000;
-
-type GridBucket = Omit<
-  GridChartDatum,
-  "timestamp" | "label" | "importViolation" | "exportViolation"
->;
-
-function startOfUtcDay(date: Date): Date {
-  return new Date(Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate()));
-}
-
-function periodKey(date: Date, view: GridTimeView): string {
-  const year = date.getUTCFullYear();
-  const month = String(date.getUTCMonth() + 1).padStart(2, "0");
-  const day = String(date.getUTCDate()).padStart(2, "0");
-
-  if (view === "year") return String(year);
-  if (view === "month") return `${year}-${month}`;
-  return `${year}-${month}-${day}`;
-}
-
-function periodStart(date: Date, view: GridTimeView): Date {
-  if (view === "year") return new Date(Date.UTC(date.getUTCFullYear(), 0, 1));
-  if (view === "month") return new Date(Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), 1));
-  return startOfUtcDay(date);
-}
-
-function nextPeriod(start: Date, view: GridTimeView): Date {
-  if (view === "year") return new Date(Date.UTC(start.getUTCFullYear() + 1, 0, 1));
-  if (view === "month") {
-    return new Date(Date.UTC(start.getUTCFullYear(), start.getUTCMonth() + 1, 1));
-  }
-  return new Date(start.getTime() + 24 * HOUR_MS);
-}
-
-function bucketStart(date: Date, view: GridTimeView, aggregation: GridAggregation): Date {
-  if (view === "year" && aggregation === "combined") {
-    return new Date(Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), 1));
-  }
-
-  if (view === "year" || (view === "month" && aggregation === "combined")) {
-    return startOfUtcDay(date);
-  }
-
-  if (view === "month" || (view === "day" && aggregation === "combined")) {
-    return new Date(
-      Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate(), date.getUTCHours()),
-    );
-  }
-
-  return new Date(date.getTime());
-}
-
-function formatPeriod(date: Date, view: GridTimeView): string {
-  if (view === "year") return String(date.getUTCFullYear());
-  if (view === "month") {
-    return new Intl.DateTimeFormat("en", {
-      month: "long",
-      year: "numeric",
-      timeZone: "UTC",
-    }).format(date);
-  }
-  return new Intl.DateTimeFormat("en", {
-    day: "numeric",
-    month: "short",
-    year: "numeric",
-    timeZone: "UTC",
-  }).format(date);
-}
-
-function formatBucket(date: Date, view: GridTimeView, aggregation: GridAggregation): string {
-  if (view === "year" && aggregation === "combined") {
-    return new Intl.DateTimeFormat("en", { month: "short", timeZone: "UTC" }).format(date);
-  }
-  if (view === "year" || (view === "month" && aggregation === "combined")) {
-    return new Intl.DateTimeFormat("en", {
-      day: "numeric",
-      month: "short",
-      timeZone: "UTC",
-    }).format(date);
-  }
-  return new Intl.DateTimeFormat("en", {
-    hour: "2-digit",
-    minute: "2-digit",
-    hour12: false,
-    timeZone: "UTC",
-  }).format(date);
-}
+type GridBucket = {
+  timestampMs: number;
+  intervalEndMs: number;
+  gridImport: number;
+  gridExport: number;
+  solarToGrid: number;
+  solarBatteryToGrid: number;
+  gridBatteryToGrid: number;
+  gridToBattery: number;
+  gridToCharger: number;
+  ownUse: number;
+};
 
 function emptyBucket(timestampMs: number, intervalEndMs: number): GridBucket {
   return {
@@ -117,16 +48,13 @@ function emptyBucket(timestampMs: number, intervalEndMs: number): GridBucket {
 function addRow(bucket: GridBucket, row: EnergyDataRow): void {
   const gridImport = Math.max(row.measurement.gridImportKwh ?? 0, 0);
   const gridExport = Math.max(row.measurement.gridExportKwh ?? 0, 0);
-  const gridToBattery = Math.max(row.flows.grid.toBatteryKwh, 0);
-  const gridToCharger = Math.max(row.flows.grid.toChargerKwh, 0);
-
   bucket.gridImport += gridImport;
   bucket.gridExport -= gridExport;
   bucket.solarToGrid -= Math.max(row.flows.solar.toGridKwh, 0);
   bucket.solarBatteryToGrid -= Math.max(row.flows.battery.solarOrigin.toGridKwh, 0);
   bucket.gridBatteryToGrid -= Math.max(row.flows.battery.gridOrigin.toGridKwh, 0);
-  bucket.gridToBattery += gridToBattery;
-  bucket.gridToCharger += gridToCharger;
+  bucket.gridToBattery += Math.max(row.flows.grid.toBatteryKwh, 0);
+  bucket.gridToCharger += Math.max(row.flows.grid.toChargerKwh, 0);
 }
 
 function toPower(value: number, durationHours: number): number {
@@ -175,17 +103,7 @@ export function getGridPeriodOptions(
   rows: readonly EnergyDataRow[],
   view: GridTimeView,
 ): GridPeriodOption[] {
-  const unique = new Map<string, GridPeriodOption>();
-
-  for (const row of rows) {
-    const key = periodKey(row.start, view);
-    if (!unique.has(key)) {
-      const start = periodStart(row.start, view);
-      unique.set(key, { key, label: formatPeriod(start, view), start });
-    }
-  }
-
-  return [...unique.values()].sort((a, b) => b.start.getTime() - a.start.getTime());
+  return getAssetPeriodOptions(rows, view);
 }
 
 export function getLatestGridPeriodKey(rows: readonly EnergyDataRow[], view: GridTimeView): string {
@@ -199,54 +117,34 @@ export function transformGridData(
   metric: GridMetric,
   selectedPeriodKey: string,
 ): GridChartDatum[] {
-  const selectedStart = getGridPeriodOptions(rows, view).find(
-    (option) => option.key === selectedPeriodKey,
-  )?.start;
+  return groupAssetRows(rows, view, aggregation, selectedPeriodKey).map((timeBucket) => {
+    const bucket = emptyBucket(timeBucket.timestampMs, timeBucket.intervalEndMs);
+    timeBucket.rows.forEach((row) => addRow(bucket, row));
+    const reconciled = reconcileBreakdown(bucket);
+    const durationHours = (bucket.intervalEndMs - bucket.timestampMs) / HOUR_MS;
+    const values =
+      metric === "power"
+        ? {
+            gridImport: toPower(reconciled.gridImport, durationHours),
+            gridExport: toPower(reconciled.gridExport, durationHours),
+            solarToGrid: toPower(reconciled.solarToGrid, durationHours),
+            solarBatteryToGrid: toPower(reconciled.solarBatteryToGrid, durationHours),
+            gridBatteryToGrid: toPower(reconciled.gridBatteryToGrid, durationHours),
+            gridToBattery: toPower(reconciled.gridToBattery, durationHours),
+            gridToCharger: toPower(reconciled.gridToCharger, durationHours),
+            ownUse: toPower(reconciled.ownUse, durationHours),
+          }
+        : reconciled;
 
-  if (selectedStart === undefined) return [];
-
-  const selectedEnd = nextPeriod(selectedStart, view);
-  const buckets = new Map<number, GridBucket>();
-
-  for (const row of rows) {
-    if (row.start < selectedStart || row.start >= selectedEnd) continue;
-    const start = bucketStart(row.start, view, aggregation);
-    const timestampMs = start.getTime();
-    const existing = buckets.get(timestampMs);
-    const bucket = existing ?? emptyBucket(timestampMs, row.end.getTime());
-    bucket.intervalEndMs = Math.max(bucket.intervalEndMs, row.end.getTime());
-    addRow(bucket, row);
-    buckets.set(timestampMs, bucket);
-  }
-
-  return [...buckets.values()]
-    .sort((a, b) => a.timestampMs - b.timestampMs)
-    .map((bucket) => {
-      const reconciled = reconcileBreakdown(bucket);
-      const durationHours = (bucket.intervalEndMs - bucket.timestampMs) / HOUR_MS;
-      const values =
-        metric === "power"
-          ? {
-              gridImport: toPower(reconciled.gridImport, durationHours),
-              gridExport: toPower(reconciled.gridExport, durationHours),
-              solarToGrid: toPower(reconciled.solarToGrid, durationHours),
-              solarBatteryToGrid: toPower(reconciled.solarBatteryToGrid, durationHours),
-              gridBatteryToGrid: toPower(reconciled.gridBatteryToGrid, durationHours),
-              gridToBattery: toPower(reconciled.gridToBattery, durationHours),
-              gridToCharger: toPower(reconciled.gridToCharger, durationHours),
-              ownUse: toPower(reconciled.ownUse, durationHours),
-            }
-          : reconciled;
-
-      return {
-        ...reconciled,
-        ...values,
-        timestamp: new Date(bucket.timestampMs).toISOString(),
-        label: formatBucket(new Date(bucket.timestampMs), view, aggregation),
-        importViolation: metric === "power" && values.gridImport > GRID_CAPACITY_LIMITS.importKw,
-        exportViolation: metric === "power" && values.gridExport < -GRID_CAPACITY_LIMITS.exportKw,
-      };
-    });
+    return {
+      ...reconciled,
+      ...values,
+      timestamp: new Date(bucket.timestampMs).toISOString(),
+      label: formatAssetBucket(new Date(bucket.timestampMs), view, aggregation),
+      importViolation: metric === "power" && values.gridImport > GRID_CAPACITY_LIMITS.importKw,
+      exportViolation: metric === "power" && values.gridExport < -GRID_CAPACITY_LIMITS.exportKw,
+    };
+  });
 }
 
 export function calculateGridCapacityViolations(
@@ -270,7 +168,6 @@ export function calculateGridCapacityViolations(
         exceededByKw: importKw - GRID_CAPACITY_LIMITS.importKw,
       });
     }
-
     if (exportKw > GRID_CAPACITY_LIMITS.exportKw) {
       violations.push({
         id: `${row.start.getTime()}-export`,
@@ -283,9 +180,9 @@ export function calculateGridCapacityViolations(
     }
   }
 
-  return violations.sort((a, b) => b.timestamp.getTime() - a.timestamp.getTime());
+  return violations.sort((left, right) => right.timestamp.getTime() - left.timestamp.getTime());
 }
 
 export function getGridDayKey(date: Date): string {
-  return periodKey(date, "day");
+  return getAssetPeriodKey(date, "day");
 }

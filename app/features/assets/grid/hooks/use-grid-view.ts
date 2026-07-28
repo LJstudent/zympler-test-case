@@ -1,11 +1,11 @@
 import { useMemo, useState } from "react";
 
 import type { EnergyDataRow } from "~/features/energy-data";
+import { useAssetDetailSelection } from "../../shared";
 
 import {
   calculateGridCapacityViolations,
   getGridDayKey,
-  getGridPeriodOptions,
   transformGridData,
 } from "../lib/transform-grid-data";
 import type {
@@ -17,40 +17,45 @@ import type {
 } from "../types/grid-types";
 
 export function useGridView(rows: readonly EnergyDataRow[]) {
-  const [timeView, setTimeViewState] = useState<GridTimeView>("year");
-  const [aggregation, setAggregationState] = useState<GridAggregation>("combined");
+  const assetSelection = useAssetDetailSelection(rows);
   const [metric, setMetricState] = useState<GridMetric>("energy");
-  const [breakdown, setBreakdown] = useState(false);
   const [showViolations, setShowViolations] = useState(false);
-  const [periodByView, setPeriodByView] = useState<Partial<Record<GridTimeView, string>>>({});
   const [highlightedViolationId, setHighlightedViolationId] = useState<string | null>(null);
+  const { selection: sharedSelection } = assetSelection;
 
-  const periodOptions = useMemo(() => getGridPeriodOptions(rows, timeView), [rows, timeView]);
-  const periodKey = periodByView[timeView] ?? periodOptions[0]?.key ?? "";
   const violations = useMemo(() => calculateGridCapacityViolations(rows), [rows]);
   const chartData = useMemo(
-    () => transformGridData(rows, timeView, aggregation, metric, periodKey),
-    [aggregation, metric, periodKey, rows, timeView],
+    () =>
+      transformGridData(
+        rows,
+        sharedSelection.timeView,
+        sharedSelection.aggregation,
+        metric,
+        sharedSelection.periodKey,
+      ),
+    [
+      metric,
+      rows,
+      sharedSelection.aggregation,
+      sharedSelection.periodKey,
+      sharedSelection.timeView,
+    ],
   );
 
   const selection: GridViewSelection = {
-    timeView,
-    aggregation,
+    ...sharedSelection,
     metric,
-    breakdown,
     showViolations,
-    periodKey,
   };
 
   function setTimeView(next: GridTimeView) {
-    setTimeViewState(next);
-    setAggregationState("combined");
+    assetSelection.setTimeView(next);
     setMetricState("energy");
     setHighlightedViolationId(null);
   }
 
   function setAggregation(next: GridAggregation) {
-    setAggregationState(next);
+    assetSelection.setAggregation(next);
     if (next === "combined") setMetricState("energy");
     setHighlightedViolationId(null);
   }
@@ -61,28 +66,28 @@ export function useGridView(rows: readonly EnergyDataRow[]) {
   }
 
   function setPeriodKey(next: string) {
-    setPeriodByView((current) => ({ ...current, [timeView]: next }));
+    assetSelection.setPeriodKey(next);
     setHighlightedViolationId(null);
   }
 
   function selectViolation(violation: GridCapacityViolation) {
-    setTimeViewState("day");
-    setAggregationState("raw");
+    assetSelection.setTimeView("day");
+    assetSelection.setAggregation("raw");
+    assetSelection.setPeriodForView("day", getGridDayKey(violation.timestamp));
     setMetricState("power");
-    setPeriodByView((current) => ({ ...current, day: getGridDayKey(violation.timestamp) }));
     setHighlightedViolationId(violation.id);
   }
 
   return {
     selection,
-    periodOptions,
+    periodOptions: assetSelection.periodOptions,
     chartData,
     violations,
     highlightedViolationId,
     setTimeView,
     setAggregation,
     setMetric,
-    setBreakdown,
+    setBreakdown: assetSelection.setBreakdown,
     setShowViolations,
     setPeriodKey,
     selectViolation,

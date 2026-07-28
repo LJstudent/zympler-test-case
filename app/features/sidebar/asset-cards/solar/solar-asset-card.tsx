@@ -34,6 +34,7 @@ export function SolarAssetCard({ state = "ready", viewModel }: SolarAssetCardPro
     <SidebarAssetCard
       title="Solar"
       iconSrc={solarIcon}
+      to="/assets/solar"
       state={resolvedState}
       emptyMessage="No solar data available"
       loadingContent={<AssetCardPreviewSkeleton metricLayout="centered" />}

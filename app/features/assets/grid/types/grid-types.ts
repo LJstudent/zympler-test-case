@@ -1,6 +1,15 @@
-export type GridTimeView = "year" | "month" | "day";
-export type GridAggregation = "raw" | "combined";
-export type GridMetric = "energy" | "power";
+import type {
+  AssetAggregation,
+  AssetChartDatum,
+  AssetChartSeries,
+  AssetMetric,
+  AssetPeriodOption,
+  AssetTimeView,
+} from "../../shared";
+
+export type GridTimeView = AssetTimeView;
+export type GridAggregation = AssetAggregation;
+export type GridMetric = AssetMetric;
 export type GridDirection = "import" | "export";
 
 export type GridSeriesKey =
@@ -13,17 +22,9 @@ export type GridSeriesKey =
   | "gridToCharger"
   | "ownUse";
 
-export type GridPeriodOption = {
-  key: string;
-  label: string;
-  start: Date;
-};
+export type GridPeriodOption = AssetPeriodOption;
 
-export type GridChartDatum = {
-  timestamp: string;
-  timestampMs: number;
-  intervalEndMs: number;
-  label: string;
+export type GridChartDatum = AssetChartDatum & {
   gridImport: number;
   gridExport: number;
   solarToGrid: number;
@@ -45,12 +46,7 @@ export type GridCapacityViolation = {
   exceededByKw: number;
 };
 
-export type GridChartSeries = {
-  key: GridSeriesKey;
-  label: string;
-  color: string;
-  stackId?: string;
-};
+export type GridChartSeries = AssetChartSeries<GridSeriesKey>;
 
 export type GridViewSelection = {
   timeView: GridTimeView;

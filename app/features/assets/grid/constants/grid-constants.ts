@@ -1,3 +1,4 @@
+import { ASSET_BLUE_PALETTE, ENERGY_FLOW_COLORS } from "../../shared";
 import type { GridChartSeries, GridTimeView } from "../types/grid-types";
 
 export const GRID_CAPACITY_LIMITS = {
@@ -12,47 +13,49 @@ export const GRID_TIME_VIEWS: readonly { value: GridTimeView; label: string }[] 
 ];
 
 export const DEFAULT_GRID_SERIES: readonly GridChartSeries[] = [
-  { key: "gridImport", label: "Grid Import", color: "#315fa8" },
-  { key: "gridExport", label: "Grid Export", color: "#7f9cc8" },
+  { key: "gridImport", label: "Grid Import", color: ASSET_BLUE_PALETTE.dark },
+  { key: "gridExport", label: "Grid Export", color: ASSET_BLUE_PALETTE.light },
 ];
 
 export const BREAKDOWN_GRID_SERIES: readonly GridChartSeries[] = [
   {
     key: "solarToGrid",
     label: "Solar → Grid",
-    color: "#FBBF24", // Amber 400
+    color: ENERGY_FLOW_COLORS.solarToGrid,
     stackId: "grid",
+    stackPosition: "bottom",
   },
   {
     key: "solarBatteryToGrid",
     label: "Battery (Solar) → Grid",
-    color: "#A78BFA", // Violet 300
+    color: ENERGY_FLOW_COLORS.solarBatteryToGrid,
     stackId: "grid",
   },
   {
     key: "gridBatteryToGrid",
     label: "Battery (Grid) → Grid",
-    color: "#7C3AED", // Violet 600
+    color: ENERGY_FLOW_COLORS.gridBatteryToGrid,
     stackId: "grid",
   },
 
   {
     key: "gridToBattery",
     label: "Grid → Battery",
-    color: "#22C55E", // Green 500
+    color: ENERGY_FLOW_COLORS.toBattery,
     stackId: "grid",
   },
   {
     key: "gridToCharger",
     label: "Grid → Charger",
-    color: "#0EA5E9", // Sky 500
+    color: ENERGY_FLOW_COLORS.toCharger,
     stackId: "grid",
   },
   {
     key: "ownUse",
     label: "Own Use",
-    color: "#CBD5E1", // Slate 300
+    color: ENERGY_FLOW_COLORS.ownUse,
     stackId: "grid",
+    stackPosition: "top",
   },
 ];
 

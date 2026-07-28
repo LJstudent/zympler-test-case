@@ -14,14 +14,23 @@ calculations, formatting, types, loading states, and tests together.
   labels, and loading states.
 - `app/features/sidebar`: sidebar navigation and asset cards.
 - `app/features/assets/grid`: Grid pages, calculations, charts, tables, and
-  states. Equivalent code belongs in sibling `charger`, `battery`, or `solar`
-  features when those sections are implemented.
+  states.
+- `app/features/assets/solar`: Solar data mapping, calculations, KPIs, and
+  presentation configuration.
+- `app/features/assets/shared`: asset-detail layout, chart, controls, time
+  selection and aggregation, tooltip, legend, and interaction building blocks
+  shared by implemented asset features.
 - `app/layouts`: application-shell composition.
 - `app/routes`: thin URL adapters that load route data and render feature entry
   components.
 
-Create `app/features/assets/shared` only when at least two implemented asset
-features need the same abstraction with the same responsibility.
+Keep asset business calculations in their owning feature. Add to
+`app/features/assets/shared` only when at least two implemented asset features
+need the same abstraction with the same responsibility.
+
+Energy-flow colors are semantic rather than asset-specific. Detail features
+must import them from `assets/shared/constants/energy-flow-colors.ts` so the
+same source or destination keeps the same color on every asset page.
 
 ## Dependency direction
 

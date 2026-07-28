@@ -1,0 +1,13 @@
+import { describe, expect, it } from "vitest";
+
+import { ENERGY_FLOW_COLORS } from "./energy-flow-colors";
+
+describe("ENERGY_FLOW_COLORS", () => {
+  it("keeps shared Solar flow colors aligned with the semantic palette", () => {
+    expect(ENERGY_FLOW_COLORS.solarProduction).toBe("#FBBF24");
+    expect(ENERGY_FLOW_COLORS.solarToGrid).toBe("#FBBF24");
+    expect(ENERGY_FLOW_COLORS.toBattery).toBe("#22C55E");
+    expect(ENERGY_FLOW_COLORS.toCharger).toBe("#0EA5E9");
+    expect(ENERGY_FLOW_COLORS.ownUse).toBe("#CBD5E1");
+  });
+});

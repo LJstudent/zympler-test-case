@@ -1,11 +1,10 @@
-import { ArrowLeft } from "lucide-react";
 import { useMemo } from "react";
-import { Link } from "react-router";
 
 import gridIcon from "~/assets/systems/utility-pole.svg";
 import { Card } from "~/components/ui/card";
 import { EmptyState } from "~/components/ui/content-state";
 import type { EnergyDataRow } from "~/features/energy-data";
+import { AssetDetailHeader, useAssetSeriesVisibility } from "../shared";
 
 import {
   BREAKDOWN_GRID_SERIES,
@@ -29,6 +28,7 @@ export function GridComplianceView({ rows }: GridComplianceViewProps) {
   const grid = useGridView(rows);
   const { selection } = grid;
   const series = selection.breakdown ? BREAKDOWN_GRID_SERIES : DEFAULT_GRID_SERIES;
+  const seriesVisibility = useAssetSeriesVisibility(series);
   const highlightedTimestampMs = grid.violations
     .find((violation) => violation.id === grid.highlightedViolationId)
     ?.timestamp.getTime();
@@ -49,29 +49,12 @@ export function GridComplianceView({ rows }: GridComplianceViewProps) {
     "the selected period";
 
   return (
-    <div className="min-w-0 animate-grid-detail-in space-y-6 py-4 sm:px-2 lg:py-6 xl:px-4">
-      <header className="flex flex-wrap items-start justify-between gap-4">
-        <div>
-          <Link
-            to="/"
-            className="mb-4 inline-flex items-center gap-2 rounded-lg text-xs font-semibold text-slate-500 transition-colors hover:text-brand-blue focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-brand-blue"
-          >
-            <ArrowLeft className="size-4" aria-hidden="true" />
-            Zympler Overview
-          </Link>
-          <div className="flex items-center gap-3">
-            <span className="flex size-10 items-center justify-center rounded-xl bg-brand-blue-light/30 text-brand-blue shadow-[0_6px_18px_rgb(0_62_208_/_0.12)]">
-              <img src={gridIcon} alt="" aria-hidden="true" className="size-5" />
-            </span>
-            <div>
-              <h1 className="text-2xl font-semibold tracking-[-0.035em] text-slate-950">Grid</h1>
-              <p className="mt-0.5 text-sm text-slate-500">
-                Import, export and contracted-capacity performance
-              </p>
-            </div>
-          </div>
-        </div>
-      </header>
+    <div className="min-w-0 animate-asset-detail-in space-y-6 py-4 sm:px-2 lg:py-6 xl:px-4">
+      <AssetDetailHeader
+        title="Grid"
+        description="Import, export and contracted-capacity performance"
+        iconSrc={gridIcon}
+      />
 
       <Card className="overflow-hidden shadow-panel">
         <GridToolbar
@@ -113,7 +96,7 @@ export function GridComplianceView({ rows }: GridComplianceViewProps) {
               <div className="min-w-0 flex-1">
                 <GridChart
                   data={grid.chartData}
-                  series={series}
+                  series={seriesVisibility.visibleSeries}
                   metric={selection.metric}
                   timeView={selection.timeView}
                   aggregation={selection.aggregation}
@@ -122,7 +105,11 @@ export function GridComplianceView({ rows }: GridComplianceViewProps) {
                   highlightedTimestampMs={highlightedTimestampMs}
                 />
                 <div className="mt-4 border-t border-slate-100 pt-4">
-                  <GridLegend series={series} />
+                  <GridLegend
+                    series={series}
+                    hiddenKeys={seriesVisibility.hiddenKeys}
+                    onToggle={seriesVisibility.toggleSeries}
+                  />
                 </div>
               </div>
               {selection.showViolations && (

@@ -1,10 +1,10 @@
-type GridToggleProps = {
+type AssetToggleProps = {
   label: string;
   checked: boolean;
   onChange: (checked: boolean) => void;
 };
 
-export function GridToggle({ label, checked, onChange }: GridToggleProps) {
+export function AssetToggle({ label, checked, onChange }: AssetToggleProps) {
   return (
     <label className="flex cursor-pointer items-center gap-2.5 text-xs font-semibold text-slate-600">
       <span>{label}</span>
