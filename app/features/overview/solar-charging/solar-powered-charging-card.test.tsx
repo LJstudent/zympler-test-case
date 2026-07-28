@@ -47,8 +47,8 @@ describe("SolarPoweredChargingCard", () => {
   it("provides separate accessible navigation and tooltip controls", () => {
     const markup = renderCard();
 
-    expect(markup).toContain('href="/overview/solar-powered-charging"');
-    expect(markup).toContain('aria-label="Open solar-powered charging details"');
+    expect(markup).toContain('href="/assets/charger"');
+    expect(markup).toContain('aria-label="Open Charger details"');
     expect(markup).toContain('aria-label="About solar-powered charging"');
     expect(markup).not.toMatch(/<a[^>]*>[^]*<button[^>]*>[^]*<\/button>[^]*<\/a>/);
   });

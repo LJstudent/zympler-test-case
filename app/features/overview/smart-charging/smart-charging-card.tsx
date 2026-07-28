@@ -6,6 +6,7 @@ import { InfoTooltip } from "~/components/ui/info-tooltip";
 import {
   OVERVIEW_KPI_CARD_STYLES,
   OverviewKpiFlowIcon,
+  OverviewKpiNavigationLink,
 } from "../components/overview-kpi-card-parts";
 import { formatPercentage, formatPricePerKwh } from "./format-smart-charging";
 import type { SmartChargingKpi } from "./smart-charging-kpi";
@@ -42,7 +43,9 @@ export function SmartChargingCard({ kpi }: SmartChargingCardProps) {
 
   return (
     <Card aria-labelledby="smart-charging-title" className={OVERVIEW_KPI_CARD_STYLES}>
-      <CardHeader className="relative z-10 items-center gap-3">
+      <OverviewKpiNavigationLink to="/assets/charger" accessibleLabel="Open Charger details" />
+
+      <CardHeader className="pointer-events-none relative z-10 items-center gap-3">
         <div className="flex min-w-0 items-center gap-2.5">
           <OverviewKpiFlowIcon>
             <Zap className="size-4.5 text-brand-blue" aria-hidden="true" />
@@ -52,10 +55,12 @@ export function SmartChargingCard({ kpi }: SmartChargingCardProps) {
           </CardTitle>
         </div>
 
-        <InfoTooltip accessibleLabel="About smart charging" content={TOOLTIP_TEXT} />
+        <div className="pointer-events-auto">
+          <InfoTooltip accessibleLabel="About smart charging" content={TOOLTIP_TEXT} />
+        </div>
       </CardHeader>
 
-      <CardContent className="relative z-10 mt-7">
+      <CardContent className="pointer-events-none relative z-10 mt-7">
         {!kpi.hasValidData ? (
           <div className="flex min-h-64 flex-col justify-center rounded-xl border border-dashed border-slate-200 bg-slate-50/60 p-5">
             <p className="text-base font-semibold text-slate-900">No grid charging recorded</p>

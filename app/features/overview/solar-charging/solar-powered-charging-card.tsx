@@ -42,10 +42,7 @@ export function SolarPoweredChargingCard({ totals, kpi }: SolarPoweredChargingCa
 
   return (
     <Card aria-labelledby="solar-powered-charging-title" className={OVERVIEW_KPI_CARD_STYLES}>
-      <OverviewKpiNavigationLink
-        to="/overview/solar-powered-charging"
-        accessibleLabel="Open solar-powered charging details"
-      />
+      <OverviewKpiNavigationLink to="/assets/charger" accessibleLabel="Open Charger details" />
 
       <CardHeader className="pointer-events-none relative z-10 items-center gap-3">
         <div className="flex min-w-0 items-center gap-2">

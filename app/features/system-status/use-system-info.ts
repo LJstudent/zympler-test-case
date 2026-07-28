@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { systemStatuses } from "./system-statuses";
 import type { SystemStatus } from "./types";
 
-const DEVELOPMENT_LOADING_DELAY_MS = 700;
+const DEVELOPMENT_LOADING_DELAY_MS = 120;
 
 type SystemInfoQuery = {
   data: readonly SystemStatus[] | null;
