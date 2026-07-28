@@ -5,7 +5,7 @@
  * color regardless of which asset is being viewed.
  */
 export const ENERGY_FLOW_COLORS = {
-  solarProduction: "#FBBF24",
+  solarProduction: "#FFD54A",
   solarToGrid: "#FBBF24",
   gridSource: "#315fa8",
   toBattery: "#22C55E",
