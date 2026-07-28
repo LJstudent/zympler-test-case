@@ -5,12 +5,14 @@ export type ContentState = "loading" | "error" | "empty" | "ready";
 type ErrorStateProps = {
   message?: string;
   onRetry?: () => void;
+  retryLabel?: string;
   compact?: boolean;
 };
 
 export function ErrorState({
   message = "Unable to load data.",
   onRetry,
+  retryLabel = "Retry",
   compact = false,
 }: ErrorStateProps) {
   return (
@@ -27,7 +29,7 @@ export function ErrorState({
             className="mt-1.5 text-xs font-semibold text-red-700 underline-offset-4 hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600"
             onClick={onRetry}
           >
-            Retry
+            {retryLabel}
           </button>
         )}
       </div>

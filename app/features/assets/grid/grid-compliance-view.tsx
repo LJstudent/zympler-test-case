@@ -1,4 +1,5 @@
 import { ArrowLeft } from "lucide-react";
+import { useMemo } from "react";
 import { Link } from "react-router";
 
 import gridIcon from "~/assets/systems/utility-pole.svg";
@@ -12,11 +13,12 @@ import {
   GRID_EXPLANATIONS,
 } from "./constants/grid-constants";
 import { GridChart } from "./components/grid-chart";
-import { GridKpiPlaceholder } from "./components/grid-kpi-placeholder";
+import { GridKpiPanel } from "./components/grid-kpi-panel";
 import { GridLegend } from "./components/grid-legend";
 import { GridToolbar } from "./components/grid-toolbar";
 import { GridViolationsPanel } from "./components/grid-violations-panel";
 import { useGridView } from "./hooks/use-grid-view";
+import { calculateGridKpis, selectGridPeriodRows } from "./lib/calculate-grid-kpis";
 import { formatGridResolution } from "./lib/format-grid-resolution";
 
 type GridComplianceViewProps = {
@@ -37,6 +39,14 @@ export function GridComplianceView({ rows }: GridComplianceViewProps) {
     selection.breakdown,
     selection.periodKey,
   ].join("-");
+  const selectedRows = useMemo(
+    () => selectGridPeriodRows(rows, selection.timeView, selection.periodKey),
+    [rows, selection.periodKey, selection.timeView],
+  );
+  const kpiSummary = useMemo(() => calculateGridKpis(selectedRows), [selectedRows]);
+  const selectedPeriodLabel =
+    grid.periodOptions.find((option) => option.key === selection.periodKey)?.label ??
+    "the selected period";
 
   return (
     <div className="min-w-0 animate-grid-detail-in space-y-6 py-4 sm:px-2 lg:py-6 xl:px-4">
@@ -127,7 +137,13 @@ export function GridComplianceView({ rows }: GridComplianceViewProps) {
         </div>
       </Card>
 
-      <GridKpiPlaceholder />
+      <GridKpiPanel
+        timeView={selection.timeView}
+        periodLabel={selectedPeriodLabel}
+        summary={kpiSummary}
+        status={kpiSummary.measurementCount === 0 ? "empty" : "success"}
+        showBreakdown={selection.breakdown}
+      />
     </div>
   );
 }
