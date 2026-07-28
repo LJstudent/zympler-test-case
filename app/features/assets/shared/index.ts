@@ -1,5 +1,6 @@
 export { AssetChart } from "./components/asset-chart";
 export { AssetChartToolbar } from "./components/asset-chart-toolbar";
+export { AssetDatePicker } from "./components/asset-date-picker";
 export { AssetDetailHeader } from "./components/asset-detail-header";
 export { AssetDetailLayout } from "./components/asset-detail-layout";
 export { AssetLegend } from "./components/asset-legend";
@@ -13,10 +14,13 @@ export { useAssetSeriesVisibility } from "./hooks/use-asset-series-visibility";
 export { formatAssetResolution, formatAssetValue } from "./lib/format-asset-chart";
 export {
   formatAssetBucket,
+  getCalendarDayKey,
   getAssetPeriodOptions,
   getAssetPeriodKey,
   groupAssetRows,
   HOUR_MS,
+  parseAssetDayKey,
+  resolveAssetPeriodKey,
   selectAssetPeriodRows,
 } from "./lib/asset-time";
 export type {

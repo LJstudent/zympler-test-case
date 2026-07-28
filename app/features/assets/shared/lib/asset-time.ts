@@ -8,6 +8,29 @@ import type {
 
 export const HOUR_MS = 60 * 60 * 1_000;
 
+export function getCalendarDayKey(date: Date): string {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+  return `${year}-${month}-${day}`;
+}
+
+export function parseAssetDayKey(key: string): Date | undefined {
+  const match = /^(\d{4})-(\d{2})-(\d{2})$/.exec(key);
+  if (match === null) return undefined;
+
+  const year = Number(match[1]);
+  const month = Number(match[2]) - 1;
+  const day = Number(match[3]);
+  const date = new Date(year, month, day);
+
+  if (date.getFullYear() !== year || date.getMonth() !== month || date.getDate() !== day) {
+    return undefined;
+  }
+
+  return date;
+}
+
 export function getAssetPeriodKey(date: Date, view: AssetTimeView): string {
   const year = date.getUTCFullYear();
   const month = String(date.getUTCMonth() + 1).padStart(2, "0");
@@ -112,6 +135,16 @@ export function getAssetPeriodOptions(
   }
 
   return [...unique.values()].sort((left, right) => right.start.getTime() - left.start.getTime());
+}
+
+export function resolveAssetPeriodKey(
+  options: readonly AssetPeriodOption[],
+  preferredKey: string | undefined,
+): string {
+  if (preferredKey !== undefined && options.some((option) => option.key === preferredKey)) {
+    return preferredKey;
+  }
+  return options[0]?.key ?? "";
 }
 
 export function selectAssetPeriodRows(

@@ -2,7 +2,7 @@ import { useMemo, useState } from "react";
 
 import type { EnergyDataRow } from "~/features/energy-data";
 
-import { getAssetPeriodOptions } from "../lib/asset-time";
+import { getAssetPeriodOptions, resolveAssetPeriodKey } from "../lib/asset-time";
 import type {
   AssetAggregation,
   AssetTimeView,
@@ -19,7 +19,7 @@ export function useAssetDetailSelection(
   const [periodByView, setPeriodByView] = useState<Partial<Record<AssetTimeView, string>>>({});
 
   const periodOptions = useMemo(() => getAssetPeriodOptions(rows, timeView), [rows, timeView]);
-  const periodKey = periodByView[timeView] ?? periodOptions[0]?.key ?? "";
+  const periodKey = resolveAssetPeriodKey(periodOptions, periodByView[timeView]);
 
   const selection: AssetViewSelection = {
     timeView,
