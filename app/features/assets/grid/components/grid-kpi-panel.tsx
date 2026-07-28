@@ -6,7 +6,6 @@ import type { GridKpiPanelStatus, GridKpiSummary } from "../types/grid-kpi-types
 import type { GridTimeView } from "../types/grid-types";
 import { GridBreakdownSection } from "./grid-breakdown-section";
 import { GridKpiItem } from "./grid-kpi-item";
-import { GridKpiPanelSkeleton } from "./grid-kpi-panel-skeleton";
 
 type GridKpiPanelProps = {
   timeView: GridTimeView;
@@ -31,10 +30,6 @@ export function GridKpiPanel({
   onBreakdownRetry,
   locale = "en",
 }: GridKpiPanelProps) {
-  if (status === "loading") {
-    return <GridKpiPanelSkeleton timeView={timeView} showBreakdown={showBreakdown} />;
-  }
-
   const panelTitleId = "grid-kpi-panel-title";
 
   if (status === "error") {
