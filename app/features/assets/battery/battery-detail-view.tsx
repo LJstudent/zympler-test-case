@@ -94,19 +94,6 @@ export function BatteryDetailView({ rows }: { rows: readonly EnergyDataRow[] }) 
             {presentation.screenReaderSummary}
           </p>
 
-          {battery.analytics.validationIssues.length > 0 && (
-            <p
-              role="status"
-              className="mb-4 rounded-lg bg-amber-50 px-3 py-2 text-xs text-amber-800"
-            >
-              Source-data validation found {battery.analytics.validationIssues.length} battery flow{" "}
-              {battery.analytics.validationIssues.length === 1
-                ? "inconsistency"
-                : "inconsistencies"}{" "}
-              beyond the rounding tolerance. Derived values have not been silently clamped.
-            </p>
-          )}
-
           {presentation.chartData.length === 0 ? (
             <div className="grid min-h-[24rem] place-items-center">
               <EmptyState message="No data available for the selected period." />
