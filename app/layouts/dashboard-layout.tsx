@@ -1,5 +1,6 @@
 import type { ContentState } from "~/components/ui/content-state";
 import type { EnergyDataRow, EnergyTotals } from "~/features/energy-data";
+import { DashboardOnboarding } from "~/features/onboarding";
 import { OverviewSection } from "~/features/overview";
 import { ResponsiveDashboardSidebar } from "~/features/sidebar";
 import { SystemStatusSection } from "~/features/system-status";
@@ -37,6 +38,7 @@ export function DashboardLayout({
           />
         </div>
       </div>
+      <DashboardOnboarding />
     </main>
   );
 }
