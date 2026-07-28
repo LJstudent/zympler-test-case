@@ -100,7 +100,12 @@ export function AssetTooltip<Key extends string>({
   return (
     <div className="min-w-56 rounded-xl border border-slate-700 bg-slate-950 p-3 text-white shadow-xl">
       <p className="mb-2 text-xs font-semibold">
-        {formatAssetTooltipTimestamp(new Date(activePoint.timestamp), timeView, aggregation)}
+        {formatAssetTooltipTimestamp(
+          new Date(activePoint.timestamp),
+          timeView,
+          aggregation,
+          new Date(activePoint.intervalEndMs),
+        )}
       </p>
       <dl className="space-y-1.5">
         {totalsFirst && totalRows.length > 0 && (

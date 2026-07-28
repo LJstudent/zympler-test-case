@@ -39,6 +39,7 @@ export function ChargerAssetCard({ state = "ready", viewModel }: ChargerAssetCar
     <SidebarAssetCard
       title="Charger"
       iconSrc={chargerIcon}
+      to="/assets/charger"
       state={resolvedState}
       emptyMessage="No charger data available"
       loadingContent={<AssetCardPreviewSkeleton />}

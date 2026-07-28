@@ -48,7 +48,20 @@ export function formatAssetTooltipTimestamp(
   date: Date,
   view: AssetTimeView,
   aggregation: AssetAggregation,
+  intervalEnd?: Date,
 ): string {
+  if (view === "day" && intervalEnd !== undefined && Number.isFinite(intervalEnd.getTime())) {
+    const time = (value: Date) =>
+      new Intl.DateTimeFormat("en-GB", {
+        hour: "2-digit",
+        minute: "2-digit",
+        hour12: false,
+        timeZone: "UTC",
+      }).format(value);
+
+    return `${time(date)}–${time(intervalEnd)}`;
+  }
+
   if (view === "month" && aggregation === "raw") {
     const formattedDate = new Intl.DateTimeFormat("en-GB", {
       day: "numeric",
