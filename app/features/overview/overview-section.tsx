@@ -3,6 +3,7 @@ import { useMemo } from "react";
 import { Card, CardTitle } from "~/components/ui/card";
 import { EmptyState, ErrorState } from "~/components/ui/content-state";
 import type { ContentState } from "~/components/ui/content-state";
+import { Skeleton } from "~/components/ui/skeleton";
 import type { EnergyDataRow, EnergyTotals } from "~/features/energy-data";
 
 import {
@@ -65,9 +66,17 @@ export function OverviewSection({
   );
 
   return (
-    <section aria-labelledby="zympler-overview-heading" className="space-y-6">
+    <section
+      aria-labelledby="zympler-overview-heading"
+      aria-busy={state === "loading"}
+      className="space-y-6 p-5"
+    >
       <div id="zympler-overview-heading">
-        <CardTitle className="text-lg tracking-[-0.025em]">Zympler overview</CardTitle>
+        {state === "loading" ? (
+          <Skeleton className="h-7 w-40" />
+        ) : (
+          <CardTitle className="text-lg tracking-[-0.025em]">Zympler overview</CardTitle>
+        )}
       </div>
 
       {state === "loading" && <OverviewSkeleton />}
