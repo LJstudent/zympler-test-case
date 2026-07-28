@@ -54,7 +54,7 @@ export function DashboardSidebar({
           <Separator className="my-5" />
           <div className="mb-3 flex items-center justify-between px-1">
             <h2 className="text-[0.6875rem] font-semibold uppercase tracking-[0.12em] text-slate-400">
-              Assets
+              Assets Today
             </h2>
             {state === "loading" ? (
               <Skeleton className="h-3 w-16" />
