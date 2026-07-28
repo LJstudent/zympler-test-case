@@ -40,6 +40,7 @@ export function BatteryAssetCard({ state = "ready", viewModel }: BatteryAssetCar
     <SidebarAssetCard
       title="Battery"
       iconSrc={batteryIcon}
+      to="/assets/battery"
       state={resolvedState}
       emptyMessage="No battery data available"
       loadingContent={<AssetCardPreviewSkeleton metricLayout="centered" />}

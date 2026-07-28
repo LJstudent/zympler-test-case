@@ -24,7 +24,7 @@ export function AssetLegend<Key extends string>({
             className="inline-flex items-center gap-2 rounded-md text-xs text-slate-500 transition-opacity hover:text-slate-800 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-blue"
           >
             <span
-              className="size-2.5 rounded-sm transition-opacity"
+              className={`${item.kind === "line" ? "size-2.5 rounded-full" : "size-2.5 rounded-sm"} transition-opacity`}
               style={{ backgroundColor: item.color, opacity: hidden ? 0.25 : 1 }}
             />
             <span className={hidden ? "opacity-45 line-through" : undefined}>{item.label}</span>

@@ -143,9 +143,11 @@ export function SolarKpiPanel({ periodLabel, summary, showBreakdown }: SolarKpiP
                       <p className="mt-2 text-2xl font-semibold tracking-[-0.035em] text-brand-blue tabular-nums">
                         {formatEnergy(flow.energyKwh)}
                       </p>
-                      <p className="mt-1.5 text-xs text-slate-500">
-                        Estimated value {formatAssetMoney(flow.estimatedValue)}
-                      </p>
+                      {flow.id !== "solarToGrid" && (
+                        <p className="mt-1.5 text-xs text-slate-500">
+                          Estimated value {formatAssetMoney(flow.estimatedValue)}
+                        </p>
+                      )}
                     </li>
                   );
                 })}

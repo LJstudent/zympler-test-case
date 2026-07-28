@@ -15,11 +15,16 @@ export type SolarChartSeries = AssetChartSeries<SolarSeriesKey>;
 
 export type SolarFlowId = "ownUse" | "solarToCharger" | "solarToBattery" | "solarToGrid";
 
-export type SolarFlowSummary = {
-  id: SolarFlowId;
-  energyKwh: number;
-  estimatedValue: number;
-};
+export type SolarFlowSummary =
+  | {
+      id: Exclude<SolarFlowId, "solarToGrid">;
+      energyKwh: number;
+      estimatedValue: number;
+    }
+  | {
+      id: "solarToGrid";
+      energyKwh: number;
+    };
 
 export type SolarKpiSummary = {
   measurementCount: number;

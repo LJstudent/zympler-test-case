@@ -9,8 +9,11 @@ import type {
   AssetViewSelection,
 } from "../types/asset-detail-types";
 
-export function useAssetDetailSelection(rows: readonly EnergyDataRow[]) {
-  const [timeView, setTimeViewState] = useState<AssetTimeView>("year");
+export function useAssetDetailSelection(
+  rows: readonly EnergyDataRow[],
+  initialTimeView: AssetTimeView = "year",
+) {
+  const [timeView, setTimeViewState] = useState<AssetTimeView>(initialTimeView);
   const [aggregation, setAggregationState] = useState<AssetAggregation>("combined");
   const [breakdown, setBreakdown] = useState(false);
   const [periodByView, setPeriodByView] = useState<Partial<Record<AssetTimeView, string>>>({});

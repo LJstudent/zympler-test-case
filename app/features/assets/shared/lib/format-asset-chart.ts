@@ -118,11 +118,11 @@ export function formatAssetResolution(
   > = {
     year: {
       combined: { singular: "monthly total", plural: "monthly totals" },
-      raw: { singular: "daily total", plural: "daily totals" },
+      raw: { singular: "source interval", plural: "source intervals" },
     },
     month: {
       combined: { singular: "daily total", plural: "daily totals" },
-      raw: { singular: "hourly interval", plural: "hourly intervals" },
+      raw: { singular: "source interval", plural: "source intervals" },
     },
     day: {
       combined: { singular: "hourly total", plural: "hourly totals" },

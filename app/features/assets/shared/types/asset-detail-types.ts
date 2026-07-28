@@ -20,8 +20,12 @@ export type AssetChartSeries<Key extends string = string> = {
   key: Key;
   label: string;
   color: string;
+  kind?: "bar" | "line";
+  yAxisId?: "left" | "right";
   stackId?: string;
   stackPosition?: "top" | "bottom";
+  showValueLabels?: boolean;
+  strokeDasharray?: string;
 };
 
 export type AssetViewSelection = {

@@ -32,20 +32,15 @@ export function calculateSolarKpis(rows: readonly EnergyDataRow[]): SolarKpiSumm
     };
     for (const [id, energyKwh] of Object.entries(flows) as [SolarFlowId, number][]) {
       totals[id].energyKwh += energyKwh;
-      totals[id].estimatedValue += energyKwh * pricePerKwh;
+      if (id !== "solarToGrid") {
+        totals[id].estimatedValue += energyKwh * pricePerKwh;
+      }
     }
   }
 
   const localUseKwh =
     totals.ownUse.energyKwh + totals.solarToCharger.energyKwh + totals.solarToBattery.energyKwh;
   const exportedKwh = totals.solarToGrid.energyKwh;
-  const order: readonly SolarFlowId[] = [
-    "ownUse",
-    "solarToCharger",
-    "solarToBattery",
-    "solarToGrid",
-  ];
-
   return {
     measurementCount: rows.length,
     totalProductionKwh,
@@ -53,6 +48,11 @@ export function calculateSolarKpis(rows: readonly EnergyDataRow[]): SolarKpiSumm
     localUsePercentage: percentage(localUseKwh, totalProductionKwh),
     exportedKwh,
     exportedPercentage: percentage(exportedKwh, totalProductionKwh),
-    breakdown: order.map((id) => ({ id, ...totals[id] })),
+    breakdown: [
+      { id: "ownUse", ...totals.ownUse },
+      { id: "solarToCharger", ...totals.solarToCharger },
+      { id: "solarToBattery", ...totals.solarToBattery },
+      { id: "solarToGrid", energyKwh: totals.solarToGrid.energyKwh },
+    ],
   };
 }
