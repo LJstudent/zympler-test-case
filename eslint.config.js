@@ -12,7 +12,14 @@ const typescriptFiles = ["**/*.{ts,tsx}"];
 
 export default [
   {
-    ignores: ["build/**", "dist/**", ".react-router/**", "coverage/**", "node_modules/**"],
+    ignores: [
+      "build/**",
+      "dist/**",
+      ".react-router/**",
+      "coverage/**",
+      "node_modules/**",
+      "old-app/**",
+    ],
   },
   {
     ...eslint.configs.recommended,
