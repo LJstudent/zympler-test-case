@@ -33,7 +33,7 @@ export function DashboardSidebar({
   const solarViewModel = createSolarAssetCardViewModel(rows);
 
   return (
-    <aside className="lg:sticky lg:top-4 lg:h-[calc(100dvh-2rem)] lg:self-start">
+    <aside className="h-full min-h-0 lg:sticky lg:top-4 lg:h-[calc(100dvh-2rem)] lg:self-start">
       <Card className="flex h-full min-h-0 flex-col overflow-hidden p-4 shadow-panel sm:p-5">
         <header className="shrink-0">
           <p className="text-[1.65rem] font-bold tracking-[-0.055em] text-brand-green">Zympler</p>
