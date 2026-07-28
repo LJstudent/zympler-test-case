@@ -8,7 +8,8 @@ import { SystemStatusCard } from "./system-status-card";
 import type { SupportedLocale } from "./system-status-labels";
 import { useSystemInfo } from "./use-system-info";
 
-const SYSTEM_INFO_TOOLTIP = "System information tooltip content will be added later.";
+const SYSTEM_INFO_TOOLTIP =
+  "Shows the operational health of your energy system. Alerts are displayed when devices report errors or forecast data is unavailable or out of sync.";
 
 type SystemInfoPanelProps = {
   state?: ContentState;
