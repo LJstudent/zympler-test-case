@@ -84,32 +84,27 @@ export function SidebarAssetCard({
   );
 
   return (
-    <Card className="group overflow-hidden shadow-sm transition-[border-color,box-shadow,transform] duration-150 hover:-translate-y-0.5 hover:border-brand-blue-light hover:shadow-panel motion-reduce:transform-none motion-reduce:transition-none">
+    <Card className="group relative overflow-hidden shadow-sm transition-[border-color,box-shadow,transform] duration-150 hover:-translate-y-0.5 hover:border-brand-blue-light hover:shadow-panel motion-reduce:transform-none motion-reduce:transition-none">
       {to === undefined ? (
         <button
           type="button"
-          className="w-full cursor-pointer p-4 text-left focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-brand-blue"
+          className="absolute inset-0 z-0 w-full cursor-pointer rounded-2xl text-left focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-brand-blue"
           aria-label={`Open ${title} details`}
-        >
-          {content}
-        </button>
+        />
       ) : isInRouter ? (
         <Link
           to={to}
-          className="block w-full cursor-pointer p-4 text-left focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-brand-blue"
+          className="absolute inset-0 z-0 block cursor-pointer rounded-2xl focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-brand-blue"
           aria-label={`Open ${title} details`}
-        >
-          {content}
-        </Link>
+        />
       ) : (
         <a
           href={to}
-          className="block w-full cursor-pointer p-4 text-left focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-brand-blue"
+          className="absolute inset-0 z-0 block cursor-pointer rounded-2xl focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-brand-blue"
           aria-label={`Open ${title} details`}
-        >
-          {content}
-        </a>
+        />
       )}
+      <div className="pointer-events-none relative z-10 p-4">{content}</div>
     </Card>
   );
 }

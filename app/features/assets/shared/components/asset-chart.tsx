@@ -13,6 +13,7 @@ import {
 } from "recharts";
 
 import { ChartContainer } from "~/components/ui/chart";
+import { useHasFinePointer } from "~/components/ui/use-fine-pointer";
 
 import { ASSET_CHART } from "../constants/asset-detail-constants";
 import { formatAssetAxisTimestamp, getMonthRawAxisTicks } from "../lib/format-asset-chart";
@@ -69,6 +70,7 @@ export function AssetChart<Key extends string>({
   lineValueFormatter = yAxisValue,
   getCellStyle,
 }: AssetChartProps<Key>) {
+  const hasFinePointer = useHasFinePointer();
   const isMonthRaw = timeView === "month" && aggregation === "raw";
   const monthRawTicks = isMonthRaw ? getMonthRawAxisTicks(data) : undefined;
   const hasRightAxis = series.some((item) => item.yAxisId === "right");
@@ -80,7 +82,7 @@ export function AssetChart<Key extends string>({
     <ChartContainer
       key={animationKey}
       config={Object.fromEntries(series.map((item) => [item.key, { color: item.color }]))}
-      className="h-[24rem] w-full"
+      className="h-[24rem] w-full [touch-action:pan-y]"
       aria-label={ariaLabel}
       aria-describedby={ariaDescribedBy}
     >
@@ -148,6 +150,7 @@ export function AssetChart<Key extends string>({
               : { fill: "#bdd2ff", fillOpacity: 0.16 }
           }
           shared
+          trigger={hasFinePointer ? "hover" : "click"}
           content={tooltip}
           isAnimationActive={false}
           wrapperStyle={{ outline: "none" }}
