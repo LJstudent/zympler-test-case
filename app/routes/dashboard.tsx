@@ -1,5 +1,6 @@
 import { isRouteErrorResponse, useRouteError } from "react-router";
 
+import { DashboardOnboarding } from "~/features/onboarding";
 import { loadOverviewData } from "~/features/overview";
 import { DashboardLayout } from "~/layouts/dashboard-layout";
 
@@ -16,11 +17,16 @@ export function HydrateFallback() {
 }
 
 export default function Dashboard({ loaderData }: Route.ComponentProps) {
-  if (loaderData.rows.length === 0) {
-    return <DashboardLayout state="empty" totals={loaderData.totals} rows={loaderData.rows} />;
-  }
-
-  return <DashboardLayout totals={loaderData.totals} rows={loaderData.rows} />;
+  return (
+    <>
+      <DashboardLayout
+        state={loaderData.rows.length === 0 ? "empty" : "ready"}
+        totals={loaderData.totals}
+        rows={loaderData.rows}
+      />
+      <DashboardOnboarding />
+    </>
+  );
 }
 
 export function ErrorBoundary() {

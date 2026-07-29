@@ -1,6 +1,52 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useReducer, useRef } from "react";
 
 import { ONBOARDING_STORAGE_KEY, ONBOARDING_STEPS } from "../constants/onboarding-steps";
+
+export type OnboardingState = {
+  currentStep: number;
+  isOpen: boolean;
+  isReady: boolean;
+};
+
+export type OnboardingAction =
+  | { type: "initialise"; hasCompleted: boolean }
+  | { type: "dismiss" }
+  | { type: "openManually" }
+  | { type: "goBack" }
+  | { type: "goNext" };
+
+export const INITIAL_ONBOARDING_STATE: OnboardingState = {
+  currentStep: 0,
+  isOpen: false,
+  isReady: false,
+};
+
+export function onboardingReducer(
+  state: OnboardingState,
+  action: OnboardingAction,
+): OnboardingState {
+  switch (action.type) {
+    case "initialise":
+      if (state.isReady) return state;
+
+      return {
+        ...state,
+        isOpen: !action.hasCompleted,
+        isReady: true,
+      };
+    case "dismiss":
+      return { ...state, isOpen: false };
+    case "openManually":
+      return { ...state, currentStep: 0, isOpen: true };
+    case "goBack":
+      return { ...state, currentStep: Math.max(0, state.currentStep - 1) };
+    case "goNext":
+      return {
+        ...state,
+        currentStep: Math.min(ONBOARDING_STEPS.length - 1, state.currentStep + 1),
+      };
+  }
+}
 
 function storeOnboardingCompletion() {
   try {
@@ -11,11 +57,13 @@ function storeOnboardingCompletion() {
 }
 
 export function useOnboarding() {
-  const [isReady, setIsReady] = useState(false);
-  const [isOpen, setIsOpen] = useState(false);
-  const [currentStep, setCurrentStep] = useState(0);
+  const [state, dispatch] = useReducer(onboardingReducer, INITIAL_ONBOARDING_STATE);
+  const hasCheckedStorage = useRef(false);
 
   useEffect(() => {
+    if (hasCheckedStorage.current) return;
+    hasCheckedStorage.current = true;
+
     let hasCompletedOnboarding = false;
 
     try {
@@ -24,19 +72,18 @@ export function useOnboarding() {
       // Treat unavailable storage as a first visit.
     }
 
-    setIsOpen(!hasCompletedOnboarding);
-    setIsReady(true);
+    dispatch({ type: "initialise", hasCompleted: hasCompletedOnboarding });
   }, []);
 
   const dismiss = useCallback(() => {
     storeOnboardingCompletion();
-    setIsOpen(false);
+    dispatch({ type: "dismiss" });
   }, []);
 
   const setOpen = useCallback(
     (open: boolean) => {
       if (open) {
-        setIsOpen(true);
+        dispatch({ type: "openManually" });
         return;
       }
 
@@ -46,25 +93,24 @@ export function useOnboarding() {
   );
 
   const openManually = useCallback(() => {
-    setCurrentStep(0);
-    setIsOpen(true);
+    dispatch({ type: "openManually" });
   }, []);
 
   const goBack = useCallback(() => {
-    setCurrentStep((step) => Math.max(0, step - 1));
+    dispatch({ type: "goBack" });
   }, []);
 
   const goNext = useCallback(() => {
-    setCurrentStep((step) => Math.min(ONBOARDING_STEPS.length - 1, step + 1));
+    dispatch({ type: "goNext" });
   }, []);
 
   return {
-    currentStep,
+    currentStep: state.currentStep,
     dismiss,
     goBack,
     goNext,
-    isOpen,
-    isReady,
+    isOpen: state.isOpen,
+    isReady: state.isReady,
     openManually,
     setOpen,
   };
