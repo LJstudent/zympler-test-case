@@ -66,7 +66,6 @@ describe("calculateBatteryInterval", () => {
       interval.gridToBatteryKwh + interval.solarToBatteryKwh,
       12,
     );
-    expect(interval.validationIssues).toHaveLength(0);
   });
 
   it("derives Own Use and reconciles measured Battery Export", () => {
@@ -86,12 +85,9 @@ describe("calculateBatteryInterval", () => {
     );
   });
 
-  it("reports rather than clamps a meaningful negative Own Use balance", () => {
+  it("preserves a meaningful negative Own Use balance", () => {
     const interval = calculateBatteryInterval(row({ discharge: 2 }));
     expect(interval.batteryToOwnUseKwh).toBe(-3);
-    expect(interval.validationIssues).toEqual([
-      expect.objectContaining({ code: "battery-export-mismatch", differenceKwh: -3 }),
-    ]);
   });
 
   it("calculates Revenue, Savings, grid charging Costs, and Profit at interval price", () => {

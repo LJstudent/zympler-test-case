@@ -17,13 +17,6 @@ export type BatteryEnergySeriesKey =
 export type BatterySeriesKey = BatteryEnergySeriesKey | "cumulativeProfit";
 export type BatteryChartSeries = AssetChartSeries<BatterySeriesKey>;
 
-export type BatteryValidationIssue = {
-  code: "battery-import-mismatch" | "battery-export-mismatch";
-  timestamp: Date;
-  differenceKwh: number;
-  message: string;
-};
-
 export type BatteryInterval = {
   batteryImportKwh: number;
   batteryExportKwh: number;
@@ -36,7 +29,6 @@ export type BatteryInterval = {
   savingsEur: number | null;
   gridChargingCostsEur: number | null;
   intervalProfitEur: number | null;
-  validationIssues: readonly BatteryValidationIssue[];
 };
 
 export type BatteryAnalyticsPoint = AssetChartDatum & {
@@ -68,7 +60,6 @@ export type BatteryAnalytics = {
   totalSavingsEur: number | null;
   totalGridChargingCostsEur: number | null;
   totalProfitEur: number | null;
-  validationIssues: readonly BatteryValidationIssue[];
 };
 
 export type BatteryChartDatum = BatteryAnalyticsPoint & {

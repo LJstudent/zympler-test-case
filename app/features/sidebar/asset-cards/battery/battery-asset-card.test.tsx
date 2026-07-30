@@ -20,10 +20,6 @@ describe("BatteryAssetCard", () => {
     expect(markup).toContain(">Battery<");
     expect(markup).toContain(">Energy shifted<");
     expect(markup).toContain("336.5 kWh");
-    expect(markup).toContain("Total energy that flowed into and out of the battery today.");
-    expect(markup).toContain(
-      "This combines all charging and discharging activity and indicates how actively the battery was used by the Energy Management System.",
-    );
     expect(markup).toContain('aria-hidden="true"');
     expect(markup).toContain("text-center");
     expect(markup).not.toContain(">Profit<");

@@ -7,7 +7,6 @@ import type {
   BatteryAnalyticsPoint,
   BatteryInterval,
   BatteryTimeView,
-  BatteryValidationIssue,
 } from "../types/battery-types";
 
 export const BATTERY_BALANCE_TOLERANCE_KWH = 0.001;
@@ -18,20 +17,6 @@ function finite(value: number): number {
 
 function normalizeRoundingDifference(value: number): number {
   return Math.abs(value) <= BATTERY_BALANCE_TOLERANCE_KWH ? 0 : value;
-}
-
-function validationIssue(
-  code: BatteryValidationIssue["code"],
-  row: EnergyDataRow,
-  differenceKwh: number,
-): BatteryValidationIssue {
-  const direction = code === "battery-import-mismatch" ? "import" : "export";
-  return {
-    code,
-    timestamp: row.start,
-    differenceKwh,
-    message: `Battery ${direction} does not reconcile with its source flows at ${row.start.toISOString()} (difference ${differenceKwh.toFixed(6)} kWh).`,
-  };
 }
 
 export function calculateBatteryInterval(row: EnergyDataRow): BatteryInterval {
@@ -48,28 +33,6 @@ export function calculateBatteryInterval(row: EnergyDataRow): BatteryInterval {
   const batteryToOwnUseKwh = normalizeRoundingDifference(
     batteryExportKwh - batteryToGridKwh - batteryToChargerKwh,
   );
-  const importDifference = normalizeRoundingDifference(
-    batteryImportKwh - gridToBatteryKwh - solarToBatteryKwh,
-  );
-  const exportDifference = normalizeRoundingDifference(
-    batteryExportKwh - batteryToGridKwh - batteryToChargerKwh - batteryToOwnUseKwh,
-  );
-  const validationIssues: BatteryValidationIssue[] = [];
-
-  if (importDifference !== 0) {
-    validationIssues.push(validationIssue("battery-import-mismatch", row, importDifference));
-  }
-  // A meaningful negative residual is an inconsistent destination balance. Keep
-  // the value visible and report it instead of silently clamping it to zero.
-  if (batteryToOwnUseKwh < -BATTERY_BALANCE_TOLERANCE_KWH || exportDifference !== 0) {
-    validationIssues.push(
-      validationIssue(
-        "battery-export-mismatch",
-        row,
-        batteryToOwnUseKwh < 0 ? batteryToOwnUseKwh : exportDifference,
-      ),
-    );
-  }
 
   const pricePerKwh = row.measurement.pricePerKwh;
   const revenueEur = pricePerKwh === null ? null : batteryToGridKwh * pricePerKwh;
@@ -94,7 +57,6 @@ export function calculateBatteryInterval(row: EnergyDataRow): BatteryInterval {
     savingsEur,
     gridChargingCostsEur,
     intervalProfitEur,
-    validationIssues,
   };
 }
 
@@ -116,7 +78,6 @@ export function calculateBatteryAnalytics(
   let totalSavingsEur = 0;
   let totalGridChargingCostsEur = 0;
   let hasCompletePricing = true;
-  const validationIssues: BatteryValidationIssue[] = [];
   const buckets = groupAssetRows(rows, view, aggregation, selectedPeriodKey);
 
   const points: BatteryAnalyticsPoint[] = buckets.map((bucket) => {
@@ -142,7 +103,6 @@ export function calculateBatteryAnalytics(
       batteryToGrid += interval.batteryToGridKwh;
       batteryToCharger += interval.batteryToChargerKwh;
       batteryToOwnUse += interval.batteryToOwnUseKwh;
-      validationIssues.push(...interval.validationIssues);
 
       if (
         interval.revenueEur === null ||
@@ -211,6 +171,5 @@ export function calculateBatteryAnalytics(
     totalProfitEur: hasCompletePricing
       ? totalRevenueEur + totalSavingsEur - totalGridChargingCostsEur
       : null,
-    validationIssues,
   };
 }
