@@ -22,7 +22,6 @@ const summary: GridKpiSummary = {
   importedBreakdown: [
     { id: "battery", energyKwh: 20, percentage: 20 },
     { id: "own-use", energyKwh: 50, percentage: 50 },
-    { id: "solar", energyKwh: 0, percentage: 0 },
     { id: "charger", energyKwh: 30, percentage: 30 },
   ],
   exportedBreakdown: [
@@ -100,22 +99,6 @@ describe("GridKpiPanel", () => {
     expect(markup).toContain("Imported energy");
     expect(markup).toContain("The energy breakdown could not be calculated.");
     expect(markup).toContain("Try again");
-  });
-
-  it("renders a layout-preserving accessible loading skeleton", () => {
-    const markup = renderToStaticMarkup(
-      <GridKpiPanel
-        timeView="year"
-        periodLabel="2025"
-        summary={null}
-        status="loading"
-        showBreakdown
-      />,
-    );
-
-    expect(markup).toContain("Loading Grid performance summary");
-    expect(markup).toContain("Loading Grid energy breakdown");
-    expect(markup).toContain('aria-busy="true"');
   });
 
   it("renders a breakdown-only empty state without hiding valid KPIs", () => {

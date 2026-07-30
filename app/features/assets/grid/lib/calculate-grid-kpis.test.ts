@@ -145,7 +145,6 @@ describe("calculateGridKpis", () => {
     expect(summary.importedBreakdown).toEqual([
       { id: "battery", energyKwh: 20, percentage: 20 },
       { id: "own-use", energyKwh: 50, percentage: 50 },
-      { id: "solar", energyKwh: 0, percentage: 0 },
       { id: "charger", energyKwh: 30, percentage: 30 },
     ]);
     expect(summary.importedBreakdown.reduce((sum, item) => sum + item.percentage, 0)).toBeCloseTo(

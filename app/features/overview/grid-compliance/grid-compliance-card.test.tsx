@@ -29,30 +29,36 @@ function renderCard(rows: readonly GridMeasurementRow[]) {
   );
 }
 
+function renderedText(markup: string): string {
+  return markup.replace(/<[^>]+>/g, "").replace(/\s+/g, " ").trim();
+}
+
 describe("GridComplianceCard", () => {
   it("renders compliance, directional violations, peaks, limits, and status", () => {
     const markup = renderCard([row(812, 400), row(100, 534)]);
+    const text = renderedText(markup);
 
-    expect(markup).toContain("0.0%");
-    expect(markup).toContain("1 import violation");
-    expect(markup).toContain("1 export violation");
-    expect(markup).toContain("812 / 750 kW");
-    expect(markup).toContain("534 / 500 kW");
-    expect(markup).toContain("Exceeded by 62 kW");
-    expect(markup).toContain("Exceeded by 34 kW");
-    expect(markup).toContain("18 Mar, 14:15");
+    expect(text).toContain("0.0%");
+    expect(text).toContain("1 import violation");
+    expect(text).toContain("1 export violation");
+    expect(text).toContain("812 / 750 kW");
+    expect(text).toContain("534 / 500 kW");
+    expect(text).toContain("Exceeded by 62 kW");
+    expect(text).toContain("Exceeded by 34 kW");
+    expect(text).toContain("18 Mar, 14:15");
   });
 
   it("renders valid zero usage as fully compliant rather than empty", () => {
     const markup = renderCard([row(0, 0)]);
+    const text = renderedText(markup);
 
-    expect(markup).toContain("100.0%");
-    expect(markup).toContain("No import violations");
-    expect(markup).toContain("No export violations");
-    expect(markup).toContain("0 / 750 kW");
-    expect(markup).toContain("750 kW headroom");
-    expect(markup).toContain("0 / 500 kW");
-    expect(markup).toContain("500 kW headroom");
+    expect(text).toContain("100.0%");
+    expect(text).toContain("No import violations");
+    expect(text).toContain("No export violations");
+    expect(text).toContain("0 / 750 kW");
+    expect(text).toContain("750 kW headroom");
+    expect(text).toContain("0 / 500 kW");
+    expect(text).toContain("500 kW headroom");
   });
 
   it("renders the grid-specific empty state for invalid measurements", () => {
