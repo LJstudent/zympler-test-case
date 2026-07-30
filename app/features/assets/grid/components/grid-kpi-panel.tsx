@@ -1,11 +1,10 @@
-import { Card } from "~/components/ui/card";
 import { EmptyState, ErrorState } from "~/components/ui/content-state";
+import { AssetKpiItem, AssetKpiPanel } from "../../shared";
 
 import { createGridKpiPresentation } from "../lib/create-grid-kpi-presentation";
 import type { GridKpiPanelStatus, GridKpiSummary } from "../types/grid-kpi-types";
 import type { GridTimeView } from "../types/grid-types";
 import { GridBreakdownSection } from "./grid-breakdown-section";
-import { GridKpiItem } from "./grid-kpi-item";
 
 type GridKpiPanelProps = {
   timeView: GridTimeView;
@@ -30,14 +29,9 @@ export function GridKpiPanel({
   onBreakdownRetry,
   locale = "en",
 }: GridKpiPanelProps) {
-  const panelTitleId = "grid-kpi-panel-title";
-
   if (status === "error") {
     return (
-      <Card aria-labelledby={panelTitleId} className="min-h-64 p-5 shadow-panel sm:p-6">
-        <h2 id={panelTitleId} className="text-base font-semibold text-slate-950">
-          Grid performance
-        </h2>
+      <AssetKpiPanel title="Grid performance" className="min-h-64">
         <div className="mt-6">
           <ErrorState
             message="Grid statistics could not be loaded. The chart is still available, but its summary could not be calculated."
@@ -45,42 +39,38 @@ export function GridKpiPanel({
             retryLabel="Try again"
           />
         </div>
-      </Card>
+      </AssetKpiPanel>
     );
   }
 
   if (status === "empty" || summary === null || summary.measurementCount === 0) {
     return (
-      <Card aria-labelledby={panelTitleId} className="min-h-64 p-5 shadow-panel sm:p-6">
-        <h2 id={panelTitleId} className="text-base font-semibold text-slate-950">
-          Grid performance
-        </h2>
-        <p className="mt-1 text-sm text-slate-500">Summary for {periodLabel}</p>
+      <AssetKpiPanel title="Grid performance" periodLabel={periodLabel} className="min-h-64">
         <div className="mt-6">
           <EmptyState message="No Grid data available. There are no import or export measurements for the selected period." />
         </div>
-      </Card>
+      </AssetKpiPanel>
     );
   }
 
   const items = createGridKpiPresentation({ summary, timeView, locale });
 
   return (
-    <Card aria-labelledby={panelTitleId} className="overflow-hidden p-5 shadow-panel sm:p-6">
-      <header>
-        <h2 id={panelTitleId} className="text-base font-semibold text-slate-950">
-          Grid performance
-        </h2>
-        <p className="mt-1 text-sm text-slate-500">Summary for {periodLabel}</p>
-      </header>
+    <AssetKpiPanel title="Grid performance" periodLabel={periodLabel}>
       <div className="mt-5 grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-12">
         {items.map((item, index) => (
-          <GridKpiItem
+          <AssetKpiItem
             key={item.id}
-            item={item}
-            desktopSpanClassName={
+            label={item.label}
+            iconSrc={item.iconSrc}
+            tooltip={item.tooltip}
+            value={item.value}
+            valueAvailable={item.valueAvailable}
+            supportingText={item.supportingText}
+            context={item.context}
+            className={`border-t border-slate-100 first:border-t-0 sm:[&:nth-child(-n+2)]:border-t-0 xl:[&:nth-child(-n+4)]:border-t-0 ${
               items.length === 7 && index >= 4 ? "xl:col-span-4" : "xl:col-span-3"
-            }
+            }`}
           />
         ))}
       </div>
@@ -92,6 +82,6 @@ export function GridKpiPanel({
           locale={locale}
         />
       )}
-    </Card>
+    </AssetKpiPanel>
   );
 }

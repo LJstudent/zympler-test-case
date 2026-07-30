@@ -1,8 +1,12 @@
 export { AssetChart } from "./components/asset-chart";
 export { AssetChartToolbar } from "./components/asset-chart-toolbar";
+export { AssetBreakdownItem } from "./components/asset-breakdown-item";
+export { AssetBreakdownSection } from "./components/asset-breakdown-section";
 export { AssetDatePicker } from "./components/asset-date-picker";
 export { AssetDetailHeader } from "./components/asset-detail-header";
 export { AssetDetailLayout } from "./components/asset-detail-layout";
+export { AssetKpiItem } from "./components/asset-kpi-item";
+export { AssetKpiPanel } from "./components/asset-kpi-panel";
 export { AssetLegend } from "./components/asset-legend";
 export { AssetSegmentedControl } from "./components/asset-segmented-control";
 export { AssetToggle } from "./components/asset-toggle";
@@ -32,3 +36,5 @@ export type {
   AssetTimeView,
   AssetViewSelection,
 } from "./types/asset-detail-types";
+export type { AssetKpiItemProps, AssetMetricContextLine } from "./components/asset-kpi-item";
+export type { AssetBreakdownItemProps } from "./components/asset-breakdown-item";

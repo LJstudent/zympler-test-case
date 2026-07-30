@@ -18,6 +18,32 @@ const summary: ChargerKpiSummary = {
 };
 
 describe("ChargerKpiPanel", () => {
+  it("renders the panel heading, period, tooltip labels, and responsive primary layout", () => {
+    const markup = renderToStaticMarkup(
+      <ChargerKpiPanel periodLabel="2025" summary={summary} showBreakdown={false} />,
+    );
+
+    expect(markup).toContain("Charger performance");
+    expect(markup).toContain("Summary for 2025");
+    expect(markup).toContain('aria-label="More information about solar charging"');
+    expect(markup).toContain(
+      "grid grid-cols-1 divide-y divide-slate-100 sm:grid-cols-2 sm:divide-x sm:divide-y-0",
+    );
+  });
+
+  it("renders the existing empty state when the selected period has no measurements", () => {
+    const markup = renderToStaticMarkup(
+      <ChargerKpiPanel
+        periodLabel="2025"
+        summary={{ ...summary, measurementCount: 0 }}
+        showBreakdown
+      />,
+    );
+
+    expect(markup).toContain("No Charger data is available for the selected period.");
+    expect(markup).not.toContain(">Breakdown<");
+  });
+
   it("always shows the general KPIs and hides breakdown KPIs in combined view", () => {
     const markup = renderToStaticMarkup(
       <ChargerKpiPanel periodLabel="2025" summary={summary} showBreakdown={false} />,
@@ -39,6 +65,7 @@ describe("ChargerKpiPanel", () => {
     expect(markup).toContain("Battery → Charger (Grid)");
     expect(markup).toContain("Grid → Charger");
     expect(markup.match(/of charged energy/g)).toHaveLength(4);
+    expect(markup).toContain("grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4");
   });
 
   it("shows an em dash instead of zero percent when total charging is zero", () => {

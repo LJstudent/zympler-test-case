@@ -2,10 +2,9 @@ import batteryIcon from "~/assets/systems/battery.svg";
 import chargerIcon from "~/assets/systems/charger.svg";
 import solarIcon from "~/assets/systems/solar.svg";
 import gridIcon from "~/assets/systems/utility-pole.svg";
-import { Card } from "~/components/ui/card";
 import { EmptyState } from "~/components/ui/content-state";
 import { InfoTooltip } from "~/components/ui/info-tooltip";
-import { Separator } from "~/components/ui/separator";
+import { AssetBreakdownItem, AssetBreakdownSection, AssetKpiPanel } from "../../shared";
 
 import { BATTERY_TOOLTIP_DESCRIPTIONS } from "../constants/battery-constants";
 import type { BatteryPresentation } from "../types/battery-types";
@@ -24,27 +23,6 @@ type BreakdownItem = {
   tooltip: string;
   iconSrc: string;
 };
-
-function BreakdownItemView({ item }: { item: BreakdownItem }) {
-  return (
-    <li className="min-w-0 border-t border-slate-100 py-5 first:border-t-0 sm:px-5 sm:[&:nth-child(-n+2)]:border-t-0 xl:[&:nth-child(-n+4)]:border-t-0">
-      <div className="flex min-h-8 items-center gap-2">
-        <span className="flex size-8 shrink-0 items-center justify-center rounded-lg bg-brand-blue-light/25">
-          <img src={item.iconSrc} alt="" aria-hidden="true" className="size-4" />
-        </span>
-        <h4 className="text-xs font-semibold text-slate-700">{item.label}</h4>
-        <InfoTooltip
-          accessibleLabel={`More information about ${item.label.toLowerCase()}`}
-          content={item.tooltip}
-        />
-      </div>
-      <p className="mt-2 whitespace-nowrap text-2xl font-semibold tracking-[-0.035em] text-brand-blue tabular-nums">
-        {item.value}
-      </p>
-      <p className="mt-1.5 text-xs leading-5 text-slate-500">{item.supporting}</p>
-    </li>
-  );
-}
 
 function CompactPerformance({ presentation }: { presentation: BatteryPresentation }) {
   return (
@@ -157,11 +135,7 @@ function BatteryBreakdown({ presentation }: { presentation: BatteryPresentation 
   ];
 
   return (
-    <section aria-labelledby="battery-breakdown-title">
-      <Separator className="my-6" />
-      <h3 id="battery-breakdown-title" className="text-sm font-semibold text-slate-950">
-        Battery Breakdown
-      </h3>
+    <AssetBreakdownSection title="Battery Breakdown">
       <div className="mt-3 space-y-6">
         <section aria-labelledby="battery-imported-title">
           <h4 id="battery-imported-title" className="text-xs font-semibold text-slate-500">
@@ -169,7 +143,14 @@ function BatteryBreakdown({ presentation }: { presentation: BatteryPresentation 
           </h4>
           <ul className="mt-1 grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4">
             {imported.map((item) => (
-              <BreakdownItemView key={item.label} item={item} />
+              <AssetBreakdownItem
+                key={item.label}
+                label={item.label}
+                iconSrc={item.iconSrc}
+                tooltip={item.tooltip}
+                value={item.value}
+                supportingText={item.supporting}
+              />
             ))}
           </ul>
         </section>
@@ -179,7 +160,14 @@ function BatteryBreakdown({ presentation }: { presentation: BatteryPresentation 
           </h4>
           <ul className="mt-1 grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4">
             {exported.map((item) => (
-              <BreakdownItemView key={item.label} item={item} />
+              <AssetBreakdownItem
+                key={item.label}
+                label={item.label}
+                iconSrc={item.iconSrc}
+                tooltip={item.tooltip}
+                value={item.value}
+                supportingText={item.supporting}
+              />
             ))}
           </ul>
         </section>
@@ -189,12 +177,19 @@ function BatteryBreakdown({ presentation }: { presentation: BatteryPresentation 
           </h4>
           <ul className="mt-1 grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4">
             {financial.map((item) => (
-              <BreakdownItemView key={item.label} item={item} />
+              <AssetBreakdownItem
+                key={item.label}
+                label={item.label}
+                iconSrc={item.iconSrc}
+                tooltip={item.tooltip}
+                value={item.value}
+                supportingText={item.supporting}
+              />
             ))}
           </ul>
         </section>
       </div>
-    </section>
+    </AssetBreakdownSection>
   );
 }
 
@@ -205,11 +200,7 @@ export function BatteryKpiPanel({
   presentation,
 }: BatteryKpiPanelProps) {
   return (
-    <Card className="overflow-hidden p-5 shadow-panel sm:p-6">
-      <header>
-        <h2 className="text-base font-semibold text-slate-950">Battery performance</h2>
-        <p className="mt-1 text-sm text-slate-500">Summary for {periodLabel}</p>
-      </header>
+    <AssetKpiPanel title="Battery performance" periodLabel={periodLabel}>
       {measurementCount === 0 ? (
         <div className="mt-6">
           <EmptyState message="No Battery data is available for the selected period." />
@@ -219,6 +210,6 @@ export function BatteryKpiPanel({
       ) : (
         <CompactPerformance presentation={presentation} />
       )}
-    </Card>
+    </AssetKpiPanel>
   );
 }

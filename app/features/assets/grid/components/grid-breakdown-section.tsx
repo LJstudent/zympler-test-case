@@ -1,10 +1,9 @@
 import { EmptyState, ErrorState } from "~/components/ui/content-state";
-import { Separator } from "~/components/ui/separator";
 import { Skeleton } from "~/components/ui/skeleton";
+import { AssetBreakdownItem, AssetBreakdownSection } from "../../shared";
 
 import { createGridBreakdownPresentation } from "../lib/create-grid-kpi-presentation";
 import type { GridKpiPanelStatus, GridKpiSummary } from "../types/grid-kpi-types";
-import { GridBreakdownItem } from "./grid-breakdown-item";
 
 type GridBreakdownSectionProps = {
   summary: GridKpiSummary | null;
@@ -50,11 +49,7 @@ export function GridBreakdownSection({
   const isEmpty = importedItems.length === 0 && exportedItems.length === 0;
 
   return (
-    <section aria-labelledby="grid-breakdown-title">
-      <Separator className="my-6" />
-      <h3 id="grid-breakdown-title" className="text-sm font-semibold text-slate-950">
-        Breakdown
-      </h3>
+    <AssetBreakdownSection title="Breakdown">
       {status === "loading" ? (
         <div aria-label="Loading Grid energy breakdown" aria-busy="true">
           <span className="sr-only">Loading Grid energy breakdown</span>
@@ -86,7 +81,14 @@ export function GridBreakdownSection({
               </h4>
               <ul className="mt-1 grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4">
                 {importedItems.map((item) => (
-                  <GridBreakdownItem key={item.id} item={item} />
+                  <AssetBreakdownItem
+                    key={item.id}
+                    label={item.label}
+                    iconSrc={item.iconSrc}
+                    tooltip={item.tooltip}
+                    value={item.value}
+                    supportingText={item.percentageText}
+                  />
                 ))}
               </ul>
             </section>
@@ -101,13 +103,20 @@ export function GridBreakdownSection({
               </h4>
               <ul className="mt-1 grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4">
                 {exportedItems.map((item) => (
-                  <GridBreakdownItem key={item.id} item={item} />
+                  <AssetBreakdownItem
+                    key={item.id}
+                    label={item.label}
+                    iconSrc={item.iconSrc}
+                    tooltip={item.tooltip}
+                    value={item.value}
+                    supportingText={item.percentageText}
+                  />
                 ))}
               </ul>
             </section>
           )}
         </div>
       )}
-    </section>
+    </AssetBreakdownSection>
   );
 }

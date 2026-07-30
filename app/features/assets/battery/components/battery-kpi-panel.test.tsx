@@ -26,6 +26,36 @@ const presentation: BatteryPresentation = {
 };
 
 describe("BatteryKpiPanel", () => {
+  it("renders the panel heading, period, tooltip label, and compact responsive layout", () => {
+    const markup = renderToStaticMarkup(
+      <BatteryKpiPanel
+        periodLabel="2025"
+        measurementCount={96}
+        showBreakdown={false}
+        presentation={presentation}
+      />,
+    );
+
+    expect(markup).toContain("Battery performance");
+    expect(markup).toContain("Summary for 2025");
+    expect(markup).toContain('aria-label="More information about Profit"');
+    expect(markup).toContain("grid grid-cols-1 sm:grid-cols-2");
+  });
+
+  it("renders the existing empty state when the selected period has no measurements", () => {
+    const markup = renderToStaticMarkup(
+      <BatteryKpiPanel
+        periodLabel="2025"
+        measurementCount={0}
+        showBreakdown
+        presentation={presentation}
+      />,
+    );
+
+    expect(markup).toContain("No Battery data is available for the selected period.");
+    expect(markup).not.toContain("Battery Breakdown");
+  });
+
   it("uses Profit as the single primary compact KPI", () => {
     const markup = renderToStaticMarkup(
       <BatteryKpiPanel
@@ -60,5 +90,6 @@ describe("BatteryKpiPanel", () => {
     expect(markup).toContain("Costs");
     expect(markup).toContain("Solar → Battery: €0 electricity purchase cost");
     expect(markup).not.toContain("Economic Value");
+    expect(markup.match(/grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4/g)).toHaveLength(3);
   });
 });

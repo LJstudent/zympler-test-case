@@ -42,6 +42,15 @@ function renderSuccess(timeView: GridTimeView) {
 }
 
 describe("GridKpiPanel", () => {
+  it("renders the panel heading, period, and responsive KPI layout", () => {
+    const markup = renderSuccess("year");
+
+    expect(markup).toContain("Grid performance");
+    expect(markup).toContain("Summary for November 2025");
+    expect(markup).toContain("grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-12");
+    expect(markup).toContain("xl:col-span-4");
+  });
+
   it.each([
     ["year", "Days above 90% capacity"],
     ["month", "Average daily peak import"],
@@ -61,6 +70,22 @@ describe("GridKpiPanel", () => {
 
     expect(markup).toContain('aria-label="More information about imported energy"');
     expect(markup).toContain("<button");
+  });
+
+  it("renders limit context and warning presentation without hiding the KPI value", () => {
+    const markup = renderToStaticMarkup(
+      <GridKpiPanel
+        timeView="year"
+        periodLabel="2025"
+        summary={{ ...summary, peakImportKw: 800 }}
+        status="success"
+      />,
+    );
+
+    expect(markup).toContain("800 kW");
+    expect(markup).toContain("Limit: 750 kW");
+    expect(markup).toContain("Exceeded by 50 kW");
+    expect(markup).toContain("font-medium text-orange-600");
   });
 
   it("shows the imported and exported breakdown only when enabled", () => {
@@ -99,6 +124,23 @@ describe("GridKpiPanel", () => {
     expect(markup).toContain("Imported energy");
     expect(markup).toContain("The energy breakdown could not be calculated.");
     expect(markup).toContain("Try again");
+  });
+
+  it("renders the existing breakdown loading state independently from the KPIs", () => {
+    const markup = renderToStaticMarkup(
+      <GridKpiPanel
+        timeView="year"
+        periodLabel="2025"
+        summary={summary}
+        status="success"
+        showBreakdown
+        breakdownStatus="loading"
+      />,
+    );
+
+    expect(markup).toContain("Imported energy");
+    expect(markup).toContain('aria-label="Loading Grid energy breakdown"');
+    expect(markup).toContain('aria-busy="true"');
   });
 
   it("renders a breakdown-only empty state without hiding valid KPIs", () => {
