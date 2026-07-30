@@ -66,8 +66,6 @@ export interface GridBreakdownPresentationItem {
   iconSrc: string;
 }
 
-export type GridKpiPanelStatus = "loading" | "success" | "empty" | "error";
-
 export interface GridKpiPresentationInput {
   summary: GridKpiSummary;
   timeView: GridTimeView;

@@ -30,33 +30,61 @@ const summary: GridKpiSummary = {
   ],
 };
 
-function renderSuccess(timeView: GridTimeView) {
+const singleBreakdownGroupCases: {
+  direction: string;
+  importedBreakdown: GridKpiSummary["importedBreakdown"];
+  exportedBreakdown: GridKpiSummary["exportedBreakdown"];
+  shown: string;
+  hidden: string;
+}[] = [
+  {
+    direction: "exported",
+    importedBreakdown: [],
+    exportedBreakdown: summary.exportedBreakdown,
+    shown: "Exported energy",
+    hidden: "Imported energy",
+  },
+  {
+    direction: "imported",
+    importedBreakdown: summary.importedBreakdown,
+    exportedBreakdown: [],
+    shown: "Imported energy",
+    hidden: "Exported energy",
+  },
+];
+
+function renderPanel(
+  timeView: GridTimeView,
+  options: {
+    summary?: GridKpiSummary;
+    showBreakdown?: boolean;
+  } = {},
+) {
   return renderToStaticMarkup(
     <GridKpiPanel
       timeView={timeView}
       periodLabel="November 2025"
-      summary={summary}
-      status="success"
+      summary={options.summary ?? summary}
+      showBreakdown={options.showBreakdown}
     />,
   );
 }
 
 describe("GridKpiPanel", () => {
   it("renders the panel heading, period, and responsive KPI layout", () => {
-    const markup = renderSuccess("year");
+    const markup = renderPanel("year");
 
     expect(markup).toContain("Grid performance");
     expect(markup).toContain("Summary for November 2025");
     expect(markup).toContain("grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-12");
-    expect(markup).toContain("xl:col-span-4");
   });
 
   it.each([
     ["year", "Days above 90% capacity"],
     ["month", "Average daily peak import"],
     ["day", "Remaining import headroom"],
-  ] as const)("renders the correct %s-specific KPI", (timeView, label) => {
-    const markup = renderSuccess(timeView);
+  ] as const)("renders the correct %s-specific KPIs", (timeView, label) => {
+    const markup = renderPanel(timeView);
 
     expect(markup).toContain(label);
     expect(markup).toContain("Imported energy");
@@ -65,22 +93,31 @@ describe("GridKpiPanel", () => {
     expect(markup).toContain("Peak export");
   });
 
+  it("renders only the empty state when the summary has no measurements", () => {
+    const markup = renderPanel("day", {
+      summary: { ...summary, measurementCount: 0 },
+      showBreakdown: true,
+    });
+
+    expect(markup).toContain("Grid performance");
+    expect(markup).toContain("Summary for November 2025");
+    expect(markup).toContain("No Grid data is available for the selected period.");
+    expect(markup).not.toContain("Peak import");
+    expect(markup).not.toContain(">Breakdown<");
+  });
+
   it("renders keyboard-focusable, accessible tooltip triggers", () => {
-    const markup = renderSuccess("year");
+    const markup = renderPanel("year", { showBreakdown: true });
 
     expect(markup).toContain('aria-label="More information about imported energy"');
+    expect(markup).toContain('aria-label="More information about battery"');
     expect(markup).toContain("<button");
   });
 
-  it("renders limit context and warning presentation without hiding the KPI value", () => {
-    const markup = renderToStaticMarkup(
-      <GridKpiPanel
-        timeView="year"
-        periodLabel="2025"
-        summary={{ ...summary, peakImportKw: 800 }}
-        status="success"
-      />,
-    );
+  it("renders context lines and warning tones without hiding the KPI value", () => {
+    const markup = renderPanel("year", {
+      summary: { ...summary, peakImportKw: 800 },
+    });
 
     expect(markup).toContain("800 kW");
     expect(markup).toContain("Limit: 750 kW");
@@ -88,113 +125,81 @@ describe("GridKpiPanel", () => {
     expect(markup).toContain("font-medium text-orange-600");
   });
 
-  it("shows the imported and exported breakdown only when enabled", () => {
-    const hidden = renderSuccess("year");
-    const visible = renderToStaticMarkup(
-      <GridKpiPanel
-        timeView="year"
-        periodLabel="2025"
-        summary={summary}
-        status="success"
-        showBreakdown
-      />,
-    );
+  it("renders unavailable values accessibly", () => {
+    const markup = renderPanel("day", {
+      summary: {
+        ...summary,
+        importedEnergyKwh: null,
+        remainingImportHeadroomKw: null,
+      },
+    });
 
-    expect(hidden).not.toContain(">Breakdown<");
-    expect(visible).toContain(">Breakdown<");
-    expect(visible).toContain("20% of imported energy");
-    expect(visible).toContain("70% of exported energy");
-    expect(visible).toContain('<img src="data:image/svg+xml');
-    expect(visible).toContain('alt="" aria-hidden="true"');
+    expect(markup.match(/aria-label="Value unavailable"/g)).toHaveLength(2);
   });
 
-  it("keeps KPIs visible when only the breakdown is in an error state", () => {
-    const markup = renderToStaticMarkup(
-      <GridKpiPanel
-        timeView="year"
-        periodLabel="2025"
-        summary={summary}
-        status="success"
-        showBreakdown
-        breakdownStatus="error"
-        onBreakdownRetry={() => undefined}
-      />,
-    );
+  it("uses four-column spans for the last three of seven year items", () => {
+    const markup = renderPanel("year");
 
-    expect(markup).toContain("Imported energy");
-    expect(markup).toContain("The energy breakdown could not be calculated.");
-    expect(markup).toContain("Try again");
+    expect(markup.match(/xl:col-span-4/g)).toHaveLength(3);
+    expect(markup.match(/xl:col-span-3/g)).toHaveLength(4);
   });
 
-  it("renders the existing breakdown loading state independently from the KPIs", () => {
-    const markup = renderToStaticMarkup(
-      <GridKpiPanel
-        timeView="year"
-        periodLabel="2025"
-        summary={summary}
-        status="success"
-        showBreakdown
-        breakdownStatus="loading"
-      />,
-    );
+  it("uses three-column spans for every non-seven-item view", () => {
+    const markup = renderPanel("month");
 
-    expect(markup).toContain("Imported energy");
-    expect(markup).toContain('aria-label="Loading Grid energy breakdown"');
-    expect(markup).toContain('aria-busy="true"');
+    expect(markup).not.toContain("xl:col-span-4");
+    expect(markup.match(/xl:col-span-3/g)).toHaveLength(8);
   });
 
-  it("renders a breakdown-only empty state without hiding valid KPIs", () => {
-    const markup = renderToStaticMarkup(
-      <GridKpiPanel
-        timeView="day"
-        periodLabel="22 Nov 2025"
-        summary={{ ...summary, importedBreakdown: [], exportedBreakdown: [] }}
-        status="success"
-        showBreakdown
-        breakdownStatus="empty"
-      />,
-    );
+  it("does not render the breakdown unless it is enabled", () => {
+    const markup = renderPanel("year");
+
+    expect(markup).not.toContain(">Breakdown<");
+    expect(markup).not.toContain("20% of imported energy");
+  });
+
+  it("renders imported and exported breakdown groups inside the panel", () => {
+    const markup = renderPanel("year", { showBreakdown: true });
+
+    expect(markup.indexOf("Grid performance")).toBeLessThan(markup.indexOf(">Breakdown<"));
+    expect(markup).toContain('aria-labelledby="grid-imported-breakdown-title"');
+    expect(markup).toContain('aria-labelledby="grid-exported-breakdown-title"');
+    expect(markup).toContain(">Imported energy</h4>");
+    expect(markup).toContain(">Exported energy</h4>");
+    expect(markup).toContain(">Battery</");
+    expect(markup).toContain(">Own use</");
+    expect(markup).toContain(">Charger</");
+    expect(markup).toContain(">Solar</");
+    expect(markup).toContain("20 kWh");
+    expect(markup).toContain("20% of imported energy");
+    expect(markup).toContain("7 kWh");
+    expect(markup).toContain("70% of exported energy");
+    expect(markup).toContain("grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4");
+    expect(markup).toContain('<img src="data:image/svg+xml');
+    expect(markup).toContain('alt="" aria-hidden="true"');
+  });
+
+  it.each(singleBreakdownGroupCases)(
+    "renders only the $direction breakdown group when the other group is empty",
+    ({ importedBreakdown, exportedBreakdown, shown, hidden }) => {
+      const markup = renderPanel("year", {
+        summary: { ...summary, importedBreakdown, exportedBreakdown },
+        showBreakdown: true,
+      });
+
+      expect(markup).toContain(">Breakdown<");
+      expect(markup).toContain(`>${shown}</h4>`);
+      expect(markup).not.toContain(`>${hidden}</h4>`);
+    },
+  );
+
+  it("does not render a breakdown section when both presentation lists are empty", () => {
+    const markup = renderPanel("year", {
+      summary: { ...summary, importedBreakdown: [], exportedBreakdown: [] },
+      showBreakdown: true,
+    });
 
     expect(markup).toContain("Peak import");
-    expect(markup).toContain("No energy breakdown is available");
-  });
-
-  it("renders the contained error state and retry action", () => {
-    const markup = renderToStaticMarkup(
-      <GridKpiPanel
-        timeView="year"
-        periodLabel="2025"
-        summary={null}
-        status="error"
-        onRetry={() => undefined}
-      />,
-    );
-
-    expect(markup).toContain("Grid statistics could not be loaded");
-    expect(markup).toContain("Try again");
-  });
-
-  it("distinguishes empty data from valid zero measurements", () => {
-    const empty = renderToStaticMarkup(
-      <GridKpiPanel timeView="day" periodLabel="22 Nov 2025" summary={null} status="empty" />,
-    );
-    const zero = renderToStaticMarkup(
-      <GridKpiPanel
-        timeView="day"
-        periodLabel="22 Nov 2025"
-        summary={{
-          ...summary,
-          importedEnergyKwh: 0,
-          exportedEnergyKwh: 0,
-          peakImportKw: 0,
-          peakExportKw: 0,
-        }}
-        status="success"
-      />,
-    );
-
-    expect(empty).toContain("No Grid data available");
-    expect(zero).toContain("0 kWh");
-    expect(zero).not.toContain("No Grid data available");
+    expect(markup).not.toContain(">Breakdown<");
   });
 });

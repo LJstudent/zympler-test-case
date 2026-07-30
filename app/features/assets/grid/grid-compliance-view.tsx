@@ -128,7 +128,6 @@ export function GridComplianceView({ rows }: GridComplianceViewProps) {
         timeView={selection.timeView}
         periodLabel={selectedPeriodLabel}
         summary={kpiSummary}
-        status={kpiSummary.measurementCount === 0 ? "empty" : "success"}
         showBreakdown={selection.breakdown}
       />
     </div>
